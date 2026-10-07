@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
+    <title>Dashboard | IoT Control</title>
+    <!-- CSS chung tải trước; dashboard.css bổ sung kiểu riêng cho trang này. -->
+    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
+    <link rel="stylesheet" href="dashboard.css?v=readable-controls-20261007" />
+    <!-- defer cho phép đọc xong HTML trước khi JavaScript tìm các công tắc. -->
+    <script src="dashboard.js?v=processing-20261007" defer></script>
+  </head>
+  <body>
+    <!--
+      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
+      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
+    -->
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <!--
+          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
+          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
+        -->
+        <span class="brand-icon">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <ellipse cx="12" cy="6" rx="7" ry="3" />
+            <path d="M5 6v6c0 4 14 4 14 0V6M5 12v6c0 4 14 4 14 0v-6" />
+          </svg>
+        </span>
+        <span>
+          <strong>IoT Control</strong>
+          <small>Dashboard v1.0</small>
+        </span>
+      </a>
+      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
+      <nav class="navigation" aria-label="Điều hướng chính">
+        <a class="nav-link active" href="index.html" aria-current="page">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Dashboard</span>
+          <span class="nav-dot"></span>
+        </a>
+        <a class="nav-link" href="data-sensor.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+          </svg>
+          <span>Data Sensor</span>
+        </a>
+        <a class="nav-link" href="action-history.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 10a9 9 0 1 1 2 9M3 4v6h6M12 7v5l3 2" />
+          </svg>
+          <span>Action History</span>
+        </a>
+        <a class="nav-link" href="profile.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="7" r="4" />
+            <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
+      <div class="account">
+        <span class="account-avatar">A</span>
+        <span>
+          <strong>Admin</strong>
+          <small>
+            <span class="online-dot"></span>
+            Online
+          </small>
+        </span>
+      </div>
+    </aside>
+    <!-- main chứa nội dung chính; dashboard-main giới hạn các kiểu CSS riêng của Dashboard. -->
+    <main class="main dashboard-main">
+      <header class="page-header dashboard-heading">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Tổng quan môi trường và thiết bị IoT</p>
+        </div>
+        <span class="demo-badge">Dữ liệu mẫu</span>
+      </header>
+
+      <!--
+        Banner tổng quan: nội dung bên trái, số thiết bị đang bật bên phải.
+        data-device-count đánh dấu nơi dashboard.js ghi số đếm; có 2 nơi dùng thuộc tính này.
+      -->
+      <section class="dashboard-welcome" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+          <p class="welcome-eyebrow">IoT Control</p>
+          <h2 id="welcome-title">Điều khiển không gian của bạn</h2>
+          <p>Theo dõi môi trường và quản lý thiết bị tại một nơi.</p>
+        </div>
+        <div class="welcome-summary">
+          <p>
+            <strong data-device-count>2</strong>
+            <span>/ 3</span>
+          </p>
+          <span>Thiết bị đang bật</span>
+        </div>
+      </section>
+
+      <!--
+        Ba thẻ cảm biến dùng cùng cấu trúc: biểu tượng, tên, giá trị và đường SVG nhỏ.
+        metric-temperature/humidity/light chọn màu riêng trong dashboard.css.
+        Giá trị và đường vẽ hiện là mẫu tĩnh; có thể sửa trực tiếp ở các thẻ phía dưới.
+      -->
+      <section class="metrics" aria-label="Thông số cảm biến mẫu">
+        <article class="card metric metric-temperature">
+          <div class="metric-top">
+            <span class="metric-icon temperature">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 14V5a3 3 0 0 1 6 0v9a5 5 0 1 1-6 0Z" />
+                <path d="M12 8v10" />
+              </svg>
+            </span>
+            <div>
+              <h2>Nhiệt độ</h2>
+              <small>Temperature</small>
+            </div>
+          </div>
+          <div class="metric-reading">
+            <p>
+              28.5
+              <span>°C</span>
+            </p>
+            <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
+              <path d="M2 26 18 23 34 24 50 18 66 20 82 14 98 19 114 14 126 16" />
+            </svg>
+          </div>
+        </article>
+        <article class="card metric metric-humidity">
+          <div class="metric-top">
+            <span class="metric-icon humidity">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 3S5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12Z" />
+                <path d="m9 16 6-6M9 11h.01M15 16h.01" />
+              </svg>
+            </span>
+            <div>
+              <h2>Độ ẩm</h2>
+              <small>Humidity</small>
+            </div>
+          </div>
+          <div class="metric-reading">
+            <p>
+              65
+              <span>%</span>
+            </p>
+            <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
+              <path d="M2 18 18 23 34 17 50 21 66 14 82 18 98 12 114 16 126 13" />
+            </svg>
+          </div>
+        </article>
+        <article class="card metric metric-light">
+          <div class="metric-top">
+            <span class="metric-icon light">
+              <svg
+                class="icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path
+                  d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"
+                />
+              </svg>
+            </span>
+            <div>
+              <h2>Ánh sáng</h2>
+              <small>Light</small>
+            </div>
+          </div>
+          <div class="metric-reading">
+            <p>
+              720
+              <span>lux</span>
+            </p>
+            <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
+              <path d="M2 27 18 24 34 22 50 25 66 18 82 17 98 22 114 16 126 14" />
+            </svg>
+          </div>
+        </article>
+      </section>
+
+      <!-- Grid chia vùng biểu đồ và điều khiển thành 2 cột; màn hình nhỏ chuyển thành 1 cột. -->
+      <div class="dashboard-grid">
+        <section class="card chart-card" aria-labelledby="chart-heading">
+          <div class="chart-heading">
+            <h2 id="chart-heading">
+              Biểu đồ theo dõi
+              <span>Dữ liệu cảm biến minh họa</span>
+            </h2>
+            <div class="legend">
+              <span class="temperature">Nhiệt độ</span>
+              <span class="humidity">Độ ẩm</span>
+              <span class="light">Ánh sáng</span>
+            </div>
+          </div>
+          <!--
+            Biểu đồ SVG dùng viewBox 740 x 190: tọa độ x tăng sang phải, y tăng xuống dưới.
+            title/desc mô tả biểu đồ cho công cụ đọc màn hình.
+            Các đường dùng chung trục tung; đây là hình minh họa, chưa lấy dữ liệu thời gian thực.
+          -->
+          <svg
+            class="chart"
+            viewBox="0 0 740 190"
+            role="img"
+            aria-labelledby="chart-title chart-desc"
+          >
+            <title id="chart-title">Biểu đồ cảm biến theo thời gian</title>
+            <desc id="chart-desc">
+              Dữ liệu mẫu từ 10:30 đến 10:30:10. Ánh sáng dao động quanh 720 lux, độ ẩm 65 phần trăm
+              và nhiệt độ 28.5 độ C. Các giá trị dùng chung trục tung.
+            </desc>
+            <!-- defs khai báo màu chuyển sắc; chart-area dùng lại qua id dashboard-light-fill. -->
+            <defs>
+              <linearGradient id="dashboard-light-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffbf46" stop-opacity=".15" />
+                <stop offset="100%" stop-color="#ffbf46" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <!-- g gom nhiều hình thành nhóm: lưới nền và nhãn trục được định dạng riêng bằng CSS. -->
+            <g class="grid-lines">
+              <path d="M42 20H722M42 60H722M42 100H722M42 140H722M42 172H722" />
+            </g>
+            <g class="chart-labels">
+              <text x="12" y="23">800</text>
+              <text x="12" y="63">600</text>
+              <text x="12" y="103">400</text>
+              <text x="12" y="143">200</text>
+              <text x="27" y="175">0</text>
+              <text x="42" y="188">10:30:00</text>
+              <text x="178" y="188" text-anchor="middle">10:30:02</text>
+              <text x="314" y="188" text-anchor="middle">10:30:04</text>
+              <text x="450" y="188" text-anchor="middle">10:30:06</text>
+              <text x="586" y="188" text-anchor="middle">10:30:08</text>
+              <text x="722" y="188" text-anchor="end">10:30:10</text>
+            </g>
+            <!-- path dùng d để mô tả nét vẽ; vùng tô đặt trước để nằm dưới 3 đường cảm biến. -->
+            <path
+              class="chart-area"
+              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36V172H42Z"
+            />
+            <path
+              class="plot light-line"
+              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36"
+            />
+            <path
+              class="plot humidity-line"
+              d="M42 159 112 159 180 158 248 159 314 159 382 160 450 159 486 159 552 159 620 158 680 159 722 159"
+            />
+            <path
+              class="plot temperature-line"
+              d="M42 166 112 166 180 166 248 166 314 165 382 166 450 166 486 166 552 166 620 166 680 166 722 166"
+            />
+            <circle class="chart-endpoint" cx="722" cy="36" r="4" />
+          </svg>
+          <div class="chart-caption">
+            <span>Khoảng thời gian mẫu</span>
+            <strong>10:30:00 – 10:30:10</strong>
+          </div>
+        </section>
+
+        <!--
+          Mỗi label chứa một checkbox và toàn bộ hình thức của công tắc.
+          Nhấn vào hàng cũng đổi checkbox. checked biểu thị bật; bỏ checked là tắt.
+          data-device-toggle được dashboard.js tìm để xử lý độ trễ 500ms.
+          Giữ input trước icon/label/switch vì CSS dùng dấu ~ để chọn phần tử đứng sau.
+        -->
+        <section class="card controls" aria-labelledby="controls-title">
+          <div class="controls-heading">
+            <div>
+              <h2 id="controls-title">Điều khiển thiết bị</h2>
+              <p>Bật hoặc tắt từng thiết bị</p>
+            </div>
+            <!-- aria-live thông báo khi số đếm đổi; aria-atomic đọc toàn bộ nội dung trạng thái. -->
+            <span class="device-count-badge" role="status" aria-live="polite" aria-atomic="true">
+              <span data-device-count>2</span>
+              /3 bật
+            </span>
+          </div>
+          <div class="device-list">
+            <!-- Quạt bật mặc định. CSS chỉ xoay nhóm fan-rotor, giữ khung ngoài đứng yên. -->
+            <label class="device device-fan">
+              <input
+                class="device-input"
+                type="checkbox"
+                role="switch"
+                checked
+                data-device-toggle
+                aria-label="Bật hoặc tắt quạt"
+              />
+              <span class="device-icon">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <g class="fan-rotor">
+                    <path
+                      d="M12 11C6 9 7 4 10 5c3 0 4 3 3 6M13 12c5-3 9 0 7 3-2 3-5 2-7-1M11 13c0 6-5 8-6 5-1-3 1-5 5-6"
+                    />
+                    <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+                  </g>
+                </svg>
+              </span>
+              <!-- CSS hiện đúng một trạng thái: bật/tắt; is-pending tạm hiện chữ đang xử lý. -->
+              <span class="device-label">
+                <strong>Quạt</strong>
+                <small class="state-on">Đang bật</small>
+                <small class="state-off">Đang tắt</small>
+                <small class="state-pending" role="status" aria-live="polite">Đang xử lý…</small>
+              </span>
+              <!-- switch là phần trang trí; checked thật và thao tác bàn phím thuộc về checkbox. -->
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <!-- Điều hòa tắt mặc định. Nhóm ac-airflow chuyển động nhẹ khi checked. -->
+            <label class="device device-ac">
+              <input
+                class="device-input"
+                type="checkbox"
+                role="switch"
+                data-device-toggle
+                aria-label="Bật hoặc tắt điều hòa"
+              />
+              <span class="device-icon">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="4" width="18" height="10" rx="3" />
+                  <path d="M6 10h12M7 7h2M11 7h2" />
+                  <g class="ac-airflow">
+                    <path d="M7 17v2c0 2-2 2-2 1M12 17v4M17 17v2c0 2 2 2 2 1" />
+                  </g>
+                </svg>
+              </span>
+              <span class="device-label">
+                <strong>Điều hòa</strong>
+                <small class="state-on">Đang bật</small>
+                <small class="state-off">Đang tắt</small>
+                <small class="state-pending" role="status" aria-live="polite">Đang xử lý…</small>
+              </span>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+            <!-- Đèn bật mặc định. CSS đổi màu icon và làm nhóm bulb-rays sáng theo nhịp. -->
+            <label class="device device-light">
+              <input
+                class="device-input"
+                type="checkbox"
+                role="switch"
+                checked
+                data-device-toggle
+                aria-label="Bật hoặc tắt đèn"
+              />
+              <span class="device-icon">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 18h6M9 21h6M8 13a6 6 0 1 1 8 0c-1 1-1 2-1 3H9c0-1 0-2-1-3Z" />
+                  <path d="M12 16v-5" />
+                  <g class="bulb-rays"><path d="M12 1v1M2 8h1M21 8h1M4 2l1 1M19 3l1-1" /></g>
+                </svg>
+              </span>
+              <span class="device-label">
+                <strong>Đèn</strong>
+                <small class="state-on">Đang bật</small>
+                <small class="state-off">Đang tắt</small>
+                <small class="state-pending" role="status" aria-live="polite">Đang xử lý…</small>
+              </span>
+              <span class="switch" aria-hidden="true"></span>
+            </label>
+          </div>
+          <p class="control-note">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 11v6M12 7v1" />
+            </svg>
+            Chế độ mô phỏng
+          </p>
+        </section>
+      </div>
+    </main>
+    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <details class="help">
+      <summary aria-label="Trợ giúp">?</summary>
+      <div class="help-content">
+        <strong>IoT Control</strong>
+        <p>
+          Dashboard sử dụng dữ liệu mẫu. Công tắc quạt, điều hòa và đèn thay đổi trạng thái trên
+          giao diện; chưa kết nối thiết bị thực.
+        </p>
+      </div>
+    </details>
+  </body>
+</html>

@@ -1,0 +1,635 @@
+/*
+ * DASHBOARD.CSS - KIỂU VÀ HIỆU ỨNG RIÊNG CHO INDEX.HTML
+ *
+ * File được tải sau styles.css. Các selector có .dashboard-main bổ sung/ghi đè
+ * kiểu cơ bản trong vùng Dashboard; các trang bảng và Profile không tải file này.
+ *
+ * Quan hệ giữa HTML, CSS và JavaScript:
+ * - checked trên checkbox quyết định màu, chữ bật/tắt và animation của thiết bị.
+ * - dashboard.js thêm .is-pending trong khoảng chờ 500ms rồi gỡ khi hoàn tất.
+ * - Trong lúc chờ, checked vẫn là trạng thái cũ nên hiệu ứng thiết bị giữ nguyên.
+ * - @keyframes định nghĩa chuyển động; animation mới kích hoạt chuyển động đó.
+ */
+
+/* Tiêu đề và tổng quan */
+
+.dashboard-main {
+  /* Biến màu chữ phụ chỉ dùng trong vùng này; --blue được kế thừa từ styles.css. */
+  --dash-muted: #8090a7;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.dashboard-heading {
+  /* Tiêu đề ở trái, nhãn Dữ liệu mẫu ở phải; gap giữ khoảng cách khi vùng chứa hẹp. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.dashboard-heading h1 {
+  font-size: 20px;
+  letter-spacing: normal;
+}
+.dashboard-heading p {
+  font-size: 12px;
+}
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 7px 11px;
+  background: #edf2ff;
+  color: #5d71b3;
+  border: 1px solid #dfe7ff;
+  border-radius: 20px;
+  font-size: 11px;
+}
+.demo-badge::before {
+  /* Phần tử giả tạo chấm màu đứng trước nhãn mà không cần thêm HTML. */
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7790e9;
+}
+.dashboard-welcome {
+  /* Flexbox xếp phần giới thiệu và số đếm ngang; gradient tạo nền chuyển màu nhẹ. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  overflow: hidden;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  border: 1px solid #dbe8ff;
+  border-radius: 16px;
+  background: linear-gradient(110deg, #edf4ff, #f5f8ff 60%, #e8f2ff);
+}
+.dashboard-welcome::after {
+  /* Vòng tròn trang trí đặt lệch ra ngoài; overflow của banner cắt phần dư.
+     pointer-events: none cho phép nhấn xuyên qua chi tiết trang trí. */
+  content: '';
+  position: absolute;
+  right: -50px;
+  top: -80px;
+  width: 260px;
+  height: 260px;
+  border: 36px solid #dbe9ff80;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.welcome-copy,
+.welcome-summary {
+  /* z-index đưa nội dung lên trên vòng trang trí được vẽ bởi ::after. */
+  position: relative;
+  z-index: 1;
+}
+.welcome-eyebrow {
+  margin: 0 0 6px;
+  color: #6583b7;
+  font-size: 11px;
+  font-weight: 600;
+}
+.welcome-copy h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.4;
+  color: #24416d;
+}
+.welcome-copy > p:last-child {
+  margin: 0;
+  color: #7c91b0;
+  font-size: 12px;
+}
+.welcome-summary {
+  /* Vạch trái và padding tách bộ đếm khỏi nội dung giới thiệu trên bố cục ngang. */
+  min-width: 166px;
+  padding-left: 28px;
+  border-left: 1px solid #cbddf6;
+}
+.welcome-summary p {
+  /* baseline căn số lớn và phần /3 theo chân chữ, thay vì theo tâm hình chữ nhật. */
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  color: #7f95b5;
+  font-size: 18px;
+}
+.welcome-summary strong {
+  font-size: 34px;
+  line-height: 1.2;
+  color: var(--blue);
+  font-weight: 700;
+}
+.welcome-summary > span {
+  display: block;
+  margin-top: 6px;
+  color: #7288aa;
+  font-size: 12px;
+}
+/* Thẻ cảm biến */
+
+.dashboard-main .metrics {
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.dashboard-main .metric {
+  /* Thẻ xếp dọc: hàng tên/icon trên, hàng giá trị/đường SVG dưới. */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  min-height: 156px;
+  padding: 20px;
+  border-color: #e9eef6;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.dashboard-main .metric:hover {
+  /* Chỉ là phản hồi khi rê chuột: thẻ nâng 3px và tăng bóng, không đổi số cảm biến. */
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px #1e2b430a;
+}
+.metric-temperature {
+  /* Ba lớp metric-* đặt nền và viền riêng; !important giữ màu viền trên trước kiểu viền chung. */
+  background: linear-gradient(130deg, #fff 45%, #fff4f5);
+  border-top: 3px solid #ff95a2 !important;
+}
+.metric-humidity {
+  background: linear-gradient(130deg, #fff 45%, #f0f6ff);
+  border-top: 3px solid #83aeff !important;
+}
+.metric-light {
+  background: linear-gradient(130deg, #fff 45%, #fffbef);
+  border-top: 3px solid #ffd36c !important;
+}
+.metric-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dashboard-main .metric h2 {
+  margin: 0;
+  color: #536681;
+  font-size: 12px;
+  font-weight: 600;
+}
+.metric-top small {
+  display: block;
+  margin-top: 3px;
+  color: #98a5b8;
+  font-size: 10px;
+}
+.dashboard-main .metric-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+}
+.metric-reading {
+  /* Giá trị ở trái và đường nhỏ ở phải; align-items: flex-end căn theo cạnh dưới. */
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.dashboard-main .metric-reading p {
+  /* Monospace giúp các số có độ rộng đều; nowrap tránh tách giá trị thành nhiều dòng. */
+  margin: 0;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 29px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.metric-reading p span {
+  color: #8797ad;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+.metric-spark {
+  /* SVG nhỏ chỉ minh họa bằng path có sẵn trong HTML, chưa được cập nhật từ dữ liệu. */
+  width: 110px;
+  max-width: 42%;
+  height: 40px;
+  flex-shrink: 0;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.metric-temperature .metric-spark {
+  stroke: #ff8394;
+}
+.metric-humidity .metric-spark {
+  stroke: #75a3ff;
+}
+.metric-light .metric-spark {
+  stroke: #f4c156;
+}
+/* Bố cục và biểu đồ */
+
+.dashboard-main .dashboard-grid {
+  /* Hai cột tỷ lệ 1,8 : 1; cột điều khiển không nhỏ hơn 290px trên bố cục này. */
+  grid-template-columns: minmax(0, 1.8fr) minmax(290px, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.dashboard-main .chart-card {
+  /* Thẻ biểu đồ dạng cột; SVG có flex: 1 để dùng phần chiều cao còn lại. */
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  border-color: #e9eef6;
+  min-width: 0;
+}
+.dashboard-main .chart-heading {
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.dashboard-main .chart-heading h2 {
+  font-size: 14px;
+}
+.dashboard-main .chart-heading h2 span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+}
+.dashboard-main .legend {
+  font-size: 10px;
+  gap: 12px;
+}
+.dashboard-main .chart {
+  flex: 1;
+  min-height: 190px;
+}
+.dashboard-main .chart-labels {
+  font-size: 11px;
+}
+.dashboard-main .grid-lines {
+  stroke: #ebf0f8;
+  stroke-dasharray: 3 5;
+}
+.dashboard-main .plot {
+  stroke-width: 2.4;
+}
+.chart-area {
+  /* Tham chiếu linearGradient có id dashboard-light-fill trong SVG của index.html. */
+  fill: url(#dashboard-light-fill);
+  stroke: none;
+}
+.chart-endpoint {
+  /* Chấm tròn đánh dấu cuối đường ánh sáng; viền trắng tách nó khỏi nét biểu đồ. */
+  fill: #ffb62e;
+  stroke: #fff;
+  stroke-width: 3;
+}
+.chart-caption {
+  /* Dòng chú thích dưới biểu đồ có thể xuống hàng khi không đủ chỗ. */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+  color: #8c9bb1;
+  font-size: 10px;
+}
+.chart-caption strong {
+  font-weight: 400;
+  color: #7184a1;
+}
+/* Điều khiển thiết bị và trạng thái xử lý */
+
+.dashboard-main .controls {
+  /* Thẻ chứa tiêu đề, 3 hàng thiết bị và chú thích; Flexbox giúp đặt chú thích ở đáy. */
+  display: flex;
+  flex-direction: column;
+  padding: 22px;
+  border-color: #e9eef6;
+}
+.controls-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.dashboard-main .controls h2 {
+  margin: 0;
+  font-size: 15px;
+}
+.controls-heading p {
+  margin: 4px 0 0;
+  color: var(--dash-muted);
+  font-size: 12px;
+}
+.device-count-badge {
+  color: var(--blue);
+  background: #edf3ff;
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.dashboard-main .device-list {
+  /* Trên máy tính, ba hàng thiết bị xếp dọc trong cột điều khiển. */
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.dashboard-main .device {
+  /* Thừa hưởng display: flex của styles.css, rồi tăng khoảng cách và bo góc cho Dashboard. */
+  padding: 14px;
+  gap: 12px;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  background: #f9fbfe;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.dashboard-main .device:hover {
+  border-color: #c6d8f8;
+  background: #f4f8ff;
+}
+.dashboard-main .device:has(.device-input:checked) {
+  /* :has chọn hàng .device chứa checkbox đang bật để tô kiểu của cả hàng. */
+  background: #f3f7ff;
+  border-color: #dce7fb;
+}
+.dashboard-main .device-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  flex-shrink: 0;
+}
+.dashboard-main .device-icon .icon {
+  width: 25px;
+  height: 25px;
+}
+.dashboard-main .device-label {
+  /* min-width: 0 cho nhãn được co trong hàng Flexbox, tránh đẩy công tắc ra ngoài. */
+  min-width: 0;
+}
+.dashboard-main .device-label strong {
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.dashboard-main .device-label small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.dashboard-main .device-label .state-on {
+  color: #5684ca;
+}
+.dashboard-main .device-label .state-pending {
+  /* Chữ đang xử lý luôn có trong HTML, nhưng bình thường bị ẩn. */
+  display: none;
+}
+.dashboard-main .switch {
+  flex-shrink: 0;
+}
+.dashboard-main .device.is-pending {
+  /* dashboard.js thêm lớp này khi bắt đầu chờ; con trỏ progress biểu thị đang xử lý. */
+  cursor: progress;
+  background: #f4f7fd;
+  border-color: #c7d7f5;
+}
+.dashboard-main .device.is-pending .state-on,
+.dashboard-main .device.is-pending .state-off {
+  /* Tạm ẩn cả hai nhãn bật/tắt để chỉ hiện chữ Đang xử lý bên dưới. */
+  display: none;
+}
+.dashboard-main .device.is-pending .state-pending {
+  display: block;
+  color: #7c8fac;
+}
+.dashboard-main .device.is-pending .switch {
+  position: relative;
+}
+.dashboard-main .device.is-pending .switch::after {
+  /* Ẩn nút tròn bình thường; không bỏ không gian để công tắc không bị nhảy bố cục. */
+  visibility: hidden;
+}
+.dashboard-main .device.is-pending .switch::before {
+  /* Vòng chờ tạo bằng viền tròn với một đoạn trắng, xoay thay cho nút tròn.
+     0,7s là tốc độ một vòng quay; độ trễ xử lý 0,5s được đặt riêng trong dashboard.js. */
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid #ffffff70;
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: dashboard-processing 0.7s linear infinite;
+}
+.dashboard-main .device.is-pending .device-input:checked ~ .switch::before {
+  /* Khi trạng thái cũ đang bật, vòng chờ ở bên phải; nếu đang tắt nó ở bên trái. */
+  left: 19px;
+}
+.device-input:checked ~ .device-icon .fan-rotor {
+  /* Chỉ xoay cánh quạt khi checked; tâm (12,12) tương ứng tâm SVG viewBox 24 x 24.
+     linear giữ tốc độ đều; infinite lặp đến khi công tắc tắt. */
+  animation: dashboard-fan-spin 2s linear infinite;
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+}
+.device-input:checked ~ .device-icon .ac-airflow {
+  /* Nhóm nét gió đổi độ mờ và dịch xuống nhẹ; ease-in-out làm chuyển động mềm ở hai đầu. */
+  animation: dashboard-airflow 1.8s ease-in-out infinite;
+}
+.dashboard-main .device-light .device-input:checked ~ .device-icon {
+  /* Màu vàng và nền ấm biểu thị bóng đèn đang bật. */
+  color: #e9a92b;
+  background: #fff0c9;
+}
+.device-light .device-input:checked ~ .device-icon .bulb-rays {
+  /* Các tia sáng đổi opacity theo nhịp; tắt checkbox sẽ ngừng animation. */
+  animation: dashboard-lamp-glow 2.8s ease-in-out infinite;
+}
+.control-note {
+  /* margin-top: auto đẩy chú thích xuống đáy thẻ khi còn chiều cao trống. */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: auto 0 0;
+  padding-top: 16px;
+  color: #91a0b5;
+  font-size: 11px;
+}
+.control-note .icon {
+  width: 13px;
+  height: 13px;
+}
+/* Hiệu ứng thiết bị */
+
+@keyframes dashboard-fan-spin {
+  /* Một chu kỳ quay đủ 360 độ; thời lượng nằm ở animation của fan-rotor. */
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dashboard-processing {
+  /* Vòng chờ dùng một keyframes riêng để chỉnh độc lập với cánh quạt. */
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dashboard-airflow {
+  /* Đầu/cuối ở vị trí gốc và mờ hơn; giữa chu kỳ dịch xuống 1,5px và rõ hơn. */
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(1.5px);
+  }
+}
+@keyframes dashboard-lamp-glow {
+  /* Chỉ thay đổi độ mờ của các tia sáng: 0,55 ở đầu/cuối và 1 ở giữa. */
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* Bố cục theo kích thước màn hình */
+
+@media (max-width: 1100px) {
+  /* Thu nhỏ thẻ/số và đưa chú giải xuống dưới tiêu đề biểu đồ. */
+  .dashboard-main .metric {
+    padding: 16px;
+  }
+  .dashboard-main .metric-reading p {
+    font-size: 25px;
+  }
+  .metric-spark {
+    width: 70px;
+  }
+  .dashboard-main .chart-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 900px) {
+  /* Biểu đồ nằm trên điều khiển; ba thiết bị tạm đặt thành ba cột trong thẻ rộng. */
+  .dashboard-main .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-main .device-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .dashboard-main .device {
+    flex-wrap: wrap;
+  }
+  .dashboard-main .device-label {
+    flex: 1;
+  }
+  .dashboard-main .switch {
+    margin: 0 0 0 auto;
+  }
+}
+@media (max-width: 800px) {
+  /* Cảm biến và thiết bị chuyển thành một cột; từng thẻ cảm biến bố trí nội dung ngang. */
+  .dashboard-main .metrics {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .dashboard-main .metric {
+    min-height: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .metric-reading {
+    justify-content: flex-end;
+  }
+  .metric-spark {
+    max-width: none;
+    width: 80px;
+  }
+  .dashboard-main .device-list {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-main .device {
+    flex-wrap: nowrap;
+  }
+}
+@media (max-width: 560px) {
+  /* Điện thoại: banner xếp dọc, giảm khoảng cách và bỏ đường SVG nhỏ để tiết kiệm chỗ. */
+  .dashboard-heading {
+    align-items: flex-start;
+  }
+  .demo-badge {
+    font-size: 9px;
+    padding: 5px 8px;
+  }
+  .dashboard-welcome {
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .welcome-copy h2 {
+    font-size: 19px;
+  }
+  .welcome-summary {
+    border-left: 0;
+    border-top: 1px solid #cbddf6;
+    padding: 14px 0 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .welcome-summary strong {
+    font-size: 27px;
+  }
+  .welcome-summary > span {
+    margin: 0;
+  }
+  .dashboard-main .metric {
+    padding: 16px;
+    gap: 10px;
+  }
+  .metric-top {
+    gap: 9px;
+  }
+  .metric-top small {
+    display: none;
+  }
+  .metric-spark {
+    display: none;
+  }
+  .dashboard-main .metric-reading p {
+    font-size: 24px;
+  }
+  .dashboard-main .chart-card,
+  .dashboard-main .controls {
+    padding: 18px;
+  }
+  .dashboard-main .chart {
+    min-height: 140px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Nếu hệ điều hành yêu cầu giảm chuyển động, bỏ animation và transition,
+     kể cả phần tử giả. Chữ trạng thái và độ trễ JavaScript vẫn hoạt động. */
+  .dashboard-main *,
+  .dashboard-main *::before,
+  .dashboard-main *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

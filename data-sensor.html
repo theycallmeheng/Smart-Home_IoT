@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
+    <title>Data Sensor | IoT Control</title>
+    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
+    <!-- CSS lo bố cục; tables.js xử lý tìm kiếm/lọc. defer đợi HTML được phân tích xong. -->
+    <script src="tables.js?v=table-controls-20261007" defer></script>
+  </head>
+  <body>
+    <!--
+      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
+      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
+    -->
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <!--
+          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
+          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
+        -->
+        <span class="brand-icon">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <ellipse cx="12" cy="6" rx="7" ry="3" />
+            <path d="M5 6v6c0 4 14 4 14 0V6M5 12v6c0 4 14 4 14 0v-6" />
+          </svg>
+        </span>
+        <span>
+          <strong>IoT Control</strong>
+          <small>Dashboard v1.0</small>
+        </span>
+      </a>
+      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
+      <nav class="navigation" aria-label="Điều hướng chính">
+        <a class="nav-link" href="index.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link active" href="data-sensor.html" aria-current="page">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+          </svg>
+          <span>Data Sensor</span>
+          <span class="nav-dot"></span>
+        </a>
+        <a class="nav-link" href="action-history.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 10a9 9 0 1 1 2 9M3 4v6h6M12 7v5l3 2" />
+          </svg>
+          <span>Action History</span>
+        </a>
+        <a class="nav-link" href="profile.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="7" r="4" />
+            <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </nav>
+      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
+      <div class="account">
+        <span class="account-avatar">A</span>
+        <span>
+          <strong>Admin</strong>
+          <small>
+            <span class="online-dot"></span>
+            Online
+          </small>
+        </span>
+      </div>
+    </aside>
+    <!-- Tìm kiếm và dữ liệu cảm biến -->
+    <!-- data-table-page đánh dấu vùng mà tables.js tìm các ô nhập, bộ lọc và bảng. -->
+    <main class="main" data-table-page>
+      <header class="page-header">
+        <h1>Data Sensor</h1>
+        <p>Dữ liệu cảm biến từ các thiết bị</p>
+      </header>
+      <!--
+        Form chứa từ khóa và bộ lọc. Nhập/chọn chưa đổi kết quả ngay.
+        Bấm Find hoặc Enter trong ô tìm kiếm sẽ gửi form; JavaScript ngăn tải lại trang.
+      -->
+      <form class="toolbar sensor-toolbar" data-table-form>
+        <!-- Chọn Sensor bên trái, rồi nhập thông tin cần tìm vào ô ngay bên cạnh. -->
+        <div class="filters sensor-search-controls">
+          <!--
+            data-filter="sensor" đọc data-sensor của từng dòng.
+            Tìm kiếm chỉ giữ những dòng thuộc sensor đã chọn và khớp từ khóa.
+            all cho phép tìm ở tất cả sensor; giá trị/đơn vị được nhập vào ô tìm kiếm.
+          -->
+          <select data-filter="sensor" aria-label="Loại cảm biến">
+            <option value="all">All Sensors</option>
+            <option value="temperature">Temperature</option>
+            <option value="humidity">Humidity</option>
+            <option value="light">Light</option>
+          </select>
+          <label class="search-field">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="10" cy="10" r="6" />
+              <path d="m15 15 5 5" />
+            </svg>
+            <!-- Tìm ID, tên, giá trị, đơn vị hoặc thời gian trong các dòng của sensor đã chọn. -->
+            <input
+              type="search"
+              data-table-search
+              placeholder="Tìm thông tin của sensor đã chọn..."
+              aria-label="Tìm thông tin của sensor đã chọn"
+              autocomplete="off"
+            />
+          </label>
+        </div>
+        <div class="filters toolbar-actions">
+          <!-- type="submit" xác nhận cả từ khóa và tất cả bộ lọc đang chọn. -->
+          <button
+            type="submit"
+            class="find-filters"
+            data-find-filters
+            aria-label="Áp dụng tìm kiếm và bộ lọc"
+          >
+            Find
+          </button>
+          <!-- type="button" không gửi form; Clear all đặt lại các điều kiện và cập nhật ngay. -->
+          <button
+            type="button"
+            class="clear-filters"
+            data-clear-filters
+            aria-label="Xóa tất cả bộ lọc và từ khóa tìm kiếm"
+          >
+            Clear all
+          </button>
+        </div>
+      </form>
+      <section class="card table-card" aria-label="Dữ liệu cảm biến">
+        <!-- Vùng cuộn ngang giữ bảng dễ đọc trên điện thoại, không ép các cột quá hẹp. -->
+        <div class="table-scroll">
+          <table>
+            <!-- thead chứa tên cột; scope="col" xác định tiêu đề cho cột tương ứng. -->
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">SENSOR TYPE</th>
+                <th scope="col">VALUE</th>
+                <th scope="col">TIME</th>
+              </tr>
+            </thead>
+            <!--
+              tbody chứa dữ liệu mẫu; mỗi tr là một bản ghi, mỗi td là một ô.
+              Thứ tự: ID, loại cảm biến, giá trị kèm đơn vị, giờ.
+              data-sensor phải khớp value trong bộ lọc: temperature, humidity hoặc light.
+              Khi thêm dòng, điền đúng data-sensor; tables.js tự tìm các dòng lúc mở trang.
+            -->
+            <tbody>
+              <tr data-sensor="temperature">
+                <td class="row-id">001</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.5 °C</td>
+                <td class="time">10:30:02</td>
+              </tr>
+              <tr data-sensor="humidity">
+                <td class="row-id">002</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">65 %</td>
+                <td class="time">10:30:02</td>
+              </tr>
+              <tr data-sensor="light">
+                <td class="row-id">003</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">720 lux</td>
+                <td class="time">10:30:02</td>
+              </tr>
+              <tr data-sensor="temperature">
+                <td class="row-id">004</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">29.0 °C</td>
+                <td class="time">10:32:02</td>
+              </tr>
+              <tr data-sensor="humidity">
+                <td class="row-id">005</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">63 %</td>
+                <td class="time">10:32:02</td>
+              </tr>
+              <tr data-sensor="light">
+                <td class="row-id">006</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">710 lux</td>
+                <td class="time">10:32:02</td>
+              </tr>
+              <tr data-sensor="temperature">
+                <td class="row-id">007</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.8 °C</td>
+                <td class="time">10:34:02</td>
+              </tr>
+              <tr data-sensor="humidity">
+                <td class="row-id">008</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">66 %</td>
+                <td class="time">10:34:02</td>
+              </tr>
+              <!-- hidden ẩn thông báo ban đầu; tables.js chỉ hiện nó khi không có kết quả.
+                   colspan="4" cho ô thông báo chiếm đủ 4 cột và dòng này không được tính vào dữ liệu. -->
+              <tr data-empty hidden>
+                <td colspan="4" class="empty-state">Không tìm thấy dữ liệu phù hợp.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Số dòng được JavaScript tính từ dữ liệu thực; aria-live thông báo khi kết quả đổi. -->
+        <footer class="table-footer">
+          <p data-result-count role="status" aria-live="polite" aria-atomic="true">
+            Hiển thị 8 trên tổng số 8 dòng
+          </p>
+          <!-- Phân trang hiện chỉ là giao diện mẫu, nên nút Trước/Sau đang bị khóa. -->
+          <nav class="pagination" aria-label="Phân trang">
+            <button type="button" disabled>Trước</button>
+            <button type="button" class="selected" aria-current="page">1</button>
+            <button type="button" disabled>Sau</button>
+          </nav>
+        </footer>
+      </section>
+    </main>
+    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <details class="help">
+      <summary aria-label="Trợ giúp">?</summary>
+      <div class="help-content">
+        <strong>IoT Control</strong>
+        <p>
+          Chọn Sensor ở bên trái, rồi nhập ID, tên, giá trị, đơn vị hoặc thời gian vào ô tìm kiếm
+          bên cạnh. Bấm Find hoặc nhấn Enter để tìm trong sensor đã chọn. Chọn All Sensors để tìm
+          tất cả loại cảm biến; Clear all xóa sensor đã chọn và từ khóa. Dữ liệu hiện là dữ liệu
+          mẫu.
+        </p>
+      </div>
+    </details>
+  </body>
+</html>

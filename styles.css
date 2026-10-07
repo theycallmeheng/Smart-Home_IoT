@@ -1,0 +1,1289 @@
+/*
+ * STYLES.CSS - KIỂU DÙNG CHUNG CHO CẢ 4 TRANG
+ *
+ * HTML xác định cấu trúc; các class như .card, .sidebar nối HTML với quy tắc ở đây.
+ * Dashboard tải thêm dashboard.css để bổ sung kiểu riêng sau file này.
+ *
+ * Cách đọc thuộc tính:
+ * - margin: khoảng cách ngoài phần tử; padding: khoảng cách trong phần tử.
+ * - gap: khoảng cách giữa các phần tử con của Flexbox hoặc Grid.
+ * - border: viền; border-radius: bo góc; box-shadow: bóng đổ.
+ * - px: kích thước theo pixel CSS; fr: phần không gian còn lại trong Grid.
+ * - :hover/:focus-visible/:checked: kiểu áp dụng khi rê chuột, dùng bàn phím hoặc bật.
+ * Các chú thích giải thích theo nhóm; các quy tắc trong nhóm cùng tạo một thành phần.
+ */
+
+/* Thiết lập chung */
+
+:root {
+  /* Biến màu dùng lại qua var(...); đổi --blue sẽ đổi màu chủ đạo ở các chỗ tham chiếu. */
+  --blue: #2864ff;
+  --text: #1e2b43;
+  --muted: #91a1b9;
+  --canvas: #f7f9fc;
+  --border: #edf1f6;
+  --red: #ff6474;
+  --yellow: #ffb62e;
+  --green: #27bd70;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: var(--canvas);
+  font-synthesis: none;
+}
+* {
+  /* border-box tính padding và viền vào width/height, giúp kiểm soát kích thước dễ hơn. */
+  box-sizing: border-box;
+}
+body {
+  /* Bỏ khoảng trắng mặc định quanh trang; giữ độ rộng tối thiểu 320px. */
+  margin: 0;
+  min-width: 320px;
+}
+button,
+input,
+select {
+  /* inherit giúp các ô nhập và nút dùng cùng phông với phần nội dung xung quanh. */
+  font: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+select,
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+.icon {
+  /* Kích thước SVG mặc định; flex-shrink: 0 tránh icon bị bóp khi hàng chật. */
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+/*
+ * Thanh điều hướng
+ * Sidebar dùng Flexbox dọc: logo trên, menu ở giữa, tài khoản ở cuối.
+ * Các class active/online-dot chỉ tạo kiểu hiển thị, không xác thực tài khoản.
+ */
+
+.sidebar {
+  /* fixed giữ sidebar tại mép trái khi cuộn; inset lần lượt là trên, phải, dưới, trái. */
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 184px;
+  background: #fff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 24px 26px;
+  border-bottom: 1px solid #f5f7fa;
+}
+.brand-icon {
+  /* Grid + place-items: center căn icon vào giữa ô vuông theo cả hai chiều. */
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #3477ff;
+  color: #fff;
+  box-shadow: 0 2px 4px #2864ff16;
+}
+.brand-icon .icon {
+  width: 15px;
+  height: 15px;
+}
+.brand strong {
+  display: block;
+  font-size: 13px;
+  line-height: 19px;
+}
+.brand small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+}
+.navigation {
+  padding: 16px 12px;
+  display: grid;
+  gap: 7px;
+}
+.nav-link {
+  /* Flexbox xếp icon, nhãn và chấm active trên cùng một hàng. */
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #71839d;
+}
+.nav-link .icon {
+  width: 16px;
+  height: 16px;
+}
+.nav-link:hover {
+  background: #f5f8fe;
+  color: var(--blue);
+}
+.nav-link.active {
+  /* HTML của mỗi trang gắn active vào đúng liên kết đang được mở. */
+  background: #eff5ff;
+  color: var(--blue);
+  font-weight: 600;
+}
+.nav-dot {
+  /* margin-left: auto dùng khoảng trống còn lại để đẩy chấm sang mép phải. */
+  margin-left: auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.account {
+  /* Trong sidebar dạng cột, margin-top: auto đẩy tài khoản xuống cuối vùng còn trống. */
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 19px 24px;
+  border-top: 1px solid #f4f6fa;
+}
+.account-avatar {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  background: #805bff;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 11px;
+}
+.account strong {
+  display: block;
+  font-size: 12px;
+  line-height: 18px;
+}
+.account small {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.online-dot {
+  width: 3px;
+  height: 3px;
+  background: var(--green);
+  border-radius: 50%;
+}
+/* Khung nội dung và thẻ dùng chung */
+
+.main {
+  /* Chừa 184px bằng độ rộng sidebar; khi đổi sidebar cần đổi khoảng chừa tương ứng. */
+  margin-left: 184px;
+  padding: 28px 24px 64px;
+  min-height: 100vh;
+}
+.page-header {
+  margin-bottom: 22px;
+}
+h1 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.page-header p {
+  margin: 0;
+  font-size: 11px;
+  color: #a3afc1;
+  line-height: 1.5;
+}
+.card {
+  /* Lớp nền chung cho thẻ cảm biến, biểu đồ, bảng và hồ sơ; các lớp khác bổ sung kiểu riêng. */
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px #1e2b4305;
+  border: 1px solid #f1f4f8;
+}
+h2 {
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+/* Cảm biến, biểu đồ và điều khiển thiết bị */
+
+.metrics {
+  /* 3 cột bằng nhau; minmax(0, 1fr) cho phép cột co nhỏ mà không bị nội dung ép rộng. */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.metric {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 84px;
+}
+.metric-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.metric-icon .icon {
+  width: 20px;
+  height: 20px;
+}
+.metric h2 {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.metric p {
+  /* Phông monospace cho số có độ rộng ký tự đều; tiêu đề vẫn dùng phông chữ chung. */
+  font-family: Consolas, 'Courier New', monospace;
+  font-weight: 700;
+  margin: 0;
+  font-size: 23px;
+  line-height: 1;
+}
+.temperature {
+  /* Ba lớp temperature/humidity/light dùng lại cho icon, nhãn cảm biến và chú giải. */
+  color: var(--red);
+  background: #ffe3e6;
+}
+.humidity {
+  color: #4587ff;
+  background: #deebff;
+}
+.light {
+  color: var(--yellow);
+  background: #fff1c4;
+}
+.dashboard-grid {
+  /* Biểu đồ chiếm 7 phần, điều khiển chiếm 3 phần; cột điều khiển rộng tối thiểu 240px. */
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
+  gap: 14px;
+  align-items: start;
+}
+.chart-card {
+  padding: 17px 18px 20px;
+}
+.chart-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.chart-heading h2 span {
+  font-weight: 400;
+  color: var(--muted);
+}
+.legend {
+  display: flex;
+  gap: 11px;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.legend span {
+  background: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.legend span::before {
+  /* ::before tạo vạch màu bằng CSS mà không cần thêm phần tử vào HTML. */
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+}
+.chart {
+  /* SVG giữ tỷ lệ theo viewBox; width: 100% cho biểu đồ co theo thẻ chứa nó. */
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.grid-lines {
+  stroke: #f5f7fa;
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+  fill: none;
+}
+.chart-labels {
+  font:
+    9px Consolas,
+    monospace;
+  fill: #a2aec0;
+}
+.plot {
+  /* Nét biểu đồ chỉ có stroke, không tô fill; mỗi lớp *-line chọn màu đường riêng. */
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.light-line {
+  stroke: var(--yellow);
+}
+.humidity-line {
+  stroke: #478bff;
+}
+.temperature-line {
+  stroke: var(--red);
+}
+.controls {
+  padding: 17px 16px;
+}
+.controls h2 {
+  margin-bottom: 14px;
+}
+.device-list {
+  display: grid;
+  gap: 10px;
+}
+.device {
+  /* position: relative làm mốc cho checkbox ẩn nằm bên trong hàng thiết bị. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f7f9fc;
+  cursor: pointer;
+}
+.device-input {
+  /* Checkbox vẫn nhận focus và điều khiển bằng label; chỉ ẩn hình thức mặc định.
+     Không dùng display: none vì sẽ làm mất khả năng focus bằng bàn phím. */
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.device-icon {
+  color: #a8b6cb;
+  background: #eef2f7;
+  border-radius: 7px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+}
+.device-label strong {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+.device-label small {
+  display: block;
+  font-size: 8px;
+  color: var(--muted);
+}
+.device-label .state-on {
+  display: none;
+  color: var(--blue);
+}
+.switch {
+  /* Nền công tắc; nút tròn bên trong được vẽ bằng phần tử giả ::after bên dưới. */
+  margin-left: auto;
+  width: 35px;
+  height: 19px;
+  background: #c6d0de;
+  border-radius: 20px;
+  padding: 3px;
+  transition: background 0.18s;
+}
+.switch::after {
+  /* content tạo phần tử giả; transition làm vị trí nút chuyển mượt khi checked đổi. */
+  content: '';
+  display: block;
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px #0002;
+  transition: transform 0.18s;
+}
+.device-input:checked ~ .switch {
+  /* ~ chọn phần tử anh em đứng sau input trong cùng label; thứ tự HTML phải được giữ. */
+  background: var(--blue);
+}
+.device-input:checked ~ .switch::after {
+  /* Khi bật, di chuyển nút tròn 16px sang phải; khi tắt nó về vị trí ban đầu. */
+  transform: translateX(16px);
+}
+.device-input:checked ~ .device-icon {
+  background: #dfecff;
+  color: #568dff;
+}
+.device-input:checked ~ .device-label .state-on {
+  /* Hai nhãn bật/tắt cùng có trong HTML, CSS chỉ hiện nhãn phù hợp với checked. */
+  display: block;
+}
+.device-input:checked ~ .device-label .state-off {
+  display: none;
+}
+.device-input:focus-visible ~ .switch {
+  /* Vẽ viền quanh công tắc thay cho checkbox ẩn khi người dùng điều hướng bằng bàn phím. */
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+/* Tìm kiếm, bộ lọc và bảng dữ liệu */
+
+/* Hai trang bảng dùng cỡ chữ lớn hơn một chút, cùng khoảng cách dòng dễ đọc. */
+[data-table-page] {
+  font-size: 13px;
+  line-height: 1.5;
+}
+[data-table-page] .page-header h1 {
+  font-size: 20px;
+  letter-spacing: normal;
+}
+[data-table-page] .page-header p {
+  font-size: 13px;
+  color: #8292aa;
+}
+.toolbar {
+  /* Ô tìm kiếm và nhóm bộ lọc nằm trên một hàng, được phép xuống hàng khi thiếu chỗ. */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+.search-field {
+  /* Label bao cả kính lúp và input; đường viền đặt ở label thay vì input bên trong. */
+  width: 320px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid #dce5f1;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #91a1b9;
+}
+.search-field .icon {
+  width: 16px;
+  height: 16px;
+}
+.search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+  background: transparent;
+}
+.search-field:focus-within {
+  /* focus-within áp dụng cho khung label khi input con đang được nhập. */
+  border-color: #8fb0ff;
+  box-shadow: 0 0 0 2px #2864ff12;
+}
+input::placeholder {
+  color: #a3afc1;
+}
+.filters {
+  /* flex-wrap cho các select và nút Find/Clear all tự xuống hàng trên màn hình hẹp. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.filters select {
+  /* Cùng chiều cao với Search và các nút; chừa khoảng bên phải cho mũi tên chọn. */
+  height: 42px;
+  min-width: 140px;
+  background: #fff;
+  color: #53647f;
+  border: 1px solid #dce5f1;
+  border-radius: 8px;
+  padding: 10px 28px 10px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.filters select:hover {
+  border-color: #a8bfea;
+}
+.toolbar-actions {
+  /* Giữ Find và Clear all thành một cặp nút có cùng kích thước theo chiều dọc. */
+  flex-wrap: nowrap;
+}
+/* Data Sensor giữ Sensor và ô tìm kiếm trong cùng một hàng, đúng thứ tự từ trái sang phải. */
+.sensor-toolbar .sensor-search-controls {
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  margin-left: 0;
+}
+.sensor-search-controls select {
+  width: 148px;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.sensor-search-controls .search-field {
+  width: 340px;
+  min-width: 0;
+}
+/* Action History chia rõ 3 nhóm: Search, 3 bộ lọc bằng nhau và cặp nút xác nhận. */
+.history-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 360px) minmax(440px, 1fr) auto;
+}
+.history-toolbar .search-field {
+  width: 100%;
+}
+.history-toolbar .history-filter-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 140px));
+  margin-left: 0;
+}
+.history-filter-controls select {
+  width: 100%;
+  min-width: 0;
+}
+.history-toolbar .toolbar-actions {
+  justify-self: end;
+  margin-left: 0;
+}
+.find-filters {
+  /* Nút xác nhận màu chủ đạo; CSS chỉ tạo hình thức, hành động nằm trong tables.js. */
+  background: var(--blue);
+  color: #fff;
+  border: 1px solid var(--blue);
+  height: 42px;
+  min-width: 78px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.find-filters:hover {
+  background: #1e54df;
+  border-color: #1e54df;
+}
+.clear-filters {
+  /* Nút đặt lại điều kiện dùng viền xanh để phân biệt với nút xác nhận Find. */
+  background: #fff;
+  color: var(--blue);
+  border: 1px solid #cbdcff;
+  height: 42px;
+  min-width: 94px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.clear-filters:hover {
+  background: #eff5ff;
+  border-color: #8fb0ff;
+}
+.table-card {
+  padding: 20px 20px 16px;
+}
+.table-scroll {
+  /* Chỉ vùng bảng cuộn ngang khi tổng độ rộng các cột vượt quá vùng chứa. */
+  overflow-x: auto;
+}
+.history-table {
+  /* Lịch sử có 6 cột; giữ độ rộng tối thiểu và cuộn ngang trong table-scroll khi cần. */
+  min-width: 720px;
+}
+table {
+  /* collapse gộp viền ô; nowrap giữ dữ liệu ngắn như giờ/giá trị trên một dòng. */
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+th {
+  background: #f7f9fc;
+  font-size: 11px;
+  color: #71839d;
+  font-weight: 600;
+  padding: 15px 18px;
+}
+td {
+  border-bottom: 1px solid #f0f3f7;
+  padding: 15px 18px;
+  height: 52px;
+}
+th:first-child,
+td:first-child {
+  /* Cột đầu là ID: giữ độ rộng thống nhất và căn giữa cả tiêu đề lẫn dữ liệu. */
+  width: 14%;
+  text-align: center;
+}
+.row-id,
+.time {
+  font-family: Consolas, 'Courier New', monospace;
+  color: #8c9bb1;
+}
+.reading {
+  font-family: Consolas, 'Courier New', monospace;
+  font-weight: 700;
+}
+.badge {
+  /* Nhãn nhỏ dạng viên thuốc cho loại cảm biến và trạng thái thành công/thất bại. */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 9px;
+  border-radius: 12px;
+  line-height: 1.1;
+}
+.badge-dot {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  border-radius: 50%;
+}
+.success {
+  color: #25b96c;
+  background: #dcfce7;
+}
+.failed {
+  color: #f25562;
+  background: #ffe1e5;
+}
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 14px;
+}
+.table-footer p {
+  margin: 0;
+  color: #8395af;
+  font-size: 12px;
+}
+[hidden] {
+  /* JavaScript đặt element.hidden để lọc dòng; !important giữ dòng đó ẩn trước kiểu khác. */
+  display: none !important;
+}
+.empty-state {
+  /* Kiểu cho ô thông báo khi không có kết quả; dòng này được tables.js loại khỏi số đếm. */
+  height: 100px;
+  text-align: center;
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.filters select:disabled {
+  cursor: default;
+  color: #9aa8bc;
+  background: #f5f7fa;
+}
+.pagination {
+  /* Chỉ tạo bố cục cho nút phân trang; hiện chưa có logic chuyển trang. */
+  display: flex;
+  gap: 4px;
+}
+.pagination button {
+  font-size: 12px;
+  min-width: 32px;
+  height: 34px;
+  padding: 0 10px;
+  color: #8191ab;
+  background: #fff;
+  border: 1px solid #e5ebf4;
+  border-radius: 5px;
+}
+.pagination .selected {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+/* Trang Profile */
+
+.profile-main {
+  /* Đặt cỡ chữ và khoảng cách dòng nhất quán cho toàn bộ hồ sơ. */
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+}
+.profile-content {
+  /* Giới hạn độ rộng để trang hồ sơ không bị trải quá rộng trên màn hình lớn. */
+  max-width: 1100px;
+}
+.profile-main .page-header h1 {
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: normal;
+}
+.profile-main .page-header p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.profile-overview {
+  /* column xếp avatar, tên, vai trò theo chiều dọc; align-items căn giữa các khối.
+     text-align căn giữa chữ; hai thuộc tính này giải quyết hai cách căn khác nhau. */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+  background: linear-gradient(110deg, #fff 55%, #f1f6ff);
+  border-color: #e7edf7;
+  overflow: hidden;
+  text-align: center;
+}
+.profile-overview::before {
+  /* Thanh màu trang trí ở mép trên; absolute đặt theo thẻ profile-overview. */
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #2864ff, #c6d9ff 65%, #f1f6ff);
+}
+.profile-avatar {
+  /* border-radius: 50% tạo hình tròn; Grid căn SVG đại diện vào chính giữa. */
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #eaf1ff;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 12px #2864ff12;
+  color: #7597cd;
+}
+.profile-avatar .icon {
+  width: 38px;
+  height: 38px;
+}
+.profile-identity {
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+}
+.profile-eyebrow {
+  color: #74859f;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0 0 6px;
+}
+.profile-identity h2 {
+  /* Tên dài được phép xuống dòng thay vì làm tràn thẻ hồ sơ. */
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.profile-subtitle {
+  color: #8292aa;
+  font-size: 12px;
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+.profile-role {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 6px;
+  color: var(--blue);
+  background: #e8f0ff;
+  border: 1px solid #dbe7ff;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+.profile-role .icon {
+  width: 14px;
+  height: 14px;
+}
+.profile-details-grid {
+  /* Cột sinh viên chiếm 0,9 phần, tài nguyên 1,1 phần; khoảng cách giữa cột là 20px. */
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 20px;
+}
+.profile-main .student-card,
+.profile-main .resources-card {
+  padding: 24px;
+  border-color: #e9eef6;
+}
+.profile-section-heading {
+  margin-bottom: 22px;
+}
+.profile-section-heading h2 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.profile-section-heading p {
+  margin: 6px 0 0;
+  color: #8292aa;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.profile-main .student-card {
+  display: flex;
+  flex-direction: column;
+}
+.profile-main .student-card dl {
+  /* Hai trường thông tin xếp dọc mặc định; media query có thể chuyển thành hai cột. */
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  flex: 1;
+}
+.profile-field {
+  /* Mỗi trường có nhãn dt trên và giá trị dd dưới, cùng nằm trong một khung nhẹ. */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 22px;
+  border: 1px solid #edf1f7;
+  border-radius: 10px;
+  background: #f8fafd;
+  min-width: 0;
+}
+.profile-field dt {
+  color: #7d8da5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.profile-field dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.resources-grid {
+  /* 2 cột bằng nhau tạo bố cục 2 x 2 cho 4 tài nguyên. */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.profile-main .resource {
+  /* Flexbox dọc giữ phần tên/mô tả trên và vùng nút bên dưới. */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  border: 1px solid #e8edf5;
+  border-radius: 10px;
+  padding: 16px;
+  min-width: 0;
+  background: #fff;
+}
+.resource-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+.resource-heading > div {
+  min-width: 0;
+}
+.resource-heading h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.resource-heading p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #8292aa;
+  line-height: 1.5;
+}
+.resource-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+.resource-icon .icon {
+  width: 19px;
+  height: 19px;
+}
+.resource-github {
+  /* Bốn lớp resource-* đặt màu icon riêng; chúng không quyết định đường dẫn tài nguyên. */
+  background: #eff2f6;
+  color: #43536d;
+}
+.resource-figma {
+  background: #f0eaff;
+  color: #8863d9;
+}
+.resource-postman {
+  background: #fff0e6;
+  color: #ed8b43;
+}
+.resource-pdf {
+  background: #ffecef;
+  color: #e7657b;
+}
+.resource-actions {
+  /* Cột trạng thái dùng phần còn lại; cột nút Open rộng theo nội dung của nút. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.resource-actions > span {
+  color: #8c9bb0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.resource-actions button,
+.resource-actions a {
+  /* Cùng tạo kiểu cho nút hiện tại và liên kết a sẽ dùng khi có URL thật. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #b9ceff;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--blue);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 6px 9px;
+  white-space: nowrap;
+}
+.resource-actions button:disabled {
+  /* Trạng thái xám tương ứng với nút Open chưa có liên kết trong HTML. */
+  color: #8495b1;
+  border-color: #e2e9f4;
+  background: #f8fafd;
+}
+.resource-actions .icon {
+  width: 11px;
+  height: 11px;
+}
+/* Trợ giúp và trạng thái focus */
+
+.help {
+  /* Nút ? cố định ở góc phải dưới; z-index đưa hướng dẫn lên trên vùng nội dung. */
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 20;
+}
+.help summary {
+  list-style: none;
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #353535;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 2px 7px #0003;
+}
+.help summary::-webkit-details-marker {
+  display: none;
+}
+.help-content {
+  /* absolute đặt hộp hướng dẫn phía trên nút ? trong phần tử .help. */
+  position: absolute;
+  bottom: 39px;
+  right: 0;
+  width: 265px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 5px 25px #1e2b4315;
+  padding: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.help-content p {
+  color: #7e8da3;
+  margin-bottom: 0;
+}
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  /* Viền focus giúp biết phần tử nào đang được chọn khi dùng phím Tab. */
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+/*
+ * Bố cục theo kích thước màn hình (responsive)
+ * @media chỉ áp dụng khi điều kiện độ rộng đúng; các quy tắc bên trong ghi đè kiểu ở trên.
+ * Khi nhiều quy tắc cùng mức ưu tiên cùng đúng, quy tắc xuất hiện sau được dùng.
+ */
+
+@media (min-width: 1500px) {
+  /* Màn hình lớn: tăng khoảng trống vùng nội dung và chiều cao thẻ. */
+  .main {
+    padding: 36px;
+  }
+  .metric {
+    min-height: 100px;
+  }
+}
+@media (max-width: 1050px) {
+  /* Thu gọn thẻ và tách tiêu đề/chú giải biểu đồ để giảm chật chội. */
+  .chart-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .dashboard-grid {
+    grid-template-columns: minmax(0, 1fr) 240px;
+  }
+  .metric {
+    padding: 14px;
+    gap: 10px;
+  }
+  .metric p {
+    font-size: 20px;
+  }
+  .metric h2 {
+    font-size: 10px;
+  }
+}
+@media (max-width: 1100px) {
+  /* Đưa Search lên một hàng riêng; ba bộ lọc vẫn chia đều hàng bên dưới. */
+  .history-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .history-toolbar .search-field {
+    grid-column: 1 / -1;
+  }
+  .history-toolbar .history-filter-controls {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  /* Khi vùng nội dung hẹp, đặt cặp nút dưới các bộ lọc để tránh ép nhỏ ô chọn. */
+  .history-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 800px) {
+  /* Sidebar hẹp hơn, cảm biến và biểu đồ chuyển dần về bố cục một cột. */
+  .sidebar {
+    width: 160px;
+  }
+  .brand,
+  .account {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .nav-link {
+    gap: 7px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .main {
+    margin-left: 160px;
+    padding: 24px 18px 60px;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .chart-heading {
+    flex-direction: row;
+  }
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+  .metric {
+    min-height: 76px;
+  }
+  .metric h2 {
+    font-size: 11px;
+  }
+  .device-list {
+    grid-template-columns: 1fr 1fr;
+  }
+  th,
+  td {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+@media (max-width: 700px) {
+  /* Ba ô chọn xếp dọc và có cùng độ rộng trên màn hình nhỏ. */
+  .history-toolbar .history-filter-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 560px) {
+  /* Điện thoại: sidebar thành thanh đầu trang, bỏ khoảng chừa bên trái và cho bảng cuộn ngang. */
+  .sidebar {
+    position: static;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand {
+    padding: 16px 18px 10px;
+    border: 0;
+  }
+  .navigation {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 8px 10px 12px;
+    gap: 3px;
+  }
+  .nav-link {
+    flex-direction: column;
+    gap: 5px;
+    padding: 9px 2px;
+    min-height: 60px;
+    font-size: 11px;
+    text-align: center;
+  }
+  .nav-dot {
+    display: none;
+  }
+  .account {
+    display: none;
+  }
+  .main {
+    margin-left: 0;
+    padding: 22px 16px 60px;
+  }
+  .page-header {
+    margin-bottom: 18px;
+  }
+  .toolbar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .search-field {
+    width: 100%;
+  }
+  .sensor-toolbar .sensor-search-controls {
+    width: 100%;
+  }
+  .sensor-search-controls select {
+    width: 128px;
+  }
+  .sensor-search-controls .search-field {
+    flex: 1;
+  }
+  .filters {
+    margin-left: auto;
+  }
+  .table-card {
+    padding: 14px;
+  }
+  table {
+    min-width: 520px;
+  }
+  .table-footer {
+    gap: 8px;
+  }
+  .table-footer p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .chart-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .device-list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 1000px) {
+  /* Riêng Profile: xếp hai thẻ chính dọc, hai trường sinh viên vẫn đặt cạnh nhau. */
+  .profile-details-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-main .student-card dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  /* Riêng Profile trên điện thoại: các trường và tài nguyên đều chuyển thành một cột. */
+  .profile-overview {
+    gap: 14px;
+    padding: 20px;
+  }
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+  }
+  .profile-avatar .icon {
+    width: 30px;
+    height: 30px;
+  }
+  .profile-identity h2 {
+    font-size: 18px;
+  }
+  .profile-role {
+    padding: 6px 10px;
+  }
+  .profile-main .student-card,
+  .profile-main .resources-card {
+    padding: 20px;
+  }
+  .profile-main .student-card dl,
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-field {
+    padding: 18px;
+  }
+  .profile-details-grid {
+    gap: 16px;
+  }
+  .profile-main .resource {
+    gap: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Tôn trọng tùy chọn giảm chuyển động của hệ điều hành bằng cách bỏ transition. */
+  *,
+  *::after {
+    transition: none !important;
+  }
+}

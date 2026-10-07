@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
+    <title>Profile | IoT Control</title>
+    <!-- Profile chỉ dùng HTML và styles.css; các tài nguyên chưa được nối với URL thật. -->
+    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
+  </head>
+  <body>
+    <!--
+      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
+      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
+    -->
+    <aside class="sidebar">
+      <a class="brand" href="index.html">
+        <!--
+          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
+          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
+        -->
+        <span class="brand-icon">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <ellipse cx="12" cy="6" rx="7" ry="3" />
+            <path d="M5 6v6c0 4 14 4 14 0V6M5 12v6c0 4 14 4 14 0v-6" />
+          </svg>
+        </span>
+        <span>
+          <strong>IoT Control</strong>
+          <small>Dashboard v1.0</small>
+        </span>
+      </a>
+      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
+      <nav class="navigation" aria-label="Điều hướng chính">
+        <a class="nav-link" href="index.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link" href="data-sensor.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M3 15h18M9 3v18M15 3v18" />
+          </svg>
+          <span>Data Sensor</span>
+        </a>
+        <a class="nav-link" href="action-history.html">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 10a9 9 0 1 1 2 9M3 4v6h6M12 7v5l3 2" />
+          </svg>
+          <span>Action History</span>
+        </a>
+        <a class="nav-link active" href="profile.html" aria-current="page">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="7" r="4" />
+            <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+          </svg>
+          <span>Profile</span>
+          <span class="nav-dot"></span>
+        </a>
+      </nav>
+      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
+      <div class="account">
+        <span class="account-avatar">A</span>
+        <span>
+          <strong>Admin</strong>
+          <small>
+            <span class="online-dot"></span>
+            Online
+          </small>
+        </span>
+      </div>
+    </aside>
+    <!-- Hồ sơ sinh viên và tài nguyên dự án -->
+    <main class="main profile-main">
+      <div class="profile-content">
+        <header class="page-header">
+          <h1>Profile</h1>
+          <p>Thông tin tài khoản và tài nguyên dự án</p>
+        </header>
+
+        <!--
+          Thẻ hồ sơ gồm avatar, tên, mô tả và vai trò Admin, xếp dọc và căn giữa.
+          align-items căn giữa các khối; text-align căn giữa chữ bên trong.
+          Các style trực tiếp giữ phần căn giữa ngay cả khi trình duyệt còn lưu CSS cũ.
+          Muốn đổi tên, thay cả 2 chỗ [HỌ VÀ TÊN] trên trang.
+        -->
+        <section
+          class="card profile-overview"
+          aria-labelledby="profile-name"
+          style="display: flex; flex-direction: column; align-items: center; text-align: center"
+        >
+          <span class="profile-avatar" role="img" aria-label="Ảnh đại diện mặc định">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21v-1a8 8 0 0 1 16 0v1" />
+            </svg>
+          </span>
+          <div
+            class="profile-identity"
+            style="width: 100%; max-width: 520px; margin-inline: auto; text-align: center"
+          >
+            <p class="profile-eyebrow">Hồ sơ sinh viên</p>
+            <h2 id="profile-name">[HỌ VÀ TÊN]</h2>
+            <p class="profile-subtitle">Sinh viên · Dự án IoT Control</p>
+          </div>
+          <span
+            class="profile-role"
+            style="
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              align-self: center;
+              margin-inline: auto;
+            "
+          >
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z" />
+              <path d="m8 12 3 3 5-5" />
+            </svg>
+            Admin
+          </span>
+        </section>
+
+        <!-- Hai cột: thông tin sinh viên và tài nguyên; CSS gộp thành một cột khi hẹp. -->
+        <div class="profile-details-grid">
+          <section class="card student-card" aria-labelledby="student-title">
+            <header class="profile-section-heading">
+              <h2 id="student-title">Thông tin sinh viên</h2>
+              <p>Thông tin cá nhân của chủ tài khoản</p>
+            </header>
+            <!-- dl là danh sách thông tin: dt là nhãn, dd là giá trị của nhãn đó. -->
+            <dl>
+              <div class="profile-field">
+                <dt>Họ và tên</dt>
+                <dd>[HỌ VÀ TÊN]</dd>
+              </div>
+              <div class="profile-field">
+                <dt>Mã sinh viên</dt>
+                <dd>[MÃ SINH VIÊN]</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section class="card resources-card" aria-labelledby="resources-title">
+            <header class="profile-section-heading">
+              <h2 id="resources-title">Project resources</h2>
+              <p>Các liên kết và tài liệu của dự án</p>
+            </header>
+            <!--
+              Grid 2 x 2 cho GitHub, Figma, Postman và PDF; mỗi article là một tài nguyên.
+              disabled tạm khóa nút Open vì chưa có đường dẫn thật.
+              Khi có URL, thay nút bằng liên kết a có href và giữ phần hiển thị bên trong.
+              Muốn thêm tài nguyên, sao chép một article rồi đổi tên, mô tả, icon và URL.
+            -->
+            <div class="resources-grid">
+              <article class="resource">
+                <div class="resource-heading">
+                  <span class="resource-icon resource-github">
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3>GitHub</h3>
+                    <p>Mã nguồn dự án</p>
+                  </div>
+                </div>
+                <div class="resource-actions">
+                  <span>Chưa có liên kết</span>
+                  <button
+                    type="button"
+                    disabled
+                    aria-label="Mở GitHub"
+                    title="Chưa có đường dẫn dự án"
+                  >
+                    Open
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+              <article class="resource">
+                <div class="resource-heading">
+                  <span class="resource-icon resource-figma">
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 9H8a3 3 0 0 1 0-6h8a3 3 0 0 1 0 6h-4ZM12 9v12H8a3 3 0 0 1 0-6h4H8a3 3 0 0 1 0-6M12 3v6"
+                      />
+                      <circle cx="15" cy="12" r="3" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3>Figma</h3>
+                    <p>Thiết kế giao diện</p>
+                  </div>
+                </div>
+                <div class="resource-actions">
+                  <span>Chưa có liên kết</span>
+                  <button
+                    type="button"
+                    disabled
+                    aria-label="Mở Figma"
+                    title="Chưa có đường dẫn dự án"
+                  >
+                    Open
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+              <article class="resource">
+                <div class="resource-heading">
+                  <span class="resource-icon resource-postman">
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 5H4v14h3M17 5h3v14h-3M8 12h8M13 9l3 3-3 3" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3>Postman</h3>
+                    <p>Bộ sưu tập API</p>
+                  </div>
+                </div>
+                <div class="resource-actions">
+                  <span>Chưa có liên kết</span>
+                  <button
+                    type="button"
+                    disabled
+                    aria-label="Mở Postman"
+                    title="Chưa có đường dẫn dự án"
+                  >
+                    Open
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+              <article class="resource">
+                <div class="resource-heading">
+                  <span class="resource-icon resource-pdf">
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M14 3H5v18h14V8l-5-5ZM14 3v5h5M8 12h8M8 16h5" />
+                    </svg>
+                  </span>
+                  <div>
+                    <h3>PDF</h3>
+                    <p>Tài liệu dự án</p>
+                  </div>
+                </div>
+                <div class="resource-actions">
+                  <span>Chưa có liên kết</span>
+                  <button type="button" disabled aria-label="Mở PDF" title="Chưa có đường dẫn PDF">
+                    Open
+                    <svg
+                      class="icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <details class="help">
+      <summary aria-label="Trợ giúp">?</summary>
+      <div class="help-content">
+        <strong>IoT Control</strong>
+        <p>
+          Hồ sơ hiển thị thông tin sinh viên và tài nguyên của dự án. Các mục GitHub, Figma, Postman
+          và PDF sẽ mở được khi có đường dẫn tương ứng.
+        </p>
+      </div>
+    </details>
+  </body>
+</html>

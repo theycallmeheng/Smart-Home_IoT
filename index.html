@@ -1,28 +1,22 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Dashboard | IoT Control</title>
-    <!-- CSS chung tải trước; dashboard.css bổ sung kiểu riêng cho trang này. -->
-    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
-    <link rel="stylesheet" href="dashboard.css?v=readable-controls-20261007" />
-    <!-- defer cho phép đọc xong HTML trước khi JavaScript tìm các công tắc. -->
-    <script src="dashboard.js?v=processing-20261007" defer></script>
+    <!-- CSS chung và kiểu riêng cho Dashboard. -->
+    <link rel="stylesheet" href="styles.css?v=hardware-20261013" />
+    <link rel="stylesheet" href="dashboard.css?v=hardware-20261013" />
+    <script src="iot-api.js?v=hardware-20261013" defer></script>
+    <script src="sensor-chart.js?v=hardware-20261013" defer></script>
+    <script src="live-dashboard.js?v=hardware-20261013" defer></script>
+    <script src="dashboard.js?v=hardware-20261013" defer></script>
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="index.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -43,7 +37,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link active" href="index.html" aria-current="page">
           <svg
@@ -112,7 +105,6 @@
           <span>Profile</span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -124,7 +116,7 @@
         </span>
       </div>
     </aside>
-    <!-- main chứa nội dung chính; dashboard-main giới hạn các kiểu CSS riêng của Dashboard. -->
+    <!-- Nội dung Dashboard. -->
     <main class="main dashboard-main">
       <header class="page-header dashboard-heading">
         <div>
@@ -134,10 +126,7 @@
         <span class="demo-badge">Dữ liệu mẫu</span>
       </header>
 
-      <!--
-        Banner tổng quan: nội dung bên trái, số thiết bị đang bật bên phải.
-        data-device-count đánh dấu nơi dashboard.js ghi số đếm; có 2 nơi dùng thuộc tính này.
-      -->
+      <!-- data-device-count hiển thị số thiết bị đang bật. -->
       <section class="dashboard-welcome" aria-labelledby="welcome-title">
         <div class="welcome-copy">
           <p class="welcome-eyebrow">IoT Control</p>
@@ -153,11 +142,7 @@
         </div>
       </section>
 
-      <!--
-        Ba thẻ cảm biến dùng cùng cấu trúc: biểu tượng, tên, giá trị và đường SVG nhỏ.
-        metric-temperature/humidity/light chọn màu riêng trong dashboard.css.
-        Giá trị và đường vẽ hiện là mẫu tĩnh; có thể sửa trực tiếp ở các thẻ phía dưới.
-      -->
+      <!-- Các cảm biến dùng dữ liệu mẫu. -->
       <section class="metrics" aria-label="Thông số cảm biến mẫu">
         <article class="card metric metric-temperature">
           <div class="metric-top">
@@ -183,11 +168,11 @@
           </div>
           <div class="metric-reading">
             <p>
-              28.5
+              <strong data-current-sensor="temperature">28.9</strong>
               <span>°C</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 26 18 23 34 24 50 18 66 20 82 14 98 19 114 14 126 16" />
+              <path d="M2.0 34.0 L26.8 30.0 L51.6 22.0 L76.4 18.0 L101.2 10.0 L126.0 6.0" />
             </svg>
           </div>
         </article>
@@ -215,11 +200,11 @@
           </div>
           <div class="metric-reading">
             <p>
-              65
+              <strong data-current-sensor="humidity">71</strong>
               <span>%</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 18 18 23 34 17 50 21 66 14 82 18 98 12 114 16 126 13" />
+              <path d="M2.0 34.0 L26.8 22.0 L51.6 18.0 L76.4 14.0 L101.2 10.0 L126.0 6.0" />
             </svg>
           </div>
         </article>
@@ -249,115 +234,464 @@
           </div>
           <div class="metric-reading">
             <p>
-              720
+              <strong data-current-sensor="light">780</strong>
               <span>lux</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 27 18 24 34 22 50 25 66 18 82 17 98 22 114 16 126 14" />
+              <path d="M2.0 34.0 L26.8 28.4 L51.6 22.8 L76.4 17.2 L101.2 11.6 L126.0 6.0" />
             </svg>
           </div>
         </article>
       </section>
 
-      <!-- Grid chia vùng biểu đồ và điều khiển thành 2 cột; màn hình nhỏ chuyển thành 1 cột. -->
       <div class="dashboard-grid">
-        <section class="card chart-card" aria-labelledby="chart-heading">
+        <section class="card chart-card" data-sensor-chart aria-labelledby="chart-heading">
           <div class="chart-heading">
             <h2 id="chart-heading">
-              Biểu đồ theo dõi
-              <span>Dữ liệu cảm biến minh họa</span>
+              Biểu đồ dữ liệu cảm biến
+              <span>Ba đường dữ liệu · Trục giá trị theo màu</span>
             </h2>
-            <div class="legend">
-              <span class="temperature">Nhiệt độ</span>
-              <span class="humidity">Độ ẩm</span>
-              <span class="light">Ánh sáng</span>
+            <span class="chart-record-badge">12 mốc đo · 07/10/2026</span>
+          </div>
+          <div class="chart-readings" role="group" aria-label="Giá trị tại mốc đo đã chọn">
+            <span class="chart-reading chart-temperature">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Nhiệt độ
+              <strong data-chart-reading="temperature">28.9 °C</strong>
+            </span>
+            <span class="chart-reading chart-humidity">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Độ ẩm
+              <strong data-chart-reading="humidity">71 %</strong>
+            </span>
+            <span class="chart-reading chart-light">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Ánh sáng
+              <strong data-chart-reading="light">780 lux</strong>
+            </span>
+          </div>
+          <!-- Cùng vùng vẽ; mỗi màu đọc theo trục có cùng đơn vị. -->
+          <div class="chart-viewport" data-chart-viewport>
+            <svg
+              class="chart sensor-chart-svg"
+              data-chart-svg
+              viewBox="0 0 840 230"
+              role="img"
+              aria-labelledby="chart-title chart-desc"
+            >
+              <title id="chart-title">Nhiệt độ, độ ẩm và ánh sáng theo thời gian</title>
+              <desc id="chart-desc">
+                12 mốc mẫu từ 10:30:02 đến 11:16:02. Ba đường trong cùng một vùng vẽ: nhiệt độ theo
+                trục °C bên trái, độ ẩm theo trục % và ánh sáng theo trục lux bên phải. Mỗi trục có
+                thang đo riêng. Mốc thiếu dữ liệu được để trống.
+              </desc>
+              <rect class="sensor-panel" x="54" y="24" width="636" height="170" rx="7" />
+              <path class="sensor-grid" d="M54 194H690" />
+              <path class="sensor-grid" d="M54 151.5H690" />
+              <path class="sensor-grid" d="M54 109H690" />
+              <path class="sensor-grid" d="M54 66.5H690" />
+              <path class="sensor-grid" d="M54 24H690" />
+              <path class="sensor-grid sensor-grid-vertical" d="M54 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M191.8 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M330.06 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M468.32 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M606.58 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M690 24V194" />
+              <g data-chart-axis="temperature" fill="#ff6474">
+                <text class="sensor-axis-unit" x="42" y="15" text-anchor="end">°C</text>
+                <text class="sensor-axis-value" x="42" y="199" text-anchor="end">26</text>
+                <text class="sensor-axis-value" x="42" y="156.5" text-anchor="end">27</text>
+                <text class="sensor-axis-value" x="42" y="114" text-anchor="end">28</text>
+                <text class="sensor-axis-value" x="42" y="71.5" text-anchor="end">29</text>
+                <text class="sensor-axis-value" x="42" y="29" text-anchor="end">30</text>
+              </g>
+              <g data-chart-axis="humidity" fill="#4587ff">
+                <text class="sensor-axis-unit" x="710" y="15" text-anchor="start">%</text>
+                <text class="sensor-axis-value" x="710" y="199" text-anchor="start">60</text>
+                <text class="sensor-axis-value" x="710" y="156.5" text-anchor="start">65</text>
+                <text class="sensor-axis-value" x="710" y="114" text-anchor="start">70</text>
+                <text class="sensor-axis-value" x="710" y="71.5" text-anchor="start">75</text>
+                <text class="sensor-axis-value" x="710" y="29" text-anchor="start">80</text>
+              </g>
+              <g data-chart-axis="light" fill="#e4a321">
+                <text class="sensor-axis-unit" x="776" y="15" text-anchor="start">lux</text>
+                <text class="sensor-axis-value" x="776" y="199" text-anchor="start">600</text>
+                <text class="sensor-axis-value" x="776" y="156.5" text-anchor="start">650</text>
+                <text class="sensor-axis-value" x="776" y="114" text-anchor="start">700</text>
+                <text class="sensor-axis-value" x="776" y="71.5" text-anchor="start">750</text>
+                <text class="sensor-axis-value" x="776" y="29" text-anchor="start">800</text>
+              </g>
+              <g data-chart-series="temperature">
+                <path
+                  class="sensor-line"
+                  stroke="#ff6474"
+                  d="M54 87.75 L81.65 66.5 L109.3 117.5 L468.78 155.75 L496.43 147.25 L524.09 138.75 L551.74 130.25 L579.39 121.75 L607.04 104.75 L634.7 96.25 L662.35 79.25 L690 70.75"
+                />
+                <circle class="sensor-point" cx="54" cy="87.75" r="3.3" stroke="#ff6474">
+                  <title>10:30:02 · Nhiệt độ: 28.5 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="66.5" r="3.3" stroke="#ff6474">
+                  <title>10:32:02 · Nhiệt độ: 29.0 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="109.3" cy="117.5" r="3.3" stroke="#ff6474">
+                  <title>10:34:02 · Nhiệt độ: 27.8 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="155.75" r="3.3" stroke="#ff6474">
+                  <title>11:00:02 · Nhiệt độ: 26.9 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="147.25" r="3.3" stroke="#ff6474">
+                  <title>11:02:02 · Nhiệt độ: 27.1 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="138.75" r="3.3" stroke="#ff6474">
+                  <title>11:04:02 · Nhiệt độ: 27.3 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="130.25" r="3.3" stroke="#ff6474">
+                  <title>11:06:02 · Nhiệt độ: 27.5 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="121.75" r="3.3" stroke="#ff6474">
+                  <title>11:08:02 · Nhiệt độ: 27.7 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="104.75" r="3.3" stroke="#ff6474">
+                  <title>11:10:02 · Nhiệt độ: 28.1 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="96.25" r="3.3" stroke="#ff6474">
+                  <title>11:12:02 · Nhiệt độ: 28.3 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="79.25" r="3.3" stroke="#ff6474">
+                  <title>11:14:02 · Nhiệt độ: 28.7 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="70.75" r="3.3" stroke="#ff6474">
+                  <title>11:16:02 · Nhiệt độ: 28.9 °C</title>
+                </circle>
+              </g>
+              <g data-chart-series="humidity">
+                <path
+                  class="sensor-line"
+                  stroke="#4587ff"
+                  d="M54 151.5 L81.65 168.5 L109.3 143 L468.78 194 L496.43 185.5 L524.09 177 L551.74 160 L579.39 134.5 L607.04 126 L634.7 117.5 L662.35 109 L690 100.5"
+                />
+                <circle class="sensor-point" cx="54" cy="151.5" r="3.3" stroke="#4587ff">
+                  <title>10:30:02 · Độ ẩm: 65 %</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="168.5" r="3.3" stroke="#4587ff">
+                  <title>10:32:02 · Độ ẩm: 63 %</title>
+                </circle>
+                <circle class="sensor-point" cx="109.3" cy="143" r="3.3" stroke="#4587ff">
+                  <title>10:34:02 · Độ ẩm: 66 %</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="194" r="3.3" stroke="#4587ff">
+                  <title>11:00:02 · Độ ẩm: 60 %</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="185.5" r="3.3" stroke="#4587ff">
+                  <title>11:02:02 · Độ ẩm: 61 %</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="177" r="3.3" stroke="#4587ff">
+                  <title>11:04:02 · Độ ẩm: 62 %</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="160" r="3.3" stroke="#4587ff">
+                  <title>11:06:02 · Độ ẩm: 64 %</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="134.5" r="3.3" stroke="#4587ff">
+                  <title>11:08:02 · Độ ẩm: 67 %</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="126" r="3.3" stroke="#4587ff">
+                  <title>11:10:02 · Độ ẩm: 68 %</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="117.5" r="3.3" stroke="#4587ff">
+                  <title>11:12:02 · Độ ẩm: 69 %</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="109" r="3.3" stroke="#4587ff">
+                  <title>11:14:02 · Độ ẩm: 70 %</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="100.5" r="3.3" stroke="#4587ff">
+                  <title>11:16:02 · Độ ẩm: 71 %</title>
+                </circle>
+              </g>
+              <g data-chart-series="light">
+                <path class="sensor-line" stroke="#e4a321" d="M54 92 L81.65 100.5" />
+                <path
+                  class="sensor-line"
+                  stroke="#e4a321"
+                  d="M468.78 126 L496.43 117.5 L524.09 109 L551.74 83.5 L579.39 75 L607.04 66.5 L634.7 58 L662.35 49.5 L690 41"
+                />
+                <circle class="sensor-point" cx="54" cy="92" r="3.3" stroke="#e4a321">
+                  <title>10:30:02 · Ánh sáng: 720 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="100.5" r="3.3" stroke="#e4a321">
+                  <title>10:32:02 · Ánh sáng: 710 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="126" r="3.3" stroke="#e4a321">
+                  <title>11:00:02 · Ánh sáng: 680 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="117.5" r="3.3" stroke="#e4a321">
+                  <title>11:02:02 · Ánh sáng: 690 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="109" r="3.3" stroke="#e4a321">
+                  <title>11:04:02 · Ánh sáng: 700 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="83.5" r="3.3" stroke="#e4a321">
+                  <title>11:06:02 · Ánh sáng: 730 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="75" r="3.3" stroke="#e4a321">
+                  <title>11:08:02 · Ánh sáng: 740 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="66.5" r="3.3" stroke="#e4a321">
+                  <title>11:10:02 · Ánh sáng: 750 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="58" r="3.3" stroke="#e4a321">
+                  <title>11:12:02 · Ánh sáng: 760 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="49.5" r="3.3" stroke="#e4a321">
+                  <title>11:14:02 · Ánh sáng: 770 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="41" r="3.3" stroke="#e4a321">
+                  <title>11:16:02 · Ánh sáng: 780 lux</title>
+                </circle>
+              </g>
+              <g>
+                <text class="sensor-axis-label" x="54" y="220" text-anchor="start">10:30</text>
+                <text class="sensor-axis-label" x="191.8" y="220" text-anchor="middle">10:40</text>
+                <text class="sensor-axis-label" x="330.06" y="220" text-anchor="middle">10:50</text>
+                <text class="sensor-axis-label" x="468.32" y="220" text-anchor="middle">11:00</text>
+                <text class="sensor-axis-label" x="606.58" y="220" text-anchor="middle">11:10</text>
+                <text class="sensor-axis-label" x="690" y="220" text-anchor="end">11:16</text>
+              </g>
+              <path class="sensor-guide" data-chart-guide d="M690 24V194" />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="temperature"
+                cx="690"
+                cy="70.75"
+                r="5"
+                fill="#ff6474"
+              />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="humidity"
+                cx="690"
+                cy="100.5"
+                r="5"
+                fill="#4587ff"
+              />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="light"
+                cx="690"
+                cy="41"
+                r="5"
+                fill="#e4a321"
+              />
+            </svg>
+            <div class="chart-tooltip" data-chart-tooltip hidden aria-hidden="true">
+              <strong data-chart-time>11:16:02</strong>
+              <dl>
+                <div>
+                  <dt>Nhiệt độ</dt>
+                  <dd data-chart-reading="temperature">28.9 °C</dd>
+                </div>
+                <div>
+                  <dt>Độ ẩm</dt>
+                  <dd data-chart-reading="humidity">71 %</dd>
+                </div>
+                <div>
+                  <dt>Ánh sáng</dt>
+                  <dd data-chart-reading="light">780 lux</dd>
+                </div>
+              </dl>
             </div>
           </div>
-          <!--
-            Biểu đồ SVG dùng viewBox 740 x 190: tọa độ x tăng sang phải, y tăng xuống dưới.
-            title/desc mô tả biểu đồ cho công cụ đọc màn hình.
-            Các đường dùng chung trục tung; đây là hình minh họa, chưa lấy dữ liệu thời gian thực.
-          -->
-          <svg
-            class="chart"
-            viewBox="0 0 740 190"
-            role="img"
-            aria-labelledby="chart-title chart-desc"
-          >
-            <title id="chart-title">Biểu đồ cảm biến theo thời gian</title>
-            <desc id="chart-desc">
-              Dữ liệu mẫu từ 10:30 đến 10:30:10. Ánh sáng dao động quanh 720 lux, độ ẩm 65 phần trăm
-              và nhiệt độ 28.5 độ C. Các giá trị dùng chung trục tung.
-            </desc>
-            <!-- defs khai báo màu chuyển sắc; chart-area dùng lại qua id dashboard-light-fill. -->
-            <defs>
-              <linearGradient id="dashboard-light-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#ffbf46" stop-opacity=".15" />
-                <stop offset="100%" stop-color="#ffbf46" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <!-- g gom nhiều hình thành nhóm: lưới nền và nhãn trục được định dạng riêng bằng CSS. -->
-            <g class="grid-lines">
-              <path d="M42 20H722M42 60H722M42 100H722M42 140H722M42 172H722" />
-            </g>
-            <g class="chart-labels">
-              <text x="12" y="23">800</text>
-              <text x="12" y="63">600</text>
-              <text x="12" y="103">400</text>
-              <text x="12" y="143">200</text>
-              <text x="27" y="175">0</text>
-              <text x="42" y="188">10:30:00</text>
-              <text x="178" y="188" text-anchor="middle">10:30:02</text>
-              <text x="314" y="188" text-anchor="middle">10:30:04</text>
-              <text x="450" y="188" text-anchor="middle">10:30:06</text>
-              <text x="586" y="188" text-anchor="middle">10:30:08</text>
-              <text x="722" y="188" text-anchor="end">10:30:10</text>
-            </g>
-            <!-- path dùng d để mô tả nét vẽ; vùng tô đặt trước để nằm dưới 3 đường cảm biến. -->
-            <path
-              class="chart-area"
-              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36V172H42Z"
+          <div class="chart-scrubber">
+            <label for="sensor-chart-time">
+              Mốc đang xem
+              <strong data-chart-time>11:16:02</strong>
+            </label>
+            <input
+              id="sensor-chart-time"
+              data-chart-slider
+              type="range"
+              min="0"
+              max="11"
+              value="11"
+              step="1"
+              aria-label="Chọn mốc đo cảm biến"
+              title="Rê chuột, chạm biểu đồ hoặc dùng thanh trượt để xem từng mốc"
+              aria-valuetext="11:16:02"
             />
-            <path
-              class="plot light-line"
-              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36"
-            />
-            <path
-              class="plot humidity-line"
-              d="M42 159 112 159 180 158 248 159 314 159 382 160 450 159 486 159 552 159 620 158 680 159 722 159"
-            />
-            <path
-              class="plot temperature-line"
-              d="M42 166 112 166 180 166 248 166 314 165 382 166 450 166 486 166 552 166 620 166 680 166 722 166"
-            />
-            <circle class="chart-endpoint" cx="722" cy="36" r="4" />
-          </svg>
-          <div class="chart-caption">
-            <span>Khoảng thời gian mẫu</span>
-            <strong>10:30:00 – 10:30:10</strong>
+            <p class="chart-hint">Rê chuột, chạm biểu đồ hoặc dùng thanh trượt để xem từng mốc.</p>
           </div>
+          <div class="chart-statistics" aria-label="Thống kê dữ liệu mẫu">
+            <article class="chart-summary chart-temperature">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Nhiệt độ
+                </h3>
+                <small data-chart-stat="temperature-count">12 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="temperature-min">26.9 °C</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="temperature-average">28.0 °C</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="temperature-max">29.0 °C</dd>
+                </div>
+              </dl>
+            </article>
+            <article class="chart-summary chart-humidity">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Độ ẩm
+                </h3>
+                <small data-chart-stat="humidity-count">12 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="humidity-min">60 %</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="humidity-average">65.5 %</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="humidity-max">71 %</dd>
+                </div>
+              </dl>
+            </article>
+            <article class="chart-summary chart-light">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Ánh sáng
+                </h3>
+                <small data-chart-stat="light-count">11 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="light-min">680 lux</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="light-average">730.0 lux</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="light-max">780 lux</dd>
+                </div>
+              </dl>
+            </article>
+          </div>
+          <div class="chart-caption">
+            <span>
+              35 bản ghi ·
+              <strong>07/10/2026 · 10:30:02 – 11:16:02</strong>
+            </span>
+            <a href="data-sensor.html">
+              Xem dữ liệu chi tiết
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <script type="application/json" data-chart-data>
+            [
+              {
+                "time": "10:30:02",
+                "temperature": 28.5,
+                "humidity": 65,
+                "light": 720
+              },
+              {
+                "time": "10:32:02",
+                "temperature": 29,
+                "humidity": 63,
+                "light": 710
+              },
+              {
+                "time": "10:34:02",
+                "temperature": 27.8,
+                "humidity": 66,
+                "light": null
+              },
+              {
+                "time": "11:00:02",
+                "temperature": 26.9,
+                "humidity": 60,
+                "light": 680
+              },
+              {
+                "time": "11:02:02",
+                "temperature": 27.1,
+                "humidity": 61,
+                "light": 690
+              },
+              {
+                "time": "11:04:02",
+                "temperature": 27.3,
+                "humidity": 62,
+                "light": 700
+              },
+              {
+                "time": "11:06:02",
+                "temperature": 27.5,
+                "humidity": 64,
+                "light": 730
+              },
+              {
+                "time": "11:08:02",
+                "temperature": 27.7,
+                "humidity": 67,
+                "light": 740
+              },
+              {
+                "time": "11:10:02",
+                "temperature": 28.1,
+                "humidity": 68,
+                "light": 750
+              },
+              {
+                "time": "11:12:02",
+                "temperature": 28.3,
+                "humidity": 69,
+                "light": 760
+              },
+              {
+                "time": "11:14:02",
+                "temperature": 28.7,
+                "humidity": 70,
+                "light": 770
+              },
+              {
+                "time": "11:16:02",
+                "temperature": 28.9,
+                "humidity": 71,
+                "light": 780
+              }
+            ]
+          </script>
         </section>
 
-        <!--
-          Mỗi label chứa một checkbox và toàn bộ hình thức của công tắc.
-          Nhấn vào hàng cũng đổi checkbox. checked biểu thị bật; bỏ checked là tắt.
-          data-device-toggle được dashboard.js tìm để xử lý độ trễ 500ms.
-          Giữ input trước icon/label/switch vì CSS dùng dấu ~ để chọn phần tử đứng sau.
-        -->
+        <!-- Công tắc xử lý sau 500ms; giữ input trước icon, nhãn và switch. -->
         <section class="card controls" aria-labelledby="controls-title">
           <div class="controls-heading">
             <div>
               <h2 id="controls-title">Điều khiển thiết bị</h2>
               <p>Bật hoặc tắt từng thiết bị</p>
             </div>
-            <!-- aria-live thông báo khi số đếm đổi; aria-atomic đọc toàn bộ nội dung trạng thái. -->
             <span class="device-count-badge" role="status" aria-live="polite" aria-atomic="true">
               <span data-device-count>2</span>
               /3 bật
             </span>
           </div>
           <div class="device-list">
-            <!-- Quạt bật mặc định. CSS chỉ xoay nhóm fan-rotor, giữ khung ngoài đứng yên. -->
+            <!-- Quạt: quay cánh khi bật. -->
             <label class="device device-fan">
               <input
                 class="device-input"
@@ -365,6 +699,7 @@
                 role="switch"
                 checked
                 data-device-toggle
+                data-device="fan"
                 aria-label="Bật hoặc tắt quạt"
               />
               <span class="device-icon">
@@ -387,23 +722,22 @@
                   </g>
                 </svg>
               </span>
-              <!-- CSS hiện đúng một trạng thái: bật/tắt; is-pending tạm hiện chữ đang xử lý. -->
               <span class="device-label">
                 <strong>Quạt</strong>
                 <small class="state-on">Đang bật</small>
                 <small class="state-off">Đang tắt</small>
                 <small class="state-pending" role="status" aria-live="polite">Đang xử lý…</small>
               </span>
-              <!-- switch là phần trang trí; checked thật và thao tác bàn phím thuộc về checkbox. -->
               <span class="switch" aria-hidden="true"></span>
             </label>
-            <!-- Điều hòa tắt mặc định. Nhóm ac-airflow chuyển động nhẹ khi checked. -->
+            <!-- Điều hòa: hiệu ứng luồng gió khi bật. -->
             <label class="device device-ac">
               <input
                 class="device-input"
                 type="checkbox"
                 role="switch"
                 data-device-toggle
+                data-device="ac"
                 aria-label="Bật hoặc tắt điều hòa"
               />
               <span class="device-icon">
@@ -432,7 +766,7 @@
               </span>
               <span class="switch" aria-hidden="true"></span>
             </label>
-            <!-- Đèn bật mặc định. CSS đổi màu icon và làm nhóm bulb-rays sáng theo nhịp. -->
+            <!-- Đèn: hiệu ứng ánh sáng khi bật. -->
             <label class="device device-light">
               <input
                 class="device-input"
@@ -440,6 +774,7 @@
                 role="switch"
                 checked
                 data-device-toggle
+                data-device="light"
                 aria-label="Bật hoặc tắt đèn"
               />
               <span class="device-icon">
@@ -484,7 +819,7 @@
         </section>
       </div>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">

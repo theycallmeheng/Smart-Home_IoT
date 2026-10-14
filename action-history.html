@@ -1,26 +1,20 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Action History | IoT Control</title>
-    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
-    <!-- CSS lo bố cục; tables.js xử lý tìm kiếm/lọc. defer đợi HTML được phân tích xong. -->
-    <script src="tables.js?v=table-controls-20261007" defer></script>
+    <link rel="stylesheet" href="styles.css?v=hardware-20261013" />
+    <!-- CSS chung; tables.js xử lý tìm kiếm và lọc. -->
+    <script src="iot-api.js?v=hardware-20261013" defer></script>
+    <script src="live-tables.js?v=hardware-20261013" defer></script>
+    <script src="tables.js?v=hardware-20261013" defer></script>
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="index.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -41,7 +35,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link" href="index.html">
           <svg
@@ -110,7 +103,6 @@
           <span>Profile</span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -122,18 +114,14 @@
         </span>
       </div>
     </aside>
-    <!-- Tìm kiếm và lịch sử điều khiển -->
-    <!-- data-table-page đánh dấu vùng mà tables.js tìm các ô nhập, bộ lọc và bảng. -->
-    <!-- data-search-scope="time" giới hạn tìm kiếm ở cột TIME, các bộ lọc vẫn kết hợp bình thường. -->
+    <!-- Vùng dữ liệu được tables.js xử lý. -->
+    <!-- Search chỉ tìm cột TIME. -->
     <main class="main" data-table-page data-search-scope="time">
       <header class="page-header">
         <h1>Action History</h1>
         <p>Lịch sử thao tác điều khiển thiết bị</p>
       </header>
-      <!--
-        Form chứa từ khóa và bộ lọc. Nhập/chọn chưa đổi kết quả ngay.
-        Bấm Find hoặc Enter trong ô tìm kiếm sẽ gửi form; JavaScript ngăn tải lại trang.
-      -->
+      <!-- Find hoặc Enter áp dụng tìm kiếm và bộ lọc. -->
       <form class="toolbar history-toolbar" data-table-form>
         <label class="search-field">
           <svg
@@ -149,7 +137,6 @@
             <circle cx="10" cy="10" r="6" />
             <path d="m15 15 5 5" />
           </svg>
-          <!-- Chỉ tìm thời gian đầy đủ hoặc một phần thời gian, ví dụ 10:31 hay 10:31:15. -->
           <input
             type="search"
             data-table-search
@@ -158,31 +145,29 @@
             autocomplete="off"
           />
         </label>
-        <!-- CSS Grid đặt ba bộ lọc có độ rộng và chiều cao bằng nhau. -->
         <div class="filters history-filter-controls">
-          <!-- Device đọc data-device của dòng: light, fan hoặc ac; all bỏ điều kiện thiết bị. -->
+          <!-- Device: light, fan hoặc ac; all bỏ lọc. -->
           <select id="device-filter" data-filter="device" aria-label="Loại thiết bị">
             <option value="all">All Devices</option>
             <option value="light">Light</option>
             <option value="fan">Fan</option>
             <option value="ac">Air Condition</option>
           </select>
-          <!-- Action đọc data-action: on hoặc off; bộ lọc này được kết hợp với Device và Status. -->
+          <!-- Action: on hoặc off. -->
           <select id="action-filter" data-filter="action" aria-label="Lọc theo action">
             <option value="all">All Actions</option>
             <option value="on">Turn ON</option>
             <option value="off">Turn OFF</option>
           </select>
-          <!-- Status đọc data-status: success hoặc failed; tên hiển thị tách riêng với mã value. -->
+          <!-- Status: thành công, thất bại hoặc đang xử lý. -->
           <select data-filter="status" aria-label="Lọc theo trạng thái">
             <option value="all">All Statuses</option>
             <option value="success">Success</option>
             <option value="failed">Failed</option>
+            <option value="pending">Pending</option>
           </select>
         </div>
-        <!-- Cặp nút riêng giữ cùng hàng với các ô lọc, hoặc xuống dưới khi màn hình hẹp. -->
         <div class="filters toolbar-actions">
-          <!-- type="submit" xác nhận cả từ khóa và tất cả bộ lọc đang chọn. -->
           <button
             type="submit"
             class="find-filters"
@@ -191,7 +176,7 @@
           >
             Find
           </button>
-          <!-- type="button" không gửi form; Clear all đặt lại các điều kiện và cập nhật ngay. -->
+          <!-- Clear all xóa từ khóa và đặt lại bộ lọc. -->
           <button
             type="button"
             class="clear-filters"
@@ -203,10 +188,8 @@
         </div>
       </form>
       <section class="card table-card" aria-label="Lịch sử điều khiển">
-        <!-- Vùng cuộn ngang giữ bảng dễ đọc trên điện thoại, không ép các cột quá hẹp. -->
         <div class="table-scroll">
           <table class="history-table">
-            <!-- thead chứa tên cột; scope="col" xác định tiêu đề cho cột tương ứng. -->
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -217,13 +200,7 @@
                 <th scope="col">TIME</th>
               </tr>
             </thead>
-            <!--
-              Mỗi dòng có 6 ô và 3 thuộc tính data-* phục vụ lọc: device, action, status.
-              Người điều khiển hiện là Admin trong dữ liệu mẫu; ô td.time là phạm vi tìm kiếm.
-              Ví dụ dòng đầu: light + on + success; đồng thời có chữ Light 1, Turn ON, Success.
-              Khi sửa dữ liệu, cập nhật cả mã data-* lẫn chữ hiển thị để lọc đúng.
-              Đây là lịch sử mẫu độc lập; thao tác Dashboard chưa tự thêm bản ghi vào bảng này.
-            -->
+            <!-- Dữ liệu mẫu; mã data-* phải khớp bộ lọc và nội dung hiển thị. -->
             <tbody>
               <tr data-action="on" data-device="light" data-status="success">
                 <td class="row-id">001</td>
@@ -231,7 +208,9 @@
                 <td>Turn ON</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-action="off" data-device="light" data-status="success">
                 <td class="row-id">002</td>
@@ -239,7 +218,9 @@
                 <td>Turn OFF</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:30:04</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:04">07/10/2026 10:30:04</time>
+                </td>
               </tr>
               <tr data-action="on" data-device="fan" data-status="success">
                 <td class="row-id">003</td>
@@ -247,7 +228,9 @@
                 <td>Turn ON</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:30:06</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:06">07/10/2026 10:30:06</time>
+                </td>
               </tr>
               <tr data-action="off" data-device="light" data-status="success">
                 <td class="row-id">004</td>
@@ -255,7 +238,9 @@
                 <td>Turn OFF</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:31:10</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:31:10">07/10/2026 10:31:10</time>
+                </td>
               </tr>
               <tr data-action="off" data-device="light" data-status="failed">
                 <td class="row-id">005</td>
@@ -263,7 +248,9 @@
                 <td>Turn OFF</td>
                 <td><span class="badge failed">Failed</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:31:10</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:31:10">07/10/2026 10:31:10</time>
+                </td>
               </tr>
               <tr data-action="on" data-device="fan" data-status="failed">
                 <td class="row-id">006</td>
@@ -271,7 +258,9 @@
                 <td>Turn ON</td>
                 <td><span class="badge failed">Failed</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:31:15</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:31:15">07/10/2026 10:31:15</time>
+                </td>
               </tr>
               <tr data-action="on" data-device="light" data-status="success">
                 <td class="row-id">007</td>
@@ -279,16 +268,19 @@
                 <td>Turn ON</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:32:20</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:20">07/10/2026 10:32:20</time>
+                </td>
               </tr>
-              <!-- Hai bản ghi điều hòa mẫu để kiểm tra bộ lọc Device = Air Condition. -->
               <tr data-action="on" data-device="ac" data-status="success">
                 <td class="row-id">008</td>
                 <td>Air Condition</td>
                 <td>Turn ON</td>
                 <td><span class="badge success">Success</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:33:00</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:33:00">07/10/2026 10:33:00</time>
+                </td>
               </tr>
               <tr data-action="off" data-device="ac" data-status="failed">
                 <td class="row-id">009</td>
@@ -296,38 +288,328 @@
                 <td>Turn OFF</td>
                 <td><span class="badge failed">Failed</span></td>
                 <td class="operator">Admin</td>
-                <td class="time">10:35:00</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:35:00">07/10/2026 10:35:00</time>
+                </td>
               </tr>
-              <!-- Dòng thông báo không phải bản ghi; chỉ hiện khi kết quả rỗng và chiếm đủ 6 cột. -->
+              <tr data-action="on" data-device="light" data-status="success">
+                <td class="row-id">010</td>
+                <td>Light 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:00">07/10/2026 11:00:00</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="fan" data-status="pending" hidden>
+                <td class="row-id">011</td>
+                <td>Fan 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge pending">Pending</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:42">07/10/2026 11:00:42</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="ac" data-status="success" hidden>
+                <td class="row-id">012</td>
+                <td>Air Condition</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:01:24">07/10/2026 11:01:24</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="light" data-status="success" hidden>
+                <td class="row-id">013</td>
+                <td>Light 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:06">07/10/2026 11:02:06</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="fan" data-status="failed" hidden>
+                <td class="row-id">014</td>
+                <td>Fan 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge failed">Failed</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:48">07/10/2026 11:02:48</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="ac" data-status="success" hidden>
+                <td class="row-id">015</td>
+                <td>Air Condition</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:03:30">07/10/2026 11:03:30</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="light" data-status="pending" hidden>
+                <td class="row-id">016</td>
+                <td>Light 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge pending">Pending</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:12">07/10/2026 11:04:12</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="fan" data-status="success" hidden>
+                <td class="row-id">017</td>
+                <td>Fan 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:54">07/10/2026 11:04:54</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="ac" data-status="success" hidden>
+                <td class="row-id">018</td>
+                <td>Air Condition</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:05:36">07/10/2026 11:05:36</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="light" data-status="failed" hidden>
+                <td class="row-id">019</td>
+                <td>Light 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge failed">Failed</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:18">07/10/2026 11:06:18</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="fan" data-status="success" hidden>
+                <td class="row-id">020</td>
+                <td>Fan 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:07:00">07/10/2026 11:07:00</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="ac" data-status="success" hidden>
+                <td class="row-id">021</td>
+                <td>Air Condition</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:07:42">07/10/2026 11:07:42</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="light" data-status="success" hidden>
+                <td class="row-id">022</td>
+                <td>Light 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:24">07/10/2026 11:08:24</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="fan" data-status="success" hidden>
+                <td class="row-id">023</td>
+                <td>Fan 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:09:06">07/10/2026 11:09:06</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="ac" data-status="pending" hidden>
+                <td class="row-id">024</td>
+                <td>Air Condition</td>
+                <td>Turn ON</td>
+                <td><span class="badge pending">Pending</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:09:48">07/10/2026 11:09:48</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="light" data-status="success" hidden>
+                <td class="row-id">025</td>
+                <td>Light 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:30">07/10/2026 11:10:30</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="fan" data-status="success" hidden>
+                <td class="row-id">026</td>
+                <td>Fan 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:11:12">07/10/2026 11:11:12</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="ac" data-status="success" hidden>
+                <td class="row-id">027</td>
+                <td>Air Condition</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:11:54">07/10/2026 11:11:54</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="light" data-status="success" hidden>
+                <td class="row-id">028</td>
+                <td>Light 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:36">07/10/2026 11:12:36</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="fan" data-status="failed" hidden>
+                <td class="row-id">029</td>
+                <td>Fan 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge failed">Failed</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:13:18">07/10/2026 11:13:18</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="ac" data-status="success" hidden>
+                <td class="row-id">030</td>
+                <td>Air Condition</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:00">07/10/2026 11:14:00</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="light" data-status="success" hidden>
+                <td class="row-id">031</td>
+                <td>Light 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:42">07/10/2026 11:14:42</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="fan" data-status="success" hidden>
+                <td class="row-id">032</td>
+                <td>Fan 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:15:24">07/10/2026 11:15:24</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="ac" data-status="success" hidden>
+                <td class="row-id">033</td>
+                <td>Air Condition</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:06">07/10/2026 11:16:06</time>
+                </td>
+              </tr>
+              <tr data-action="on" data-device="light" data-status="failed" hidden>
+                <td class="row-id">034</td>
+                <td>Light 1</td>
+                <td>Turn ON</td>
+                <td><span class="badge failed">Failed</span></td>
+                <td class="operator">Nguyễn Đức Hưng</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:48">07/10/2026 11:16:48</time>
+                </td>
+              </tr>
+              <tr data-action="off" data-device="fan" data-status="success" hidden>
+                <td class="row-id">035</td>
+                <td>Fan 1</td>
+                <td>Turn OFF</td>
+                <td><span class="badge success">Success</span></td>
+                <td class="operator">Admin</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:17:30">07/10/2026 11:17:30</time>
+                </td>
+              </tr>
+              <!-- Thông báo khi không có kết quả. -->
               <tr data-empty hidden>
                 <td colspan="6" class="empty-state">Không tìm thấy dữ liệu phù hợp.</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- Số dòng được JavaScript tính từ dữ liệu thực; aria-live thông báo khi kết quả đổi. -->
         <footer class="table-footer">
-          <p data-result-count role="status" aria-live="polite" aria-atomic="true">
-            Hiển thị 9 trên tổng số 9 dòng
-          </p>
-          <!-- Phân trang hiện chỉ là giao diện mẫu, nên nút Trước/Sau đang bị khóa. -->
+          <div class="table-summary">
+            <p data-result-count role="status" aria-live="polite" aria-atomic="true">
+              Hiển thị 1-10 trên tổng số 35 dòng
+            </p>
+            <label class="page-size">
+              <span>Dòng/trang</span>
+              <select data-page-size aria-label="Số dòng hiển thị mỗi trang">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+          </div>
+          <!-- Phân trang theo số dòng đã chọn. -->
           <nav class="pagination" aria-label="Phân trang">
-            <button type="button" disabled>Trước</button>
-            <button type="button" class="selected" aria-current="page">1</button>
-            <button type="button" disabled>Sau</button>
+            <button type="button" data-page-first aria-label="Về trang đầu" disabled>Đầu</button>
+            <button type="button" data-page-previous aria-label="Trang trước" disabled>
+              Trước
+            </button>
+            <span class="pagination-pages" data-page-numbers>
+              <button
+                type="button"
+                data-page="1"
+                aria-label="Trang 1"
+                class="selected"
+                aria-current="page"
+              >
+                1
+              </button>
+              <button type="button" data-page="2" aria-label="Trang 2">2</button>
+              <button type="button" data-page="3" aria-label="Trang 3">3</button>
+              <button type="button" data-page="4" aria-label="Trang 4">4</button>
+            </span>
+            <button type="button" data-page-next aria-label="Trang sau">Sau</button>
+            <button type="button" data-page-last aria-label="Đến trang cuối">Cuối</button>
           </nav>
         </footer>
       </section>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">
         <strong>IoT Control</strong>
         <p>
-          Ô tìm kiếm chỉ tìm theo thời gian, ví dụ 10:31 hoặc 10:31:15. Chọn Device (Light, Fan, Air
-          Condition), Action và Status rồi bấm Find hoặc nhấn Enter để áp dụng. Cột người điều khiển
-          đang hiển thị Admin trong dữ liệu mẫu; Clear all xóa mọi điều kiện tìm kiếm.
+          Ô tìm kiếm chỉ tìm theo thời gian, ví dụ 07/10/2026, 10:31 hoặc 10:31:15. Chọn Device
+          (Light, Fan, Air Condition), Action và Status rồi bấm Find hoặc nhấn Enter để áp dụng. Cột
+          người điều khiển hiển thị người gửi lệnh trong dữ liệu mẫu; Clear all xóa mọi điều kiện
+          tìm kiếm.
         </p>
       </div>
     </details>

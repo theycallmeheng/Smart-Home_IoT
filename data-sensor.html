@@ -1,26 +1,20 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Data Sensor | IoT Control</title>
-    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
-    <!-- CSS lo bố cục; tables.js xử lý tìm kiếm/lọc. defer đợi HTML được phân tích xong. -->
-    <script src="tables.js?v=table-controls-20261007" defer></script>
+    <link rel="stylesheet" href="styles.css?v=hardware-20261013" />
+    <!-- CSS chung; tables.js xử lý tìm kiếm và lọc. -->
+    <script src="iot-api.js?v=hardware-20261013" defer></script>
+    <script src="live-tables.js?v=hardware-20261013" defer></script>
+    <script src="tables.js?v=hardware-20261013" defer></script>
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="index.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -41,7 +35,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link" href="index.html">
           <svg
@@ -110,7 +103,6 @@
           <span>Profile</span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -122,30 +114,22 @@
         </span>
       </div>
     </aside>
-    <!-- Tìm kiếm và dữ liệu cảm biến -->
-    <!-- data-table-page đánh dấu vùng mà tables.js tìm các ô nhập, bộ lọc và bảng. -->
+    <!-- Vùng dữ liệu được tables.js xử lý. -->
     <main class="main" data-table-page>
       <header class="page-header">
         <h1>Data Sensor</h1>
         <p>Dữ liệu cảm biến từ các thiết bị</p>
       </header>
-      <!--
-        Form chứa từ khóa và bộ lọc. Nhập/chọn chưa đổi kết quả ngay.
-        Bấm Find hoặc Enter trong ô tìm kiếm sẽ gửi form; JavaScript ngăn tải lại trang.
-      -->
+      <!-- Filter hoặc Enter áp dụng tìm kiếm và bộ lọc. -->
       <form class="toolbar sensor-toolbar" data-table-form>
-        <!-- Chọn Sensor bên trái, rồi nhập thông tin cần tìm vào ô ngay bên cạnh. -->
         <div class="filters sensor-search-controls">
-          <!--
-            data-filter="sensor" đọc data-sensor của từng dòng.
-            Tìm kiếm chỉ giữ những dòng thuộc sensor đã chọn và khớp từ khóa.
-            all cho phép tìm ở tất cả sensor; giá trị/đơn vị được nhập vào ô tìm kiếm.
-          -->
-          <select data-filter="sensor" aria-label="Loại cảm biến">
-            <option value="all">All Sensors</option>
+          <!-- Sensor lọc loại; Thời gian chỉ tìm cột TIME. -->
+          <select data-filter="sensor" aria-label="Lọc theo cảm biến hoặc thời gian">
+            <option value="all">All Value</option>
             <option value="temperature">Temperature</option>
             <option value="humidity">Humidity</option>
             <option value="light">Light</option>
+            <option value="time">Thời gian</option>
           </select>
           <label class="search-field">
             <svg
@@ -161,27 +145,26 @@
               <circle cx="10" cy="10" r="6" />
               <path d="m15 15 5 5" />
             </svg>
-            <!-- Tìm ID, tên, giá trị, đơn vị hoặc thời gian trong các dòng của sensor đã chọn. -->
+            <!-- Search dùng phạm vi được chọn và Sensor bên trái. -->
             <input
               type="search"
               data-table-search
-              placeholder="Tìm thông tin của sensor đã chọn..."
-              aria-label="Tìm thông tin của sensor đã chọn"
+              placeholder="Tìm thông tin hoặc ngày/giờ..."
+              aria-label="Tìm theo bộ lọc đã chọn"
               autocomplete="off"
             />
           </label>
         </div>
         <div class="filters toolbar-actions">
-          <!-- type="submit" xác nhận cả từ khóa và tất cả bộ lọc đang chọn. -->
           <button
             type="submit"
             class="find-filters"
             data-find-filters
             aria-label="Áp dụng tìm kiếm và bộ lọc"
           >
-            Find
+            Filter
           </button>
-          <!-- type="button" không gửi form; Clear all đặt lại các điều kiện và cập nhật ngay. -->
+          <!-- Clear all xóa từ khóa và đặt lại bộ lọc. -->
           <button
             type="button"
             class="clear-filters"
@@ -193,10 +176,8 @@
         </div>
       </form>
       <section class="card table-card" aria-label="Dữ liệu cảm biến">
-        <!-- Vùng cuộn ngang giữ bảng dễ đọc trên điện thoại, không ép các cột quá hẹp. -->
         <div class="table-scroll">
           <table>
-            <!-- thead chứa tên cột; scope="col" xác định tiêu đề cho cột tương ứng. -->
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -205,12 +186,7 @@
                 <th scope="col">TIME</th>
               </tr>
             </thead>
-            <!--
-              tbody chứa dữ liệu mẫu; mỗi tr là một bản ghi, mỗi td là một ô.
-              Thứ tự: ID, loại cảm biến, giá trị kèm đơn vị, giờ.
-              data-sensor phải khớp value trong bộ lọc: temperature, humidity hoặc light.
-              Khi thêm dòng, điền đúng data-sensor; tables.js tự tìm các dòng lúc mở trang.
-            -->
+            <!-- Dữ liệu cảm biến mẫu. -->
             <tbody>
               <tr data-sensor="temperature">
                 <td class="row-id">001</td>
@@ -221,7 +197,9 @@
                   </span>
                 </td>
                 <td class="reading">28.5 °C</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">002</td>
@@ -232,7 +210,9 @@
                   </span>
                 </td>
                 <td class="reading">65 %</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="light">
                 <td class="row-id">003</td>
@@ -243,7 +223,9 @@
                   </span>
                 </td>
                 <td class="reading">720 lux</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="temperature">
                 <td class="row-id">004</td>
@@ -254,7 +236,9 @@
                   </span>
                 </td>
                 <td class="reading">29.0 °C</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">005</td>
@@ -265,7 +249,9 @@
                   </span>
                 </td>
                 <td class="reading">63 %</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="light">
                 <td class="row-id">006</td>
@@ -276,7 +262,9 @@
                   </span>
                 </td>
                 <td class="reading">710 lux</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="temperature">
                 <td class="row-id">007</td>
@@ -287,7 +275,9 @@
                   </span>
                 </td>
                 <td class="reading">27.8 °C</td>
-                <td class="time">10:34:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:34:02">07/10/2026 10:34:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">008</td>
@@ -298,40 +288,418 @@
                   </span>
                 </td>
                 <td class="reading">66 %</td>
-                <td class="time">10:34:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:34:02">07/10/2026 10:34:02</time>
+                </td>
               </tr>
-              <!-- hidden ẩn thông báo ban đầu; tables.js chỉ hiện nó khi không có kết quả.
-                   colspan="4" cho ô thông báo chiếm đủ 4 cột và dòng này không được tính vào dữ liệu. -->
+              <tr data-sensor="light">
+                <td class="row-id">009</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">680 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature">
+                <td class="row-id">010</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">26.9 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">011</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">60 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">012</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">690 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">013</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.1 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">014</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">61 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">015</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">700 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">016</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.3 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">017</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">62 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">018</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">730 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">019</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.5 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">020</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">64 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">021</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">740 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">022</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.7 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">023</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">67 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">024</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">750 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">025</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.1 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">026</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">68 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">027</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">760 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">028</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.3 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">029</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">69 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">030</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">770 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">031</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.7 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">032</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">70 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">033</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">780 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">034</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.9 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">035</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">71 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <!-- Thông báo khi không có kết quả. -->
               <tr data-empty hidden>
                 <td colspan="4" class="empty-state">Không tìm thấy dữ liệu phù hợp.</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- Số dòng được JavaScript tính từ dữ liệu thực; aria-live thông báo khi kết quả đổi. -->
         <footer class="table-footer">
-          <p data-result-count role="status" aria-live="polite" aria-atomic="true">
-            Hiển thị 8 trên tổng số 8 dòng
-          </p>
-          <!-- Phân trang hiện chỉ là giao diện mẫu, nên nút Trước/Sau đang bị khóa. -->
+          <div class="table-summary">
+            <p data-result-count role="status" aria-live="polite" aria-atomic="true">
+              Hiển thị 1-10 trên tổng số 35 dòng
+            </p>
+            <label class="page-size">
+              <span>Dòng/trang</span>
+              <select data-page-size aria-label="Số dòng hiển thị mỗi trang">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+          </div>
+          <!-- Phân trang theo số dòng đã chọn. -->
           <nav class="pagination" aria-label="Phân trang">
-            <button type="button" disabled>Trước</button>
-            <button type="button" class="selected" aria-current="page">1</button>
-            <button type="button" disabled>Sau</button>
+            <button type="button" data-page-first aria-label="Về trang đầu" disabled>Đầu</button>
+            <button type="button" data-page-previous aria-label="Trang trước" disabled>
+              Trước
+            </button>
+            <span class="pagination-pages" data-page-numbers>
+              <button
+                type="button"
+                data-page="1"
+                aria-label="Trang 1"
+                class="selected"
+                aria-current="page"
+              >
+                1
+              </button>
+              <button type="button" data-page="2" aria-label="Trang 2">2</button>
+              <button type="button" data-page="3" aria-label="Trang 3">3</button>
+              <button type="button" data-page="4" aria-label="Trang 4">4</button>
+            </span>
+            <button type="button" data-page-next aria-label="Trang sau">Sau</button>
+            <button type="button" data-page-last aria-label="Đến trang cuối">Cuối</button>
           </nav>
         </footer>
       </section>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">
         <strong>IoT Control</strong>
         <p>
           Chọn Sensor ở bên trái, rồi nhập ID, tên, giá trị, đơn vị hoặc thời gian vào ô tìm kiếm
-          bên cạnh. Bấm Find hoặc nhấn Enter để tìm trong sensor đã chọn. Chọn All Sensors để tìm
-          tất cả loại cảm biến; Clear all xóa sensor đã chọn và từ khóa. Dữ liệu hiện là dữ liệu
-          mẫu.
+          bên cạnh. Chọn Thời gian để chỉ tìm ngày/giờ, ví dụ 07/10/2026 hoặc 10:32. Bấm Filter hoặc
+          Enter để áp dụng. Clear all đặt lại mọi điều kiện. Dữ liệu hiện là dữ liệu mẫu.
         </p>
       </div>
     </details>

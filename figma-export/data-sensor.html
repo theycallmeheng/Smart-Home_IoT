@@ -1,33 +1,17 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- Bản xuất riêng từ data-sensor.html để import từng tab vào Figma.
-     CSS, JavaScript và SVG đã nằm trong file này; các file gốc giữ nguyên. -->
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
+    <!-- Bản xuất data-sensor.html cho Figma, nhúng sẵn CSS/JS và dữ liệu mẫu. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Data Sensor | IoT Control</title>
     <style data-source="styles.css">
-      /*
- * STYLES.CSS - KIỂU DÙNG CHUNG CHO CẢ 4 TRANG
- *
- * HTML xác định cấu trúc; các class như .card, .sidebar nối HTML với quy tắc ở đây.
- * Dashboard tải thêm dashboard.css để bổ sung kiểu riêng sau file này.
- *
- * Cách đọc thuộc tính:
- * - margin: khoảng cách ngoài phần tử; padding: khoảng cách trong phần tử.
- * - gap: khoảng cách giữa các phần tử con của Flexbox hoặc Grid.
- * - border: viền; border-radius: bo góc; box-shadow: bóng đổ.
- * - px: kích thước theo pixel CSS; fr: phần không gian còn lại trong Grid.
- * - :hover/:focus-visible/:checked: kiểu áp dụng khi rê chuột, dùng bàn phím hoặc bật.
- * Các chú thích giải thích theo nhóm; các quy tắc trong nhóm cùng tạo một thành phần.
- */
+      /* CSS dùng chung cho bốn trang. */
 
       /* Thiết lập chung */
 
       :root {
-        /* Biến màu dùng lại qua var(...); đổi --blue sẽ đổi màu chủ đạo ở các chỗ tham chiếu. */
         --blue: #2864ff;
         --text: #1e2b43;
         --muted: #91a1b9;
@@ -42,18 +26,15 @@
         font-synthesis: none;
       }
       * {
-        /* border-box tính padding và viền vào width/height, giúp kiểm soát kích thước dễ hơn. */
         box-sizing: border-box;
       }
       body {
-        /* Bỏ khoảng trắng mặc định quanh trang; giữ độ rộng tối thiểu 320px. */
         margin: 0;
         min-width: 320px;
       }
       button,
       input,
       select {
-        /* inherit giúp các ô nhập và nút dùng cùng phông với phần nội dung xung quanh. */
         font: inherit;
       }
       a {
@@ -69,19 +50,13 @@
         cursor: default;
       }
       .icon {
-        /* Kích thước SVG mặc định; flex-shrink: 0 tránh icon bị bóp khi hàng chật. */
         width: 16px;
         height: 16px;
         flex-shrink: 0;
       }
-      /*
- * Thanh điều hướng
- * Sidebar dùng Flexbox dọc: logo trên, menu ở giữa, tài khoản ở cuối.
- * Các class active/online-dot chỉ tạo kiểu hiển thị, không xác thực tài khoản.
- */
+      /* Thanh điều hướng */
 
       .sidebar {
-        /* fixed giữ sidebar tại mép trái khi cuộn; inset lần lượt là trên, phải, dưới, trái. */
         position: fixed;
         inset: 0 auto 0 0;
         width: 184px;
@@ -99,7 +74,6 @@
         border-bottom: 1px solid #f5f7fa;
       }
       .brand-icon {
-        /* Grid + place-items: center căn icon vào giữa ô vuông theo cả hai chiều. */
         display: grid;
         place-items: center;
         width: 28px;
@@ -129,7 +103,6 @@
         gap: 7px;
       }
       .nav-link {
-        /* Flexbox xếp icon, nhãn và chấm active trên cùng một hàng. */
         display: flex;
         align-items: center;
         gap: 9px;
@@ -149,13 +122,11 @@
         color: var(--blue);
       }
       .nav-link.active {
-        /* HTML của mỗi trang gắn active vào đúng liên kết đang được mở. */
         background: #eff5ff;
         color: var(--blue);
         font-weight: 600;
       }
       .nav-dot {
-        /* margin-left: auto dùng khoảng trống còn lại để đẩy chấm sang mép phải. */
         margin-left: auto;
         width: 5px;
         height: 5px;
@@ -163,7 +134,6 @@
         background: var(--blue);
       }
       .account {
-        /* Trong sidebar dạng cột, margin-top: auto đẩy tài khoản xuống cuối vùng còn trống. */
         margin-top: auto;
         display: flex;
         align-items: center;
@@ -172,6 +142,7 @@
         border-top: 1px solid #f4f6fa;
       }
       .account-avatar {
+        flex-shrink: 0;
         width: 25px;
         height: 25px;
         display: grid;
@@ -185,6 +156,7 @@
         display: block;
         font-size: 12px;
         line-height: 18px;
+        overflow-wrap: anywhere;
       }
       .account small {
         display: flex;
@@ -199,10 +171,10 @@
         background: var(--green);
         border-radius: 50%;
       }
-      /* Khung nội dung và thẻ dùng chung */
+      /* Nội dung và thẻ dùng chung */
 
       .main {
-        /* Chừa 184px bằng độ rộng sidebar; khi đổi sidebar cần đổi khoảng chừa tương ứng. */
+        /* Chừa khoảng bên trái bằng độ rộng sidebar: 184px. */
         margin-left: 184px;
         padding: 28px 24px 64px;
         min-height: 100vh;
@@ -223,8 +195,66 @@
         color: #a3afc1;
         line-height: 1.5;
       }
+      .page-header.has-iot-status {
+        position: relative;
+        padding-right: 350px;
+      }
+      .iot-modebar {
+        position: absolute;
+        top: 5px;
+        right: 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .iot-status-label {
+        padding: 6px 9px;
+        color: #657a9c;
+        background: #edf2ff;
+        border-radius: 18px;
+      }
+      .iot-modebar a,
+      .iot-modebar button {
+        padding: 6px 9px;
+        border: 1px solid #d7e3fb;
+        border-radius: 6px;
+        color: var(--blue);
+        background: #fff;
+      }
+      .iot-modebar button[hidden] {
+        display: none;
+      }
+      .iot-modebar button:hover {
+        background: #eff5ff;
+      }
+      .iot-modebar button:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
+      .table-api-error {
+        padding: 10px 12px;
+        border: 1px solid #ffd4d8;
+        border-radius: 8px;
+        color: #ba3c4a;
+        background: #fff1f2;
+        font-size: 13px;
+      }
+      .pagination-gap {
+        align-self: center;
+        padding: 0 4px;
+      }
+      @media (max-width: 700px) {
+        .page-header.has-iot-status {
+          padding-right: 0;
+        }
+        .iot-modebar {
+          position: static;
+          margin-top: 8px;
+        }
+      }
       .card {
-        /* Lớp nền chung cho thẻ cảm biến, biểu đồ, bảng và hồ sơ; các lớp khác bổ sung kiểu riêng. */
         background: #fff;
         border-radius: 14px;
         box-shadow: 0 1px 2px #1e2b4305;
@@ -235,10 +265,9 @@
         margin: 0;
         line-height: 1.5;
       }
-      /* Cảm biến, biểu đồ và điều khiển thiết bị */
+      /* Cảm biến, biểu đồ và thiết bị */
 
       .metrics {
-        /* 3 cột bằng nhau; minmax(0, 1fr) cho phép cột co nhỏ mà không bị nội dung ép rộng. */
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
@@ -270,7 +299,6 @@
         margin-bottom: 6px;
       }
       .metric p {
-        /* Phông monospace cho số có độ rộng ký tự đều; tiêu đề vẫn dùng phông chữ chung. */
         font-family: Consolas, 'Courier New', monospace;
         font-weight: 700;
         margin: 0;
@@ -278,7 +306,6 @@
         line-height: 1;
       }
       .temperature {
-        /* Ba lớp temperature/humidity/light dùng lại cho icon, nhãn cảm biến và chú giải. */
         color: var(--red);
         background: #ffe3e6;
       }
@@ -291,7 +318,6 @@
         background: #fff1c4;
       }
       .dashboard-grid {
-        /* Biểu đồ chiếm 7 phần, điều khiển chiếm 3 phần; cột điều khiển rộng tối thiểu 240px. */
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
         gap: 14px;
@@ -324,14 +350,12 @@
         gap: 4px;
       }
       .legend span::before {
-        /* ::before tạo vạch màu bằng CSS mà không cần thêm phần tử vào HTML. */
         content: '';
         width: 14px;
         height: 2px;
         background: currentColor;
       }
       .chart {
-        /* SVG giữ tỷ lệ theo viewBox; width: 100% cho biểu đồ co theo thẻ chứa nó. */
         display: block;
         width: 100%;
         height: auto;
@@ -350,7 +374,6 @@
         fill: #a2aec0;
       }
       .plot {
-        /* Nét biểu đồ chỉ có stroke, không tô fill; mỗi lớp *-line chọn màu đường riêng. */
         fill: none;
         stroke-width: 2;
         stroke-linecap: round;
@@ -376,7 +399,6 @@
         gap: 10px;
       }
       .device {
-        /* position: relative làm mốc cho checkbox ẩn nằm bên trong hàng thiết bị. */
         position: relative;
         display: flex;
         align-items: center;
@@ -387,8 +409,7 @@
         cursor: pointer;
       }
       .device-input {
-        /* Checkbox vẫn nhận focus và điều khiển bằng label; chỉ ẩn hình thức mặc định.
-     Không dùng display: none vì sẽ làm mất khả năng focus bằng bàn phím. */
+        /* Ẩn checkbox nhưng vẫn cho phép nhận focus bằng bàn phím. */
         position: absolute;
         opacity: 0;
         width: 1px;
@@ -418,7 +439,6 @@
         color: var(--blue);
       }
       .switch {
-        /* Nền công tắc; nút tròn bên trong được vẽ bằng phần tử giả ::after bên dưới. */
         margin-left: auto;
         width: 35px;
         height: 19px;
@@ -428,7 +448,6 @@
         transition: background 0.18s;
       }
       .switch::after {
-        /* content tạo phần tử giả; transition làm vị trí nút chuyển mượt khi checked đổi. */
         content: '';
         display: block;
         width: 13px;
@@ -439,11 +458,10 @@
         transition: transform 0.18s;
       }
       .device-input:checked ~ .switch {
-        /* ~ chọn phần tử anh em đứng sau input trong cùng label; thứ tự HTML phải được giữ. */
+        /* Giữ input trước các phần tử được chọn bằng dấu ~. */
         background: var(--blue);
       }
       .device-input:checked ~ .switch::after {
-        /* Khi bật, di chuyển nút tròn 16px sang phải; khi tắt nó về vị trí ban đầu. */
         transform: translateX(16px);
       }
       .device-input:checked ~ .device-icon {
@@ -451,20 +469,17 @@
         color: #568dff;
       }
       .device-input:checked ~ .device-label .state-on {
-        /* Hai nhãn bật/tắt cùng có trong HTML, CSS chỉ hiện nhãn phù hợp với checked. */
         display: block;
       }
       .device-input:checked ~ .device-label .state-off {
         display: none;
       }
       .device-input:focus-visible ~ .switch {
-        /* Vẽ viền quanh công tắc thay cho checkbox ẩn khi người dùng điều hướng bằng bàn phím. */
         outline: 2px solid var(--blue);
         outline-offset: 4px;
       }
-      /* Tìm kiếm, bộ lọc và bảng dữ liệu */
+      /* Tìm kiếm, bộ lọc và bảng */
 
-      /* Hai trang bảng dùng cỡ chữ lớn hơn một chút, cùng khoảng cách dòng dễ đọc. */
       [data-table-page] {
         font-size: 13px;
         line-height: 1.5;
@@ -478,7 +493,6 @@
         color: #8292aa;
       }
       .toolbar {
-        /* Ô tìm kiếm và nhóm bộ lọc nằm trên một hàng, được phép xuống hàng khi thiếu chỗ. */
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -487,7 +501,6 @@
         margin: 0 0 18px;
       }
       .search-field {
-        /* Label bao cả kính lúp và input; đường viền đặt ở label thay vì input bên trong. */
         width: 320px;
         height: 42px;
         display: flex;
@@ -514,7 +527,6 @@
         background: transparent;
       }
       .search-field:focus-within {
-        /* focus-within áp dụng cho khung label khi input con đang được nhập. */
         border-color: #8fb0ff;
         box-shadow: 0 0 0 2px #2864ff12;
       }
@@ -522,14 +534,12 @@
         color: #a3afc1;
       }
       .filters {
-        /* flex-wrap cho các select và nút Find/Clear all tự xuống hàng trên màn hình hẹp. */
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 10px;
       }
       .filters select {
-        /* Cùng chiều cao với Search và các nút; chừa khoảng bên phải cho mũi tên chọn. */
         height: 42px;
         min-width: 140px;
         background: #fff;
@@ -544,11 +554,16 @@
         border-color: #a8bfea;
       }
       .toolbar-actions {
-        /* Giữ Find và Clear all thành một cặp nút có cùng kích thước theo chiều dọc. */
         flex-wrap: nowrap;
       }
-      /* Data Sensor giữ Sensor và ô tìm kiếm trong cùng một hàng, đúng thứ tự từ trái sang phải. */
+      /* Data Sensor: bộ lọc Sensor bên trái, Search bên cạnh. */
+      .sensor-toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
       .sensor-toolbar .sensor-search-controls {
+        display: grid;
+        grid-template-columns: 148px minmax(0, 1fr);
         align-items: center;
         flex-wrap: nowrap;
         min-width: 0;
@@ -556,15 +571,30 @@
         margin-left: 0;
       }
       .sensor-search-controls select {
-        width: 148px;
+        width: 100%;
         min-width: 0;
         flex-shrink: 0;
       }
       .sensor-search-controls .search-field {
-        width: 340px;
+        width: 100%;
         min-width: 0;
+        flex: 1;
       }
-      /* Action History chia rõ 3 nhóm: Search, 3 bộ lọc bằng nhau và cặp nút xác nhận. */
+      .sensor-toolbar .toolbar-actions {
+        margin-left: 0;
+        justify-self: end;
+      }
+      @media (max-width: 1100px) {
+        .sensor-toolbar {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 700px) {
+        .sensor-toolbar .sensor-search-controls {
+          grid-template-columns: 128px minmax(0, 1fr);
+        }
+      }
+      /* Action History: Search, ba bộ lọc và Find/Clear all. */
       .history-toolbar {
         display: grid;
         grid-template-columns: minmax(220px, 360px) minmax(440px, 1fr) auto;
@@ -586,7 +616,6 @@
         margin-left: 0;
       }
       .find-filters {
-        /* Nút xác nhận màu chủ đạo; CSS chỉ tạo hình thức, hành động nằm trong tables.js. */
         background: var(--blue);
         color: #fff;
         border: 1px solid var(--blue);
@@ -604,7 +633,6 @@
         border-color: #1e54df;
       }
       .clear-filters {
-        /* Nút đặt lại điều kiện dùng viền xanh để phân biệt với nút xác nhận Find. */
         background: #fff;
         color: var(--blue);
         border: 1px solid #cbdcff;
@@ -624,15 +652,13 @@
         padding: 20px 20px 16px;
       }
       .table-scroll {
-        /* Chỉ vùng bảng cuộn ngang khi tổng độ rộng các cột vượt quá vùng chứa. */
+        /* Cuộn ngang khi bảng vượt chiều rộng màn hình. */
         overflow-x: auto;
       }
       .history-table {
-        /* Lịch sử có 6 cột; giữ độ rộng tối thiểu và cuộn ngang trong table-scroll khi cần. */
         min-width: 720px;
       }
       table {
-        /* collapse gộp viền ô; nowrap giữ dữ liệu ngắn như giờ/giá trị trên một dòng. */
         border-collapse: collapse;
         width: 100%;
         text-align: left;
@@ -654,7 +680,6 @@
       }
       th:first-child,
       td:first-child {
-        /* Cột đầu là ID: giữ độ rộng thống nhất và căn giữa cả tiêu đề lẫn dữ liệu. */
         width: 14%;
         text-align: center;
       }
@@ -663,12 +688,14 @@
         font-family: Consolas, 'Courier New', monospace;
         color: #8c9bb1;
       }
+      .time {
+        white-space: nowrap;
+      }
       .reading {
         font-family: Consolas, 'Courier New', monospace;
         font-weight: 700;
       }
       .badge {
-        /* Nhãn nhỏ dạng viên thuốc cho loại cảm biến và trạng thái thành công/thất bại. */
         display: inline-flex;
         align-items: center;
         gap: 4px;
@@ -692,8 +719,13 @@
         color: #f25562;
         background: #ffe1e5;
       }
+      .badge.pending {
+        color: #a57309;
+        background: #fff2cf;
+      }
       .table-footer {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
@@ -704,12 +736,38 @@
         color: #8395af;
         font-size: 12px;
       }
+      .table-summary {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+      }
+      .page-size {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #71839d;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .page-size select {
+        height: 34px;
+        min-width: 62px;
+        padding: 5px 8px;
+        color: #53647f;
+        background: #fff;
+        border: 1px solid #dce5f1;
+        border-radius: 5px;
+      }
+      .page-size select:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
       [hidden] {
-        /* JavaScript đặt element.hidden để lọc dòng; !important giữ dòng đó ẩn trước kiểu khác. */
+        /* Ưu tiên ẩn các dòng không khớp điều kiện lọc. */
         display: none !important;
       }
       .empty-state {
-        /* Kiểu cho ô thông báo khi không có kết quả; dòng này được tables.js loại khỏi số đếm. */
         height: 100px;
         text-align: center;
         color: var(--muted);
@@ -721,8 +779,15 @@
         background: #f5f7fa;
       }
       .pagination {
-        /* Chỉ tạo bố cục cho nút phân trang; hiện chưa có logic chuyển trang. */
+        /* Các nút phân trang được tables.js cập nhật theo kết quả lọc. */
         display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .pagination-pages {
+        display: flex;
+        flex-wrap: wrap;
         gap: 4px;
       }
       .pagination button {
@@ -740,10 +805,21 @@
         background: var(--blue);
         border-color: var(--blue);
       }
-      /* Trang Profile */
+      .pagination button:disabled {
+        color: #a4b1c4;
+        background: #f7f9fc;
+        border-color: #edf1f6;
+      }
+      .pagination button:not(:disabled):hover {
+        border-color: #8fb0ff;
+      }
+      .pagination button:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
+      /* Profile */
 
       .profile-main {
-        /* Đặt cỡ chữ và khoảng cách dòng nhất quán cho toàn bộ hồ sơ. */
         font-family: inherit;
         font-size: 12px;
         font-weight: 400;
@@ -752,7 +828,6 @@
         text-align: left;
       }
       .profile-content {
-        /* Giới hạn độ rộng để trang hồ sơ không bị trải quá rộng trên màn hình lớn. */
         max-width: 1100px;
       }
       .profile-main .page-header h1 {
@@ -765,8 +840,7 @@
         line-height: 1.5;
       }
       .profile-overview {
-        /* column xếp avatar, tên, vai trò theo chiều dọc; align-items căn giữa các khối.
-     text-align căn giữa chữ; hai thuộc tính này giải quyết hai cách căn khác nhau. */
+        /* Xếp dọc và căn giữa avatar, tên, vai trò. */
         position: relative;
         display: flex;
         flex-direction: column;
@@ -780,7 +854,6 @@
         text-align: center;
       }
       .profile-overview::before {
-        /* Thanh màu trang trí ở mép trên; absolute đặt theo thẻ profile-overview. */
         content: '';
         position: absolute;
         inset: 0 0 auto;
@@ -788,7 +861,6 @@
         background: linear-gradient(90deg, #2864ff, #c6d9ff 65%, #f1f6ff);
       }
       .profile-avatar {
-        /* border-radius: 50% tạo hình tròn; Grid căn SVG đại diện vào chính giữa. */
         display: grid;
         place-items: center;
         width: 84px;
@@ -815,7 +887,6 @@
         margin: 0 0 6px;
       }
       .profile-identity h2 {
-        /* Tên dài được phép xuống dòng thay vì làm tràn thẻ hồ sơ. */
         font-size: 18px;
         font-weight: 700;
         line-height: 1.5;
@@ -847,7 +918,6 @@
         height: 14px;
       }
       .profile-details-grid {
-        /* Cột sinh viên chiếm 0,9 phần, tài nguyên 1,1 phần; khoảng cách giữa cột là 20px. */
         display: grid;
         grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
         gap: 20px;
@@ -876,14 +946,12 @@
         flex-direction: column;
       }
       .profile-main .student-card dl {
-        /* Hai trường thông tin xếp dọc mặc định; media query có thể chuyển thành hai cột. */
         display: grid;
         gap: 14px;
         margin: 0;
         flex: 1;
       }
       .profile-field {
-        /* Mỗi trường có nhãn dt trên và giá trị dd dưới, cùng nằm trong một khung nhẹ. */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -907,13 +975,12 @@
         overflow-wrap: anywhere;
       }
       .resources-grid {
-        /* 2 cột bằng nhau tạo bố cục 2 x 2 cho 4 tài nguyên. */
+        /* Bốn tài nguyên chia thành hai cột. */
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
       .profile-main .resource {
-        /* Flexbox dọc giữ phần tên/mô tả trên và vùng nút bên dưới. */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -958,7 +1025,6 @@
         height: 19px;
       }
       .resource-github {
-        /* Bốn lớp resource-* đặt màu icon riêng; chúng không quyết định đường dẫn tài nguyên. */
         background: #eff2f6;
         color: #43536d;
       }
@@ -975,7 +1041,6 @@
         color: #e7657b;
       }
       .resource-actions {
-        /* Cột trạng thái dùng phần còn lại; cột nút Open rộng theo nội dung của nút. */
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
@@ -988,7 +1053,7 @@
       }
       .resource-actions button,
       .resource-actions a {
-        /* Cùng tạo kiểu cho nút hiện tại và liên kết a sẽ dùng khi có URL thật. */
+        /* Kiểu chung cho nút và liên kết Open. */
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1005,7 +1070,6 @@
         white-space: nowrap;
       }
       .resource-actions button:disabled {
-        /* Trạng thái xám tương ứng với nút Open chưa có liên kết trong HTML. */
         color: #8495b1;
         border-color: #e2e9f4;
         background: #f8fafd;
@@ -1014,10 +1078,9 @@
         width: 11px;
         height: 11px;
       }
-      /* Trợ giúp và trạng thái focus */
+      /* Trợ giúp và focus bàn phím */
 
       .help {
-        /* Nút ? cố định ở góc phải dưới; z-index đưa hướng dẫn lên trên vùng nội dung. */
         position: fixed;
         bottom: 16px;
         right: 16px;
@@ -1039,7 +1102,6 @@
         display: none;
       }
       .help-content {
-        /* absolute đặt hộp hướng dẫn phía trên nút ? trong phần tử .help. */
         position: absolute;
         bottom: 39px;
         right: 0;
@@ -1060,18 +1122,12 @@
       button:focus-visible,
       select:focus-visible,
       summary:focus-visible {
-        /* Viền focus giúp biết phần tử nào đang được chọn khi dùng phím Tab. */
         outline: 2px solid var(--blue);
         outline-offset: 3px;
       }
-      /*
- * Bố cục theo kích thước màn hình (responsive)
- * @media chỉ áp dụng khi điều kiện độ rộng đúng; các quy tắc bên trong ghi đè kiểu ở trên.
- * Khi nhiều quy tắc cùng mức ưu tiên cùng đúng, quy tắc xuất hiện sau được dùng.
- */
+      /* Bố cục theo kích thước màn hình */
 
       @media (min-width: 1500px) {
-        /* Màn hình lớn: tăng khoảng trống vùng nội dung và chiều cao thẻ. */
         .main {
           padding: 36px;
         }
@@ -1080,7 +1136,6 @@
         }
       }
       @media (max-width: 1050px) {
-        /* Thu gọn thẻ và tách tiêu đề/chú giải biểu đồ để giảm chật chội. */
         .chart-heading {
           align-items: flex-start;
           flex-direction: column;
@@ -1100,7 +1155,7 @@
         }
       }
       @media (max-width: 1100px) {
-        /* Đưa Search lên một hàng riêng; ba bộ lọc vẫn chia đều hàng bên dưới. */
+        /* Đưa Search lên hàng riêng khi thiếu chỗ. */
         .history-toolbar {
           grid-template-columns: minmax(0, 1fr) auto;
         }
@@ -1112,13 +1167,12 @@
         }
       }
       @media (max-width: 900px) {
-        /* Khi vùng nội dung hẹp, đặt cặp nút dưới các bộ lọc để tránh ép nhỏ ô chọn. */
         .history-toolbar {
           grid-template-columns: minmax(0, 1fr);
         }
       }
       @media (max-width: 800px) {
-        /* Sidebar hẹp hơn, cảm biến và biểu đồ chuyển dần về bố cục một cột. */
+        /* Thu gọn sidebar và bố cục nội dung. */
         .sidebar {
           width: 160px;
         }
@@ -1161,13 +1215,12 @@
         }
       }
       @media (max-width: 700px) {
-        /* Ba ô chọn xếp dọc và có cùng độ rộng trên màn hình nhỏ. */
         .history-toolbar .history-filter-controls {
           grid-template-columns: minmax(0, 1fr);
         }
       }
       @media (max-width: 560px) {
-        /* Điện thoại: sidebar thành thanh đầu trang, bỏ khoảng chừa bên trái và cho bảng cuộn ngang. */
+        /* Điện thoại: sidebar chuyển lên đầu trang. */
         .sidebar {
           position: static;
           width: 100%;
@@ -1245,7 +1298,6 @@
         }
       }
       @media (max-width: 1000px) {
-        /* Riêng Profile: xếp hai thẻ chính dọc, hai trường sinh viên vẫn đặt cạnh nhau. */
         .profile-details-grid {
           grid-template-columns: 1fr;
         }
@@ -1254,7 +1306,7 @@
         }
       }
       @media (max-width: 560px) {
-        /* Riêng Profile trên điện thoại: các trường và tài nguyên đều chuyển thành một cột. */
+        /* Profile trên điện thoại: các trường và tài nguyên xếp dọc. */
         .profile-overview {
           gap: 14px;
           padding: 20px;
@@ -1292,26 +1344,19 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        /* Tôn trọng tùy chọn giảm chuyển động của hệ điều hành bằng cách bỏ transition. */
+        /* Giảm chuyển động theo tùy chọn hệ điều hành. */
         *,
         *::after {
           transition: none !important;
         }
       }
     </style>
-    <!-- CSS lo bố cục; tables.js xử lý tìm kiếm/lọc. defer đợi HTML được phân tích xong. -->
+    <!-- CSS chung; tables.js xử lý tìm kiếm và lọc. -->
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="dashboard.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -1332,7 +1377,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link" href="dashboard.html">
           <svg
@@ -1401,7 +1445,6 @@
           <span>Profile</span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -1413,30 +1456,22 @@
         </span>
       </div>
     </aside>
-    <!-- Tìm kiếm và dữ liệu cảm biến -->
-    <!-- data-table-page đánh dấu vùng mà tables.js tìm các ô nhập, bộ lọc và bảng. -->
+    <!-- Vùng dữ liệu được tables.js xử lý. -->
     <main class="main" data-table-page>
       <header class="page-header">
         <h1>Data Sensor</h1>
         <p>Dữ liệu cảm biến từ các thiết bị</p>
       </header>
-      <!--
-        Form chứa từ khóa và bộ lọc. Nhập/chọn chưa đổi kết quả ngay.
-        Bấm Find hoặc Enter trong ô tìm kiếm sẽ gửi form; JavaScript ngăn tải lại trang.
-      -->
+      <!-- Filter hoặc Enter áp dụng tìm kiếm và bộ lọc. -->
       <form class="toolbar sensor-toolbar" data-table-form>
-        <!-- Chọn Sensor bên trái, rồi nhập thông tin cần tìm vào ô ngay bên cạnh. -->
         <div class="filters sensor-search-controls">
-          <!--
-            data-filter="sensor" đọc data-sensor của từng dòng.
-            Tìm kiếm chỉ giữ những dòng thuộc sensor đã chọn và khớp từ khóa.
-            all cho phép tìm ở tất cả sensor; giá trị/đơn vị được nhập vào ô tìm kiếm.
-          -->
-          <select data-filter="sensor" aria-label="Loại cảm biến">
-            <option value="all">All Sensors</option>
+          <!-- Sensor lọc loại; Thời gian chỉ tìm cột TIME. -->
+          <select data-filter="sensor" aria-label="Lọc theo cảm biến hoặc thời gian">
+            <option value="all">All Value</option>
             <option value="temperature">Temperature</option>
             <option value="humidity">Humidity</option>
             <option value="light">Light</option>
+            <option value="time">Thời gian</option>
           </select>
           <label class="search-field">
             <svg
@@ -1452,27 +1487,26 @@
               <circle cx="10" cy="10" r="6" />
               <path d="m15 15 5 5" />
             </svg>
-            <!-- Tìm ID, tên, giá trị, đơn vị hoặc thời gian trong các dòng của sensor đã chọn. -->
+            <!-- Search dùng phạm vi được chọn và Sensor bên trái. -->
             <input
               type="search"
               data-table-search
-              placeholder="Tìm thông tin của sensor đã chọn..."
-              aria-label="Tìm thông tin của sensor đã chọn"
+              placeholder="Tìm thông tin hoặc ngày/giờ..."
+              aria-label="Tìm theo bộ lọc đã chọn"
               autocomplete="off"
             />
           </label>
         </div>
         <div class="filters toolbar-actions">
-          <!-- type="submit" xác nhận cả từ khóa và tất cả bộ lọc đang chọn. -->
           <button
             type="submit"
             class="find-filters"
             data-find-filters
             aria-label="Áp dụng tìm kiếm và bộ lọc"
           >
-            Find
+            Filter
           </button>
-          <!-- type="button" không gửi form; Clear all đặt lại các điều kiện và cập nhật ngay. -->
+          <!-- Clear all xóa từ khóa và đặt lại bộ lọc. -->
           <button
             type="button"
             class="clear-filters"
@@ -1484,10 +1518,8 @@
         </div>
       </form>
       <section class="card table-card" aria-label="Dữ liệu cảm biến">
-        <!-- Vùng cuộn ngang giữ bảng dễ đọc trên điện thoại, không ép các cột quá hẹp. -->
         <div class="table-scroll">
           <table>
-            <!-- thead chứa tên cột; scope="col" xác định tiêu đề cho cột tương ứng. -->
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -1496,12 +1528,7 @@
                 <th scope="col">TIME</th>
               </tr>
             </thead>
-            <!--
-              tbody chứa dữ liệu mẫu; mỗi tr là một bản ghi, mỗi td là một ô.
-              Thứ tự: ID, loại cảm biến, giá trị kèm đơn vị, giờ.
-              data-sensor phải khớp value trong bộ lọc: temperature, humidity hoặc light.
-              Khi thêm dòng, điền đúng data-sensor; tables.js tự tìm các dòng lúc mở trang.
-            -->
+            <!-- Dữ liệu cảm biến mẫu. -->
             <tbody>
               <tr data-sensor="temperature">
                 <td class="row-id">001</td>
@@ -1512,7 +1539,9 @@
                   </span>
                 </td>
                 <td class="reading">28.5 °C</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">002</td>
@@ -1523,7 +1552,9 @@
                   </span>
                 </td>
                 <td class="reading">65 %</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="light">
                 <td class="row-id">003</td>
@@ -1534,7 +1565,9 @@
                   </span>
                 </td>
                 <td class="reading">720 lux</td>
-                <td class="time">10:30:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:30:02">07/10/2026 10:30:02</time>
+                </td>
               </tr>
               <tr data-sensor="temperature">
                 <td class="row-id">004</td>
@@ -1545,7 +1578,9 @@
                   </span>
                 </td>
                 <td class="reading">29.0 °C</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">005</td>
@@ -1556,7 +1591,9 @@
                   </span>
                 </td>
                 <td class="reading">63 %</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="light">
                 <td class="row-id">006</td>
@@ -1567,7 +1604,9 @@
                   </span>
                 </td>
                 <td class="reading">710 lux</td>
-                <td class="time">10:32:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:32:02">07/10/2026 10:32:02</time>
+                </td>
               </tr>
               <tr data-sensor="temperature">
                 <td class="row-id">007</td>
@@ -1578,7 +1617,9 @@
                   </span>
                 </td>
                 <td class="reading">27.8 °C</td>
-                <td class="time">10:34:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:34:02">07/10/2026 10:34:02</time>
+                </td>
               </tr>
               <tr data-sensor="humidity">
                 <td class="row-id">008</td>
@@ -1589,145 +1630,570 @@
                   </span>
                 </td>
                 <td class="reading">66 %</td>
-                <td class="time">10:34:02</td>
+                <td class="time">
+                  <time datetime="2026-10-07T10:34:02">07/10/2026 10:34:02</time>
+                </td>
               </tr>
-              <!-- hidden ẩn thông báo ban đầu; tables.js chỉ hiện nó khi không có kết quả.
-                   colspan="4" cho ô thông báo chiếm đủ 4 cột và dòng này không được tính vào dữ liệu. -->
+              <tr data-sensor="light">
+                <td class="row-id">009</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">680 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature">
+                <td class="row-id">010</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">26.9 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">011</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">60 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:00:02">07/10/2026 11:00:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">012</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">690 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">013</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.1 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">014</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">61 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:02:02">07/10/2026 11:02:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">015</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">700 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">016</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.3 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">017</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">62 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:04:02">07/10/2026 11:04:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">018</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">730 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">019</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.5 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">020</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">64 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:06:02">07/10/2026 11:06:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">021</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">740 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">022</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">27.7 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">023</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">67 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:08:02">07/10/2026 11:08:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">024</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">750 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">025</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.1 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">026</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">68 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:10:02">07/10/2026 11:10:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">027</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">760 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">028</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.3 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">029</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">69 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:12:02">07/10/2026 11:12:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">030</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">770 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">031</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.7 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">032</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">70 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:14:02">07/10/2026 11:14:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="light" hidden>
+                <td class="row-id">033</td>
+                <td>
+                  <span class="badge light">
+                    <span class="badge-dot"></span>
+                    Light
+                  </span>
+                </td>
+                <td class="reading">780 lux</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="temperature" hidden>
+                <td class="row-id">034</td>
+                <td>
+                  <span class="badge temperature">
+                    <span class="badge-dot"></span>
+                    Temperature
+                  </span>
+                </td>
+                <td class="reading">28.9 °C</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <tr data-sensor="humidity" hidden>
+                <td class="row-id">035</td>
+                <td>
+                  <span class="badge humidity">
+                    <span class="badge-dot"></span>
+                    Humidity
+                  </span>
+                </td>
+                <td class="reading">71 %</td>
+                <td class="time">
+                  <time datetime="2026-10-07T11:16:02">07/10/2026 11:16:02</time>
+                </td>
+              </tr>
+              <!-- Thông báo khi không có kết quả. -->
               <tr data-empty hidden>
                 <td colspan="4" class="empty-state">Không tìm thấy dữ liệu phù hợp.</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- Số dòng được JavaScript tính từ dữ liệu thực; aria-live thông báo khi kết quả đổi. -->
         <footer class="table-footer">
-          <p data-result-count role="status" aria-live="polite" aria-atomic="true">
-            Hiển thị 8 trên tổng số 8 dòng
-          </p>
-          <!-- Phân trang hiện chỉ là giao diện mẫu, nên nút Trước/Sau đang bị khóa. -->
+          <div class="table-summary">
+            <p data-result-count role="status" aria-live="polite" aria-atomic="true">
+              Hiển thị 1-10 trên tổng số 35 dòng
+            </p>
+            <label class="page-size">
+              <span>Dòng/trang</span>
+              <select data-page-size aria-label="Số dòng hiển thị mỗi trang">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+          </div>
+          <!-- Phân trang theo số dòng đã chọn. -->
           <nav class="pagination" aria-label="Phân trang">
-            <button type="button" disabled>Trước</button>
-            <button type="button" class="selected" aria-current="page">1</button>
-            <button type="button" disabled>Sau</button>
+            <button type="button" data-page-first aria-label="Về trang đầu" disabled>Đầu</button>
+            <button type="button" data-page-previous aria-label="Trang trước" disabled>
+              Trước
+            </button>
+            <span class="pagination-pages" data-page-numbers>
+              <button
+                type="button"
+                data-page="1"
+                aria-label="Trang 1"
+                class="selected"
+                aria-current="page"
+              >
+                1
+              </button>
+              <button type="button" data-page="2" aria-label="Trang 2">2</button>
+              <button type="button" data-page="3" aria-label="Trang 3">3</button>
+              <button type="button" data-page="4" aria-label="Trang 4">4</button>
+            </span>
+            <button type="button" data-page-next aria-label="Trang sau">Sau</button>
+            <button type="button" data-page-last aria-label="Đến trang cuối">Cuối</button>
           </nav>
         </footer>
       </section>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">
         <strong>IoT Control</strong>
         <p>
           Chọn Sensor ở bên trái, rồi nhập ID, tên, giá trị, đơn vị hoặc thời gian vào ô tìm kiếm
-          bên cạnh. Bấm Find hoặc nhấn Enter để tìm trong sensor đã chọn. Chọn All Sensors để tìm
-          tất cả loại cảm biến; Clear all xóa sensor đã chọn và từ khóa. Dữ liệu hiện là dữ liệu
-          mẫu.
+          bên cạnh. Chọn Thời gian để chỉ tìm ngày/giờ, ví dụ 07/10/2026 hoặc 10:32. Bấm Filter hoặc
+          Enter để áp dụng. Clear all đặt lại mọi điều kiện. Dữ liệu hiện là dữ liệu mẫu.
         </p>
       </div>
     </details>
     <script data-source="tables.js">
-      /**
-       * TÌM KIẾM VÀ BỘ LỌC DÙNG CHUNG CHO HAI TRANG BẢNG
-       *
-       * data-sensor.html và action-history.html đều đánh dấu phần nội dung bằng
-       * data-table-page, nên cùng một file JavaScript có thể xử lý cả hai trang.
-       * Các thuộc tính data-* nối phần tử HTML với chức năng JavaScript.
-       * Data Sensor tìm trong mọi cột của sensor đã chọn; Action History chỉ tìm cột TIME.
-       *
-       * Luồng xử lý:
-       * Đọc các dòng HTML -> chuẩn hóa văn bản -> chờ Find/Enter -> xét từng dòng.
-       * Một dòng chỉ hiện khi khớp tất cả từ tìm kiếm VÀ tất cả bộ lọc đang chọn.
-       * Clear all đặt lại điều kiện và hiển thị kết quả ngay.
-       */
+      /* Filter/Find/Enter áp dụng điều kiện; Clear all đặt lại ngay. */
       (() => {
-        // IIFE tạo phạm vi riêng cho các biến; strict mode hỗ trợ phát hiện lỗi khai báo.
         'use strict';
+        if (typeof window !== 'undefined' && window.IoT?.live) return;
 
-        // Chuẩn hóa cả dữ liệu lẫn từ khóa theo cùng quy tắc trước khi so sánh.
-        // Ví dụ: "  ĐÈN   phòng  " trở thành "den phong".
+        const PAGE_SIZES = [5, 10, 20, 50];
+
+        // Bỏ dấu, chữ hoa và khoảng trắng thừa khi so sánh.
         const normalize = (value) =>
           value
-            // NFD tách dấu ra khỏi chữ; biểu thức tiếp theo loại các dấu kết hợp.
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
-            // Chữ đ/Đ không được NFD đổi thành d, nên phải xử lý riêng.
             .replace(/[đĐ]/g, 'd')
             .toLowerCase()
-            // Gộp khoảng trắng liên tiếp thành một dấu cách và bỏ khoảng trắng hai đầu.
             .replace(/\s+/g, ' ')
             .trim();
 
-        // Chỉ tìm phần tử trong từng vùng data-table-page, tránh lẫn với trang/vùng khác.
+        // Xử lý riêng từng bảng.
         document.querySelectorAll('[data-table-page]').forEach((page) => {
-          // Các nút và ô nhập được tìm bằng thuộc tính chức năng thay vì lớp trang trí CSS.
           const form = page.querySelector('[data-table-form]');
           const search = page.querySelector('[data-table-search]');
-          // Data Sensor có bộ lọc sensor; Action History có device, action và status.
           const filters = [...page.querySelectorAll('[data-filter]')];
           const clear = page.querySelector('[data-clear-filters]');
           const count = page.querySelector('[data-result-count]');
           const empty = page.querySelector('[data-empty]');
+          const previous = page.querySelector('[data-page-previous]');
+          const next = page.querySelector('[data-page-next]');
+          const first = page.querySelector('[data-page-first]');
+          const last = page.querySelector('[data-page-last]');
+          const numbers = page.querySelector('[data-page-numbers]');
+          const pageSizeControl = page.querySelector('[data-page-size]');
 
-          // data-search-scope="time" chỉ lấy ô td.time ở Action History.
-          // Các trang còn lại lấy tất cả ô td, rồi kết hợp với bộ lọc loại cảm biến.
-          const searchSelector = page.dataset.searchScope === 'time' ? 'td.time' : 'td';
-
-          // Bỏ dòng thông báo rỗng ra khỏi dữ liệu cần tìm kiếm và đếm.
-          // Lưu tham chiếu dòng cùng văn bản chuẩn hóa một lần vì dữ liệu hiện là mẫu tĩnh.
+          // Lưu các dòng dữ liệu, bỏ dòng thông báo rỗng.
           const rows = [...page.querySelectorAll('tbody tr:not([data-empty])')].map((element) => ({
             element,
-            // Chỉ ghép các ô thuộc phạm vi tìm kiếm của trang: mọi cột hoặc riêng TIME.
-            // join(' ') ngăn từ cuối ô này dính vào từ đầu ô kế tiếp.
             text: normalize(
-              [...element.querySelectorAll(searchSelector)]
-                .map((cell) => cell.textContent)
-                .join(' '),
+              [...element.querySelectorAll('td')].map((cell) => cell.textContent).join(' '),
             ),
+            timeText: normalize(element.querySelectorAll('td.time')[0]?.textContent ?? ''),
           }));
 
-          // Đọc điều kiện hiện tại, hiện/ẩn các dòng và cập nhật phần kết quả.
-          const update = () => {
-            // Chia từ khóa thành nhiều từ; filter(Boolean) bỏ chuỗi rỗng.
-            // Khi không nhập gì, terms là mảng rỗng và mọi dòng đều khớp phần tìm kiếm.
-            const terms = normalize(search.value).split(' ').filter(Boolean);
-            let visibleCount = 0;
+          let currentPage = 1;
+          let pageSize = 10;
+          let filteredRows = rows;
+          const pageButtons = [];
 
-            rows.forEach(({ element, text }) => {
-              // every yêu cầu tất cả từ có mặt trong phạm vi tìm kiếm của trang.
-              // Với Data Sensor, các từ có thể nằm ở nhiều cột của cùng một dòng.
-              // includes tìm một phần chuỗi: "10:34" khớp với "10:34:02".
-              const matchesSearch = terms.every((term) => text.includes(term));
+          // Đổi số dòng chỉ chia lại kết quả đã xác nhận.
+          const render = () => {
+            const total = filteredRows.length;
+            const pageCount = Math.max(1, Math.ceil(total / pageSize));
+            currentPage = Math.min(currentPage, pageCount);
+            const start = (currentPage - 1) * pageSize;
+            const end = Math.min(start + pageSize, total);
+            const visibleRows = new Set(filteredRows.slice(start, end));
 
-              // "all" nghĩa là bỏ điều kiện của bộ lọc đó.
-              // Ví dụ: data-filter="device" đọc element.dataset.device từ data-device của dòng.
-              // Tên trường và giá trị trong select phải khớp với data-* trên dòng HTML.
-              const matchesFilters = filters.every(
-                (filter) =>
-                  filter.value === 'all' || element.dataset[filter.dataset.filter] === filter.value,
-              );
-
-              // && kết hợp tìm kiếm với bộ lọc; hidden chỉ ẩn dòng, không xóa dữ liệu.
-              const visible = matchesSearch && matchesFilters;
-              element.hidden = !visible;
-              if (visible) visibleCount += 1;
+            rows.forEach((row) => {
+              row.element.hidden = !visibleRows.has(row);
             });
+            empty.hidden = total !== 0;
+            count.textContent = total
+              ? `Hiển thị ${start + 1}-${end} trên tổng số ${total} dòng`
+              : 'Hiển thị 0 trên tổng số 0 dòng';
 
-            // Chỉ hiện thông báo rỗng khi không có dòng khớp; tổng lấy từ số dòng thực.
-            empty.hidden = visibleCount !== 0;
-            count.textContent = `Hiển thị ${visibleCount} trên tổng số ${rows.length} dòng`;
+            previous.disabled = currentPage === 1;
+            next.disabled = currentPage === pageCount;
+            first.disabled = currentPage === 1;
+            last.disabled = currentPage === pageCount;
+            pageButtons.forEach((button, index) => {
+              const selected = index + 1 === currentPage;
+              button.hidden = index >= pageCount;
+              button.classList.toggle('selected', selected);
+              if (selected) button.setAttribute('aria-current', 'page');
+              else button.removeAttribute('aria-current');
+            });
           };
 
-          // Nút Find có type="submit"; nhấn Enter trong ô tìm kiếm cũng gửi form.
-          // preventDefault ngăn form tải lại trang để giữ các điều kiện và kết quả.
-          // Dấu ?. chỉ gắn sự kiện khi tìm thấy phần tử tương ứng.
+          const goToPage = (number) => {
+            const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+            if (number < 1 || number > pageCount || number === currentPage) return;
+            currentPage = number;
+            render();
+          };
+
+          // Tạo nút một lần để giữ focus bàn phím khi chuyển trang.
+          for (
+            let number = 1;
+            number <= Math.max(1, Math.ceil(rows.length / Math.min(...PAGE_SIZES)));
+            number += 1
+          ) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = String(number);
+            button.dataset.page = String(number);
+            button.setAttribute('aria-label', `Trang ${number}`);
+            button.addEventListener('click', () => goToPage(number));
+            pageButtons.push(button);
+          }
+          numbers.replaceChildren(...pageButtons);
+          previous.addEventListener('click', () => goToPage(currentPage - 1));
+          next.addEventListener('click', () => goToPage(currentPage + 1));
+          first.addEventListener('click', () => goToPage(1));
+          last.addEventListener('click', () =>
+            goToPage(Math.max(1, Math.ceil(filteredRows.length / pageSize))),
+          );
+          pageSizeControl.addEventListener('change', () => {
+            const selectedSize = Number(pageSizeControl.value);
+            if (!PAGE_SIZES.includes(selectedSize)) return;
+            pageSize = selectedSize;
+            currentPage = 1;
+            render();
+          });
+
+          // Lọc dòng theo từ khóa và tất cả bộ lọc.
+          const update = () => {
+            const terms = normalize(search.value).split(' ').filter(Boolean);
+            // Action History chỉ tìm thời gian; Data Sensor cho phép chọn phạm vi.
+            const timeOnly =
+              page.dataset.searchScope === 'time' ||
+              filters.some(
+                (filter) => filter.dataset.filter === 'sensor' && filter.value === 'time',
+              );
+            filteredRows = rows.filter(({ element, text, timeText }) => {
+              // Tất cả từ khóa phải khớp.
+              const matchesSearch = terms.every((term) =>
+                (timeOnly ? timeText : text).includes(term),
+              );
+
+              // Giá trị all bỏ điều kiện lọc tương ứng.
+              const matchesFilters = filters.every(
+                (filter) =>
+                  filter.value === 'all' ||
+                  (filter.dataset.filter === 'sensor' && filter.value === 'time') ||
+                  element.dataset[filter.dataset.filter] === filter.value,
+              );
+
+              return matchesSearch && matchesFilters;
+            });
+            currentPage = 1;
+            render();
+          };
+
+          // Nút xác nhận hoặc Enter áp dụng điều kiện, không tải lại trang.
           form?.addEventListener('submit', (event) => {
             event.preventDefault();
             update();
           });
 
-          // Clear all có type="button", vì vậy không gửi form.
-          // Xóa cả từ khóa lẫn bộ lọc, rồi áp dụng ngay mà không cần nhấn Find.
+          // Clear all xóa từ khóa và đặt bộ lọc về all.
           clear?.addEventListener('click', () => {
             search.value = '';
             filters.forEach((filter) => {
@@ -1736,8 +2202,7 @@
             update();
           });
 
-          // Hiển thị đúng số dòng khi mở trang. Không gắn update vào input/change,
-          // nên nhập chữ hoặc đổi select chỉ có hiệu lực sau khi nhấn Find/Enter.
+          // Mặc định 10 dòng/trang; Clear all giữ lựa chọn số dòng.
           update();
         });
       })();

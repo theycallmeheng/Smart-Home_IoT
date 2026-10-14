@@ -1,0 +1,25 @@
+{
+  "name": "iot-control",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ESP8266 MQTT bridge and IoT dashboard",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env scripts/start-local.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "export:figma": "node scripts/export-figma.cjs",
+    "setup:hardware": "node scripts/setup-hardware.cjs",
+    "account:create": "node --env-file-if-exists=.env scripts/create-account.cjs",
+    "start:backend": "node --env-file-if-exists=.env backend/server.cjs",
+    "format": "prettier --write \"*.html\" \"*.css\" \"*.js\" \"backend/*.cjs\" \"scripts/*.cjs\" \"tests/*.cjs\""
+  },
+  "dependencies": {
+    "mqtt": "5.16.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2"
+  }
+}

@@ -1,25 +1,18 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Profile | IoT Control</title>
-    <!-- Profile chỉ dùng HTML và styles.css; các tài nguyên chưa được nối với URL thật. -->
-    <link rel="stylesheet" href="styles.css?v=readable-controls-20261007" />
+    <!-- Profile dùng HTML và CSS. -->
+    <link rel="stylesheet" href="styles.css?v=hardware-20261013" />
+    <script src="iot-api.js?v=hardware-20261013" defer></script>
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="index.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -40,7 +33,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link" href="index.html">
           <svg
@@ -109,7 +101,6 @@
           <span class="nav-dot"></span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -121,7 +112,7 @@
         </span>
       </div>
     </aside>
-    <!-- Hồ sơ sinh viên và tài nguyên dự án -->
+    <!-- Thông tin sinh viên và tài nguyên dự án. -->
     <main class="main profile-main">
       <div class="profile-content">
         <header class="page-header">
@@ -129,12 +120,7 @@
           <p>Thông tin tài khoản và tài nguyên dự án</p>
         </header>
 
-        <!--
-          Thẻ hồ sơ gồm avatar, tên, mô tả và vai trò Admin, xếp dọc và căn giữa.
-          align-items căn giữa các khối; text-align căn giữa chữ bên trong.
-          Các style trực tiếp giữ phần căn giữa ngay cả khi trình duyệt còn lưu CSS cũ.
-          Muốn đổi tên, thay cả 2 chỗ [HỌ VÀ TÊN] trên trang.
-        -->
+        <!-- Avatar, tên và vai trò xếp dọc, căn giữa. -->
         <section
           class="card profile-overview"
           aria-labelledby="profile-name"
@@ -160,7 +146,7 @@
             style="width: 100%; max-width: 520px; margin-inline: auto; text-align: center"
           >
             <p class="profile-eyebrow">Hồ sơ sinh viên</p>
-            <h2 id="profile-name">[HỌ VÀ TÊN]</h2>
+            <h2 id="profile-name">Nguyễn Đức Hưng</h2>
             <p class="profile-subtitle">Sinh viên · Dự án IoT Control</p>
           </div>
           <span
@@ -190,22 +176,20 @@
           </span>
         </section>
 
-        <!-- Hai cột: thông tin sinh viên và tài nguyên; CSS gộp thành một cột khi hẹp. -->
         <div class="profile-details-grid">
           <section class="card student-card" aria-labelledby="student-title">
             <header class="profile-section-heading">
               <h2 id="student-title">Thông tin sinh viên</h2>
               <p>Thông tin cá nhân của chủ tài khoản</p>
             </header>
-            <!-- dl là danh sách thông tin: dt là nhãn, dd là giá trị của nhãn đó. -->
             <dl>
               <div class="profile-field">
                 <dt>Họ và tên</dt>
-                <dd>[HỌ VÀ TÊN]</dd>
+                <dd>Nguyễn Đức Hưng</dd>
               </div>
               <div class="profile-field">
                 <dt>Mã sinh viên</dt>
-                <dd>[MÃ SINH VIÊN]</dd>
+                <dd>B23DCCN368</dd>
               </div>
             </dl>
           </section>
@@ -215,12 +199,7 @@
               <h2 id="resources-title">Project resources</h2>
               <p>Các liên kết và tài liệu của dự án</p>
             </header>
-            <!--
-              Grid 2 x 2 cho GitHub, Figma, Postman và PDF; mỗi article là một tài nguyên.
-              disabled tạm khóa nút Open vì chưa có đường dẫn thật.
-              Khi có URL, thay nút bằng liên kết a có href và giữ phần hiển thị bên trong.
-              Muốn thêm tài nguyên, sao chép một article rồi đổi tên, mô tả, icon và URL.
-            -->
+            <!-- GitHub/Figma mở tab mới; Postman/PDF chờ liên kết. -->
             <div class="resources-grid">
               <article class="resource">
                 <div class="resource-heading">
@@ -244,12 +223,13 @@
                   </div>
                 </div>
                 <div class="resource-actions">
-                  <span>Chưa có liên kết</span>
-                  <button
-                    type="button"
-                    disabled
-                    aria-label="Mở GitHub"
-                    title="Chưa có đường dẫn dự án"
+                  <span>Smart-Home_IoT</span>
+                  <a
+                    href="https://github.com/theycallmeheng/Smart-Home_IoT"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Mở GitHub trong tab mới"
+                    title="Mở mã nguồn Smart-Home_IoT"
                   >
                     Open
                     <svg
@@ -266,7 +246,7 @@
                         d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
                       />
                     </svg>
-                  </button>
+                  </a>
                 </div>
               </article>
               <article class="resource">
@@ -294,12 +274,13 @@
                   </div>
                 </div>
                 <div class="resource-actions">
-                  <span>Chưa có liên kết</span>
-                  <button
-                    type="button"
-                    disabled
-                    aria-label="Mở Figma"
-                    title="Chưa có đường dẫn dự án"
+                  <span>Figma Design</span>
+                  <a
+                    href="https://www.figma.com/design/b2QFIRSd7shMWHjT0JWH5N/Untitled?node-id=0-1&amp;p=f&amp;t=66TdSH2PLBFyFJ21-0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Mở Figma trong tab mới"
+                    title="Mở thiết kế giao diện trên Figma"
                   >
                     Open
                     <svg
@@ -316,7 +297,7 @@
                         d="M14 3h7v7M21 3l-10 10M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6"
                       />
                     </svg>
-                  </button>
+                  </a>
                 </div>
               </article>
               <article class="resource">
@@ -413,14 +394,14 @@
         </div>
       </div>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">
         <strong>IoT Control</strong>
         <p>
-          Hồ sơ hiển thị thông tin sinh viên và tài nguyên của dự án. Các mục GitHub, Figma, Postman
-          và PDF sẽ mở được khi có đường dẫn tương ứng.
+          Hồ sơ hiển thị thông tin sinh viên và tài nguyên của dự án. Nhấn Open ở GitHub hoặc Figma
+          để mở liên kết trong tab mới. Postman và PDF sẽ mở được khi có đường dẫn tương ứng.
         </p>
       </div>
     </details>

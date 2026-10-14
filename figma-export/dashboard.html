@@ -1,34 +1,18 @@
 <!doctype html>
 <html lang="vi">
   <head>
-    <!-- Bản xuất riêng từ index.html để import từng tab vào Figma.
-     CSS, JavaScript và SVG đã nằm trong file này; các file gốc giữ nguyên. -->
-    <!-- UTF-8 hiển thị đúng tiếng Việt; viewport giúp CSS thích ứng với màn hình nhỏ. -->
+    <!-- Bản xuất dashboard.html cho Figma, nhúng sẵn CSS/JS và dữ liệu mẫu. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="IoT Control — bảng điều khiển và dữ liệu cảm biến." />
     <title>Dashboard | IoT Control</title>
-    <!-- CSS chung tải trước; dashboard.css bổ sung kiểu riêng cho trang này. -->
+    <!-- CSS chung và kiểu riêng cho Dashboard. -->
     <style data-source="styles.css">
-      /*
- * STYLES.CSS - KIỂU DÙNG CHUNG CHO CẢ 4 TRANG
- *
- * HTML xác định cấu trúc; các class như .card, .sidebar nối HTML với quy tắc ở đây.
- * Dashboard tải thêm dashboard.css để bổ sung kiểu riêng sau file này.
- *
- * Cách đọc thuộc tính:
- * - margin: khoảng cách ngoài phần tử; padding: khoảng cách trong phần tử.
- * - gap: khoảng cách giữa các phần tử con của Flexbox hoặc Grid.
- * - border: viền; border-radius: bo góc; box-shadow: bóng đổ.
- * - px: kích thước theo pixel CSS; fr: phần không gian còn lại trong Grid.
- * - :hover/:focus-visible/:checked: kiểu áp dụng khi rê chuột, dùng bàn phím hoặc bật.
- * Các chú thích giải thích theo nhóm; các quy tắc trong nhóm cùng tạo một thành phần.
- */
+      /* CSS dùng chung cho bốn trang. */
 
       /* Thiết lập chung */
 
       :root {
-        /* Biến màu dùng lại qua var(...); đổi --blue sẽ đổi màu chủ đạo ở các chỗ tham chiếu. */
         --blue: #2864ff;
         --text: #1e2b43;
         --muted: #91a1b9;
@@ -43,18 +27,15 @@
         font-synthesis: none;
       }
       * {
-        /* border-box tính padding và viền vào width/height, giúp kiểm soát kích thước dễ hơn. */
         box-sizing: border-box;
       }
       body {
-        /* Bỏ khoảng trắng mặc định quanh trang; giữ độ rộng tối thiểu 320px. */
         margin: 0;
         min-width: 320px;
       }
       button,
       input,
       select {
-        /* inherit giúp các ô nhập và nút dùng cùng phông với phần nội dung xung quanh. */
         font: inherit;
       }
       a {
@@ -70,19 +51,13 @@
         cursor: default;
       }
       .icon {
-        /* Kích thước SVG mặc định; flex-shrink: 0 tránh icon bị bóp khi hàng chật. */
         width: 16px;
         height: 16px;
         flex-shrink: 0;
       }
-      /*
- * Thanh điều hướng
- * Sidebar dùng Flexbox dọc: logo trên, menu ở giữa, tài khoản ở cuối.
- * Các class active/online-dot chỉ tạo kiểu hiển thị, không xác thực tài khoản.
- */
+      /* Thanh điều hướng */
 
       .sidebar {
-        /* fixed giữ sidebar tại mép trái khi cuộn; inset lần lượt là trên, phải, dưới, trái. */
         position: fixed;
         inset: 0 auto 0 0;
         width: 184px;
@@ -100,7 +75,6 @@
         border-bottom: 1px solid #f5f7fa;
       }
       .brand-icon {
-        /* Grid + place-items: center căn icon vào giữa ô vuông theo cả hai chiều. */
         display: grid;
         place-items: center;
         width: 28px;
@@ -130,7 +104,6 @@
         gap: 7px;
       }
       .nav-link {
-        /* Flexbox xếp icon, nhãn và chấm active trên cùng một hàng. */
         display: flex;
         align-items: center;
         gap: 9px;
@@ -150,13 +123,11 @@
         color: var(--blue);
       }
       .nav-link.active {
-        /* HTML của mỗi trang gắn active vào đúng liên kết đang được mở. */
         background: #eff5ff;
         color: var(--blue);
         font-weight: 600;
       }
       .nav-dot {
-        /* margin-left: auto dùng khoảng trống còn lại để đẩy chấm sang mép phải. */
         margin-left: auto;
         width: 5px;
         height: 5px;
@@ -164,7 +135,6 @@
         background: var(--blue);
       }
       .account {
-        /* Trong sidebar dạng cột, margin-top: auto đẩy tài khoản xuống cuối vùng còn trống. */
         margin-top: auto;
         display: flex;
         align-items: center;
@@ -173,6 +143,7 @@
         border-top: 1px solid #f4f6fa;
       }
       .account-avatar {
+        flex-shrink: 0;
         width: 25px;
         height: 25px;
         display: grid;
@@ -186,6 +157,7 @@
         display: block;
         font-size: 12px;
         line-height: 18px;
+        overflow-wrap: anywhere;
       }
       .account small {
         display: flex;
@@ -200,10 +172,10 @@
         background: var(--green);
         border-radius: 50%;
       }
-      /* Khung nội dung và thẻ dùng chung */
+      /* Nội dung và thẻ dùng chung */
 
       .main {
-        /* Chừa 184px bằng độ rộng sidebar; khi đổi sidebar cần đổi khoảng chừa tương ứng. */
+        /* Chừa khoảng bên trái bằng độ rộng sidebar: 184px. */
         margin-left: 184px;
         padding: 28px 24px 64px;
         min-height: 100vh;
@@ -224,8 +196,66 @@
         color: #a3afc1;
         line-height: 1.5;
       }
+      .page-header.has-iot-status {
+        position: relative;
+        padding-right: 350px;
+      }
+      .iot-modebar {
+        position: absolute;
+        top: 5px;
+        right: 0;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 11px;
+      }
+      .iot-status-label {
+        padding: 6px 9px;
+        color: #657a9c;
+        background: #edf2ff;
+        border-radius: 18px;
+      }
+      .iot-modebar a,
+      .iot-modebar button {
+        padding: 6px 9px;
+        border: 1px solid #d7e3fb;
+        border-radius: 6px;
+        color: var(--blue);
+        background: #fff;
+      }
+      .iot-modebar button[hidden] {
+        display: none;
+      }
+      .iot-modebar button:hover {
+        background: #eff5ff;
+      }
+      .iot-modebar button:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
+      .table-api-error {
+        padding: 10px 12px;
+        border: 1px solid #ffd4d8;
+        border-radius: 8px;
+        color: #ba3c4a;
+        background: #fff1f2;
+        font-size: 13px;
+      }
+      .pagination-gap {
+        align-self: center;
+        padding: 0 4px;
+      }
+      @media (max-width: 700px) {
+        .page-header.has-iot-status {
+          padding-right: 0;
+        }
+        .iot-modebar {
+          position: static;
+          margin-top: 8px;
+        }
+      }
       .card {
-        /* Lớp nền chung cho thẻ cảm biến, biểu đồ, bảng và hồ sơ; các lớp khác bổ sung kiểu riêng. */
         background: #fff;
         border-radius: 14px;
         box-shadow: 0 1px 2px #1e2b4305;
@@ -236,10 +266,9 @@
         margin: 0;
         line-height: 1.5;
       }
-      /* Cảm biến, biểu đồ và điều khiển thiết bị */
+      /* Cảm biến, biểu đồ và thiết bị */
 
       .metrics {
-        /* 3 cột bằng nhau; minmax(0, 1fr) cho phép cột co nhỏ mà không bị nội dung ép rộng. */
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
@@ -271,7 +300,6 @@
         margin-bottom: 6px;
       }
       .metric p {
-        /* Phông monospace cho số có độ rộng ký tự đều; tiêu đề vẫn dùng phông chữ chung. */
         font-family: Consolas, 'Courier New', monospace;
         font-weight: 700;
         margin: 0;
@@ -279,7 +307,6 @@
         line-height: 1;
       }
       .temperature {
-        /* Ba lớp temperature/humidity/light dùng lại cho icon, nhãn cảm biến và chú giải. */
         color: var(--red);
         background: #ffe3e6;
       }
@@ -292,7 +319,6 @@
         background: #fff1c4;
       }
       .dashboard-grid {
-        /* Biểu đồ chiếm 7 phần, điều khiển chiếm 3 phần; cột điều khiển rộng tối thiểu 240px. */
         display: grid;
         grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
         gap: 14px;
@@ -325,14 +351,12 @@
         gap: 4px;
       }
       .legend span::before {
-        /* ::before tạo vạch màu bằng CSS mà không cần thêm phần tử vào HTML. */
         content: '';
         width: 14px;
         height: 2px;
         background: currentColor;
       }
       .chart {
-        /* SVG giữ tỷ lệ theo viewBox; width: 100% cho biểu đồ co theo thẻ chứa nó. */
         display: block;
         width: 100%;
         height: auto;
@@ -351,7 +375,6 @@
         fill: #a2aec0;
       }
       .plot {
-        /* Nét biểu đồ chỉ có stroke, không tô fill; mỗi lớp *-line chọn màu đường riêng. */
         fill: none;
         stroke-width: 2;
         stroke-linecap: round;
@@ -377,7 +400,6 @@
         gap: 10px;
       }
       .device {
-        /* position: relative làm mốc cho checkbox ẩn nằm bên trong hàng thiết bị. */
         position: relative;
         display: flex;
         align-items: center;
@@ -388,8 +410,7 @@
         cursor: pointer;
       }
       .device-input {
-        /* Checkbox vẫn nhận focus và điều khiển bằng label; chỉ ẩn hình thức mặc định.
-     Không dùng display: none vì sẽ làm mất khả năng focus bằng bàn phím. */
+        /* Ẩn checkbox nhưng vẫn cho phép nhận focus bằng bàn phím. */
         position: absolute;
         opacity: 0;
         width: 1px;
@@ -419,7 +440,6 @@
         color: var(--blue);
       }
       .switch {
-        /* Nền công tắc; nút tròn bên trong được vẽ bằng phần tử giả ::after bên dưới. */
         margin-left: auto;
         width: 35px;
         height: 19px;
@@ -429,7 +449,6 @@
         transition: background 0.18s;
       }
       .switch::after {
-        /* content tạo phần tử giả; transition làm vị trí nút chuyển mượt khi checked đổi. */
         content: '';
         display: block;
         width: 13px;
@@ -440,11 +459,10 @@
         transition: transform 0.18s;
       }
       .device-input:checked ~ .switch {
-        /* ~ chọn phần tử anh em đứng sau input trong cùng label; thứ tự HTML phải được giữ. */
+        /* Giữ input trước các phần tử được chọn bằng dấu ~. */
         background: var(--blue);
       }
       .device-input:checked ~ .switch::after {
-        /* Khi bật, di chuyển nút tròn 16px sang phải; khi tắt nó về vị trí ban đầu. */
         transform: translateX(16px);
       }
       .device-input:checked ~ .device-icon {
@@ -452,20 +470,17 @@
         color: #568dff;
       }
       .device-input:checked ~ .device-label .state-on {
-        /* Hai nhãn bật/tắt cùng có trong HTML, CSS chỉ hiện nhãn phù hợp với checked. */
         display: block;
       }
       .device-input:checked ~ .device-label .state-off {
         display: none;
       }
       .device-input:focus-visible ~ .switch {
-        /* Vẽ viền quanh công tắc thay cho checkbox ẩn khi người dùng điều hướng bằng bàn phím. */
         outline: 2px solid var(--blue);
         outline-offset: 4px;
       }
-      /* Tìm kiếm, bộ lọc và bảng dữ liệu */
+      /* Tìm kiếm, bộ lọc và bảng */
 
-      /* Hai trang bảng dùng cỡ chữ lớn hơn một chút, cùng khoảng cách dòng dễ đọc. */
       [data-table-page] {
         font-size: 13px;
         line-height: 1.5;
@@ -479,7 +494,6 @@
         color: #8292aa;
       }
       .toolbar {
-        /* Ô tìm kiếm và nhóm bộ lọc nằm trên một hàng, được phép xuống hàng khi thiếu chỗ. */
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -488,7 +502,6 @@
         margin: 0 0 18px;
       }
       .search-field {
-        /* Label bao cả kính lúp và input; đường viền đặt ở label thay vì input bên trong. */
         width: 320px;
         height: 42px;
         display: flex;
@@ -515,7 +528,6 @@
         background: transparent;
       }
       .search-field:focus-within {
-        /* focus-within áp dụng cho khung label khi input con đang được nhập. */
         border-color: #8fb0ff;
         box-shadow: 0 0 0 2px #2864ff12;
       }
@@ -523,14 +535,12 @@
         color: #a3afc1;
       }
       .filters {
-        /* flex-wrap cho các select và nút Find/Clear all tự xuống hàng trên màn hình hẹp. */
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 10px;
       }
       .filters select {
-        /* Cùng chiều cao với Search và các nút; chừa khoảng bên phải cho mũi tên chọn. */
         height: 42px;
         min-width: 140px;
         background: #fff;
@@ -545,11 +555,16 @@
         border-color: #a8bfea;
       }
       .toolbar-actions {
-        /* Giữ Find và Clear all thành một cặp nút có cùng kích thước theo chiều dọc. */
         flex-wrap: nowrap;
       }
-      /* Data Sensor giữ Sensor và ô tìm kiếm trong cùng một hàng, đúng thứ tự từ trái sang phải. */
+      /* Data Sensor: bộ lọc Sensor bên trái, Search bên cạnh. */
+      .sensor-toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
       .sensor-toolbar .sensor-search-controls {
+        display: grid;
+        grid-template-columns: 148px minmax(0, 1fr);
         align-items: center;
         flex-wrap: nowrap;
         min-width: 0;
@@ -557,15 +572,30 @@
         margin-left: 0;
       }
       .sensor-search-controls select {
-        width: 148px;
+        width: 100%;
         min-width: 0;
         flex-shrink: 0;
       }
       .sensor-search-controls .search-field {
-        width: 340px;
+        width: 100%;
         min-width: 0;
+        flex: 1;
       }
-      /* Action History chia rõ 3 nhóm: Search, 3 bộ lọc bằng nhau và cặp nút xác nhận. */
+      .sensor-toolbar .toolbar-actions {
+        margin-left: 0;
+        justify-self: end;
+      }
+      @media (max-width: 1100px) {
+        .sensor-toolbar {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 700px) {
+        .sensor-toolbar .sensor-search-controls {
+          grid-template-columns: 128px minmax(0, 1fr);
+        }
+      }
+      /* Action History: Search, ba bộ lọc và Find/Clear all. */
       .history-toolbar {
         display: grid;
         grid-template-columns: minmax(220px, 360px) minmax(440px, 1fr) auto;
@@ -587,7 +617,6 @@
         margin-left: 0;
       }
       .find-filters {
-        /* Nút xác nhận màu chủ đạo; CSS chỉ tạo hình thức, hành động nằm trong tables.js. */
         background: var(--blue);
         color: #fff;
         border: 1px solid var(--blue);
@@ -605,7 +634,6 @@
         border-color: #1e54df;
       }
       .clear-filters {
-        /* Nút đặt lại điều kiện dùng viền xanh để phân biệt với nút xác nhận Find. */
         background: #fff;
         color: var(--blue);
         border: 1px solid #cbdcff;
@@ -625,15 +653,13 @@
         padding: 20px 20px 16px;
       }
       .table-scroll {
-        /* Chỉ vùng bảng cuộn ngang khi tổng độ rộng các cột vượt quá vùng chứa. */
+        /* Cuộn ngang khi bảng vượt chiều rộng màn hình. */
         overflow-x: auto;
       }
       .history-table {
-        /* Lịch sử có 6 cột; giữ độ rộng tối thiểu và cuộn ngang trong table-scroll khi cần. */
         min-width: 720px;
       }
       table {
-        /* collapse gộp viền ô; nowrap giữ dữ liệu ngắn như giờ/giá trị trên một dòng. */
         border-collapse: collapse;
         width: 100%;
         text-align: left;
@@ -655,7 +681,6 @@
       }
       th:first-child,
       td:first-child {
-        /* Cột đầu là ID: giữ độ rộng thống nhất và căn giữa cả tiêu đề lẫn dữ liệu. */
         width: 14%;
         text-align: center;
       }
@@ -664,12 +689,14 @@
         font-family: Consolas, 'Courier New', monospace;
         color: #8c9bb1;
       }
+      .time {
+        white-space: nowrap;
+      }
       .reading {
         font-family: Consolas, 'Courier New', monospace;
         font-weight: 700;
       }
       .badge {
-        /* Nhãn nhỏ dạng viên thuốc cho loại cảm biến và trạng thái thành công/thất bại. */
         display: inline-flex;
         align-items: center;
         gap: 4px;
@@ -693,8 +720,13 @@
         color: #f25562;
         background: #ffe1e5;
       }
+      .badge.pending {
+        color: #a57309;
+        background: #fff2cf;
+      }
       .table-footer {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
@@ -705,12 +737,38 @@
         color: #8395af;
         font-size: 12px;
       }
+      .table-summary {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+      }
+      .page-size {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #71839d;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .page-size select {
+        height: 34px;
+        min-width: 62px;
+        padding: 5px 8px;
+        color: #53647f;
+        background: #fff;
+        border: 1px solid #dce5f1;
+        border-radius: 5px;
+      }
+      .page-size select:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
       [hidden] {
-        /* JavaScript đặt element.hidden để lọc dòng; !important giữ dòng đó ẩn trước kiểu khác. */
+        /* Ưu tiên ẩn các dòng không khớp điều kiện lọc. */
         display: none !important;
       }
       .empty-state {
-        /* Kiểu cho ô thông báo khi không có kết quả; dòng này được tables.js loại khỏi số đếm. */
         height: 100px;
         text-align: center;
         color: var(--muted);
@@ -722,8 +780,15 @@
         background: #f5f7fa;
       }
       .pagination {
-        /* Chỉ tạo bố cục cho nút phân trang; hiện chưa có logic chuyển trang. */
+        /* Các nút phân trang được tables.js cập nhật theo kết quả lọc. */
         display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .pagination-pages {
+        display: flex;
+        flex-wrap: wrap;
         gap: 4px;
       }
       .pagination button {
@@ -741,10 +806,21 @@
         background: var(--blue);
         border-color: var(--blue);
       }
-      /* Trang Profile */
+      .pagination button:disabled {
+        color: #a4b1c4;
+        background: #f7f9fc;
+        border-color: #edf1f6;
+      }
+      .pagination button:not(:disabled):hover {
+        border-color: #8fb0ff;
+      }
+      .pagination button:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 2px;
+      }
+      /* Profile */
 
       .profile-main {
-        /* Đặt cỡ chữ và khoảng cách dòng nhất quán cho toàn bộ hồ sơ. */
         font-family: inherit;
         font-size: 12px;
         font-weight: 400;
@@ -753,7 +829,6 @@
         text-align: left;
       }
       .profile-content {
-        /* Giới hạn độ rộng để trang hồ sơ không bị trải quá rộng trên màn hình lớn. */
         max-width: 1100px;
       }
       .profile-main .page-header h1 {
@@ -766,8 +841,7 @@
         line-height: 1.5;
       }
       .profile-overview {
-        /* column xếp avatar, tên, vai trò theo chiều dọc; align-items căn giữa các khối.
-     text-align căn giữa chữ; hai thuộc tính này giải quyết hai cách căn khác nhau. */
+        /* Xếp dọc và căn giữa avatar, tên, vai trò. */
         position: relative;
         display: flex;
         flex-direction: column;
@@ -781,7 +855,6 @@
         text-align: center;
       }
       .profile-overview::before {
-        /* Thanh màu trang trí ở mép trên; absolute đặt theo thẻ profile-overview. */
         content: '';
         position: absolute;
         inset: 0 0 auto;
@@ -789,7 +862,6 @@
         background: linear-gradient(90deg, #2864ff, #c6d9ff 65%, #f1f6ff);
       }
       .profile-avatar {
-        /* border-radius: 50% tạo hình tròn; Grid căn SVG đại diện vào chính giữa. */
         display: grid;
         place-items: center;
         width: 84px;
@@ -816,7 +888,6 @@
         margin: 0 0 6px;
       }
       .profile-identity h2 {
-        /* Tên dài được phép xuống dòng thay vì làm tràn thẻ hồ sơ. */
         font-size: 18px;
         font-weight: 700;
         line-height: 1.5;
@@ -848,7 +919,6 @@
         height: 14px;
       }
       .profile-details-grid {
-        /* Cột sinh viên chiếm 0,9 phần, tài nguyên 1,1 phần; khoảng cách giữa cột là 20px. */
         display: grid;
         grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
         gap: 20px;
@@ -877,14 +947,12 @@
         flex-direction: column;
       }
       .profile-main .student-card dl {
-        /* Hai trường thông tin xếp dọc mặc định; media query có thể chuyển thành hai cột. */
         display: grid;
         gap: 14px;
         margin: 0;
         flex: 1;
       }
       .profile-field {
-        /* Mỗi trường có nhãn dt trên và giá trị dd dưới, cùng nằm trong một khung nhẹ. */
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -908,13 +976,12 @@
         overflow-wrap: anywhere;
       }
       .resources-grid {
-        /* 2 cột bằng nhau tạo bố cục 2 x 2 cho 4 tài nguyên. */
+        /* Bốn tài nguyên chia thành hai cột. */
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
       .profile-main .resource {
-        /* Flexbox dọc giữ phần tên/mô tả trên và vùng nút bên dưới. */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -959,7 +1026,6 @@
         height: 19px;
       }
       .resource-github {
-        /* Bốn lớp resource-* đặt màu icon riêng; chúng không quyết định đường dẫn tài nguyên. */
         background: #eff2f6;
         color: #43536d;
       }
@@ -976,7 +1042,6 @@
         color: #e7657b;
       }
       .resource-actions {
-        /* Cột trạng thái dùng phần còn lại; cột nút Open rộng theo nội dung của nút. */
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
@@ -989,7 +1054,7 @@
       }
       .resource-actions button,
       .resource-actions a {
-        /* Cùng tạo kiểu cho nút hiện tại và liên kết a sẽ dùng khi có URL thật. */
+        /* Kiểu chung cho nút và liên kết Open. */
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -1006,7 +1071,6 @@
         white-space: nowrap;
       }
       .resource-actions button:disabled {
-        /* Trạng thái xám tương ứng với nút Open chưa có liên kết trong HTML. */
         color: #8495b1;
         border-color: #e2e9f4;
         background: #f8fafd;
@@ -1015,10 +1079,9 @@
         width: 11px;
         height: 11px;
       }
-      /* Trợ giúp và trạng thái focus */
+      /* Trợ giúp và focus bàn phím */
 
       .help {
-        /* Nút ? cố định ở góc phải dưới; z-index đưa hướng dẫn lên trên vùng nội dung. */
         position: fixed;
         bottom: 16px;
         right: 16px;
@@ -1040,7 +1103,6 @@
         display: none;
       }
       .help-content {
-        /* absolute đặt hộp hướng dẫn phía trên nút ? trong phần tử .help. */
         position: absolute;
         bottom: 39px;
         right: 0;
@@ -1061,18 +1123,12 @@
       button:focus-visible,
       select:focus-visible,
       summary:focus-visible {
-        /* Viền focus giúp biết phần tử nào đang được chọn khi dùng phím Tab. */
         outline: 2px solid var(--blue);
         outline-offset: 3px;
       }
-      /*
- * Bố cục theo kích thước màn hình (responsive)
- * @media chỉ áp dụng khi điều kiện độ rộng đúng; các quy tắc bên trong ghi đè kiểu ở trên.
- * Khi nhiều quy tắc cùng mức ưu tiên cùng đúng, quy tắc xuất hiện sau được dùng.
- */
+      /* Bố cục theo kích thước màn hình */
 
       @media (min-width: 1500px) {
-        /* Màn hình lớn: tăng khoảng trống vùng nội dung và chiều cao thẻ. */
         .main {
           padding: 36px;
         }
@@ -1081,7 +1137,6 @@
         }
       }
       @media (max-width: 1050px) {
-        /* Thu gọn thẻ và tách tiêu đề/chú giải biểu đồ để giảm chật chội. */
         .chart-heading {
           align-items: flex-start;
           flex-direction: column;
@@ -1101,7 +1156,7 @@
         }
       }
       @media (max-width: 1100px) {
-        /* Đưa Search lên một hàng riêng; ba bộ lọc vẫn chia đều hàng bên dưới. */
+        /* Đưa Search lên hàng riêng khi thiếu chỗ. */
         .history-toolbar {
           grid-template-columns: minmax(0, 1fr) auto;
         }
@@ -1113,13 +1168,12 @@
         }
       }
       @media (max-width: 900px) {
-        /* Khi vùng nội dung hẹp, đặt cặp nút dưới các bộ lọc để tránh ép nhỏ ô chọn. */
         .history-toolbar {
           grid-template-columns: minmax(0, 1fr);
         }
       }
       @media (max-width: 800px) {
-        /* Sidebar hẹp hơn, cảm biến và biểu đồ chuyển dần về bố cục một cột. */
+        /* Thu gọn sidebar và bố cục nội dung. */
         .sidebar {
           width: 160px;
         }
@@ -1162,13 +1216,12 @@
         }
       }
       @media (max-width: 700px) {
-        /* Ba ô chọn xếp dọc và có cùng độ rộng trên màn hình nhỏ. */
         .history-toolbar .history-filter-controls {
           grid-template-columns: minmax(0, 1fr);
         }
       }
       @media (max-width: 560px) {
-        /* Điện thoại: sidebar thành thanh đầu trang, bỏ khoảng chừa bên trái và cho bảng cuộn ngang. */
+        /* Điện thoại: sidebar chuyển lên đầu trang. */
         .sidebar {
           position: static;
           width: 100%;
@@ -1246,7 +1299,6 @@
         }
       }
       @media (max-width: 1000px) {
-        /* Riêng Profile: xếp hai thẻ chính dọc, hai trường sinh viên vẫn đặt cạnh nhau. */
         .profile-details-grid {
           grid-template-columns: 1fr;
         }
@@ -1255,7 +1307,7 @@
         }
       }
       @media (max-width: 560px) {
-        /* Riêng Profile trên điện thoại: các trường và tài nguyên đều chuyển thành một cột. */
+        /* Profile trên điện thoại: các trường và tài nguyên xếp dọc. */
         .profile-overview {
           gap: 14px;
           padding: 20px;
@@ -1293,7 +1345,7 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        /* Tôn trọng tùy chọn giảm chuyển động của hệ điều hành bằng cách bỏ transition. */
+        /* Giảm chuyển động theo tùy chọn hệ điều hành. */
         *,
         *::after {
           transition: none !important;
@@ -1301,36 +1353,28 @@
       }
     </style>
     <style data-source="dashboard.css">
-      /*
- * DASHBOARD.CSS - KIỂU VÀ HIỆU ỨNG RIÊNG CHO INDEX.HTML
- *
- * File được tải sau styles.css. Các selector có .dashboard-main bổ sung/ghi đè
- * kiểu cơ bản trong vùng Dashboard; các trang bảng và Profile không tải file này.
- *
- * Quan hệ giữa HTML, CSS và JavaScript:
- * - checked trên checkbox quyết định màu, chữ bật/tắt và animation của thiết bị.
- * - dashboard.js thêm .is-pending trong khoảng chờ 500ms rồi gỡ khi hoàn tất.
- * - Trong lúc chờ, checked vẫn là trạng thái cũ nên hiệu ứng thiết bị giữ nguyên.
- * - @keyframes định nghĩa chuyển động; animation mới kích hoạt chuyển động đó.
- */
+      /* CSS và hiệu ứng riêng cho Dashboard. */
 
       /* Tiêu đề và tổng quan */
 
       .dashboard-main {
-        /* Biến màu chữ phụ chỉ dùng trong vùng này; --blue được kế thừa từ styles.css. */
         --dash-muted: #8090a7;
+        padding: 16px;
         font-size: 12px;
         line-height: 1.5;
       }
+      .dashboard-main .page-header {
+        margin-bottom: 10px;
+      }
       .dashboard-heading {
-        /* Tiêu đề ở trái, nhãn Dữ liệu mẫu ở phải; gap giữ khoảng cách khi vùng chứa hẹp. */
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
       }
       .dashboard-heading h1 {
-        font-size: 20px;
+        margin-bottom: 4px;
+        font-size: 18px;
         letter-spacing: normal;
       }
       .dashboard-heading p {
@@ -1349,7 +1393,6 @@
         font-size: 11px;
       }
       .demo-badge::before {
-        /* Phần tử giả tạo chấm màu đứng trước nhãn mà không cần thêm HTML. */
         content: '';
         width: 6px;
         height: 6px;
@@ -1357,22 +1400,19 @@
         background: #7790e9;
       }
       .dashboard-welcome {
-        /* Flexbox xếp phần giới thiệu và số đếm ngang; gradient tạo nền chuyển màu nhẹ. */
         position: relative;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 28px;
         overflow: hidden;
-        padding: 24px 28px;
-        margin-bottom: 20px;
+        padding: 10px 18px;
+        margin-bottom: 10px;
         border: 1px solid #dbe8ff;
         border-radius: 16px;
         background: linear-gradient(110deg, #edf4ff, #f5f8ff 60%, #e8f2ff);
       }
       .dashboard-welcome::after {
-        /* Vòng tròn trang trí đặt lệch ra ngoài; overflow của banner cắt phần dư.
-     pointer-events: none cho phép nhấn xuyên qua chi tiết trang trí. */
         content: '';
         position: absolute;
         right: -50px;
@@ -1385,35 +1425,37 @@
       }
       .welcome-copy,
       .welcome-summary {
-        /* z-index đưa nội dung lên trên vòng trang trí được vẽ bởi ::after. */
         position: relative;
         z-index: 1;
       }
       .welcome-eyebrow {
+        display: none;
         margin: 0 0 6px;
         color: #6583b7;
         font-size: 11px;
         font-weight: 600;
       }
       .welcome-copy h2 {
-        margin: 0 0 8px;
-        font-size: 22px;
+        margin: 0 0 3px;
+        font-size: 17px;
         line-height: 1.4;
         color: #24416d;
       }
       .welcome-copy > p:last-child {
+        display: none;
         margin: 0;
         color: #7c91b0;
         font-size: 12px;
       }
       .welcome-summary {
-        /* Vạch trái và padding tách bộ đếm khỏi nội dung giới thiệu trên bố cục ngang. */
+        display: flex;
+        align-items: center;
+        gap: 12px;
         min-width: 166px;
-        padding-left: 28px;
+        padding-left: 20px;
         border-left: 1px solid #cbddf6;
       }
       .welcome-summary p {
-        /* baseline căn số lớn và phần /3 theo chân chữ, thay vì theo tâm hình chữ nhật. */
         display: flex;
         align-items: baseline;
         gap: 6px;
@@ -1422,43 +1464,41 @@
         font-size: 18px;
       }
       .welcome-summary strong {
-        font-size: 34px;
+        font-size: 27px;
         line-height: 1.2;
         color: var(--blue);
         font-weight: 700;
       }
       .welcome-summary > span {
         display: block;
-        margin-top: 6px;
+        max-width: 90px;
+        margin-top: 0;
         color: #7288aa;
         font-size: 12px;
       }
       /* Thẻ cảm biến */
 
       .dashboard-main .metrics {
-        gap: 16px;
-        margin-bottom: 20px;
+        gap: 12px;
+        margin-bottom: 12px;
       }
       .dashboard-main .metric {
-        /* Thẻ xếp dọc: hàng tên/icon trên, hàng giá trị/đường SVG dưới. */
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 16px;
-        min-height: 156px;
-        padding: 20px;
+        gap: 8px;
+        min-height: 94px;
+        padding: 10px 16px;
         border-color: #e9eef6;
         transition:
           transform 0.2s,
           box-shadow 0.2s;
       }
       .dashboard-main .metric:hover {
-        /* Chỉ là phản hồi khi rê chuột: thẻ nâng 3px và tăng bóng, không đổi số cảm biến. */
         transform: translateY(-3px);
         box-shadow: 0 8px 22px #1e2b430a;
       }
       .metric-temperature {
-        /* Ba lớp metric-* đặt nền và viền riêng; !important giữ màu viền trên trước kiểu viền chung. */
         background: linear-gradient(130deg, #fff 45%, #fff4f5);
         border-top: 3px solid #ff95a2 !important;
       }
@@ -1482,28 +1522,26 @@
         font-weight: 600;
       }
       .metric-top small {
-        display: block;
+        display: none;
         margin-top: 3px;
         color: #98a5b8;
         font-size: 10px;
       }
       .dashboard-main .metric-icon {
-        width: 38px;
-        height: 38px;
+        width: 32px;
+        height: 32px;
         border-radius: 11px;
       }
       .metric-reading {
-        /* Giá trị ở trái và đường nhỏ ở phải; align-items: flex-end căn theo cạnh dưới. */
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 12px;
       }
       .dashboard-main .metric-reading p {
-        /* Monospace giúp các số có độ rộng đều; nowrap tránh tách giá trị thành nhiều dòng. */
         margin: 0;
         font-family: Consolas, 'Courier New', monospace;
-        font-size: 29px;
+        font-size: 25px;
         line-height: 1.2;
         white-space: nowrap;
       }
@@ -1514,10 +1552,9 @@
         font-weight: 400;
       }
       .metric-spark {
-        /* SVG nhỏ chỉ minh họa bằng path có sẵn trong HTML, chưa được cập nhật từ dữ liệu. */
         width: 110px;
         max-width: 42%;
-        height: 40px;
+        height: 28px;
         flex-shrink: 0;
         fill: none;
         stroke-width: 2;
@@ -1536,84 +1573,283 @@
       /* Bố cục và biểu đồ */
 
       .dashboard-main .dashboard-grid {
-        /* Hai cột tỷ lệ 1,8 : 1; cột điều khiển không nhỏ hơn 290px trên bố cục này. */
-        grid-template-columns: minmax(0, 1.8fr) minmax(290px, 1fr);
-        gap: 20px;
-        align-items: stretch;
+        grid-template-columns: minmax(0, 1fr) 264px;
+        gap: 14px;
+        align-items: start;
       }
       .dashboard-main .chart-card {
-        /* Thẻ biểu đồ dạng cột; SVG có flex: 1 để dùng phần chiều cao còn lại. */
         display: flex;
         flex-direction: column;
-        padding: 22px;
+        padding: 14px;
         border-color: #e9eef6;
         min-width: 0;
       }
       .dashboard-main .chart-heading {
         flex-wrap: wrap;
-        margin-bottom: 20px;
+        margin-bottom: 8px;
       }
       .dashboard-main .chart-heading h2 {
         font-size: 14px;
       }
       .dashboard-main .chart-heading h2 span {
         display: block;
-        margin-top: 4px;
+        margin-top: 2px;
         font-size: 11px;
       }
-      .dashboard-main .legend {
-        font-size: 10px;
-        gap: 12px;
-      }
-      .dashboard-main .chart {
-        flex: 1;
-        min-height: 190px;
-      }
-      .dashboard-main .chart-labels {
+      .chart-record-badge {
+        padding: 4px 8px;
+        border-radius: 20px;
+        background: #eff4ff;
+        color: #5a78ab;
         font-size: 11px;
       }
-      .dashboard-main .grid-lines {
-        stroke: #ebf0f8;
-        stroke-dasharray: 3 5;
+      .chart-viewport {
+        position: relative;
+        min-width: 0;
       }
-      .dashboard-main .plot {
-        stroke-width: 2.4;
+      .dashboard-main .sensor-chart-svg {
+        width: 100%;
+        height: auto;
+        min-width: 0;
+        min-height: 0;
+        max-height: clamp(150px, calc(100dvh - 550px), 218px);
+        flex: none;
       }
-      .chart-area {
-        /* Tham chiếu linearGradient có id dashboard-light-fill trong SVG của index.html. */
-        fill: url(#dashboard-light-fill);
-        stroke: none;
+      .sensor-panel {
+        fill: #f8fafd;
       }
-      .chart-endpoint {
-        /* Chấm tròn đánh dấu cuối đường ánh sáng; viền trắng tách nó khỏi nét biểu đồ. */
-        fill: #ffb62e;
+      .sensor-grid {
+        fill: none;
+        stroke: #e2e9f3;
+        stroke-width: 1;
+        stroke-dasharray: 3 4;
+      }
+      .sensor-grid-vertical {
+        stroke: #ecf0f6;
+      }
+      .sensor-axis-label {
+        fill: #7588a5;
+        font:
+          17px Consolas,
+          monospace;
+      }
+      .sensor-axis-value {
+        font:
+          17px Consolas,
+          monospace;
+      }
+      .sensor-axis-unit {
+        font:
+          700 17px Arial,
+          sans-serif;
+      }
+      .sensor-line {
+        fill: none;
+        stroke-width: 2.3;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .sensor-point {
+        fill: #fff;
+        stroke-width: 1.7;
+      }
+      .sensor-guide {
+        stroke: #aab9ce;
+        stroke-width: 1;
+        stroke-dasharray: 4 4;
+        pointer-events: none;
+      }
+      .sensor-selected-point {
         stroke: #fff;
-        stroke-width: 3;
+        stroke-width: 2;
+        pointer-events: none;
+      }
+      .chart-tooltip {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 2;
+        width: 226px;
+        max-width: calc(100% - 16px);
+        padding: 12px 14px;
+        border: 1px solid #dce5f3;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 10px 28px #253b6024;
+        pointer-events: none;
+        font-size: 12px;
+      }
+      .chart-tooltip dl {
+        margin: 8px 0 0;
+      }
+      .chart-tooltip dl > div,
+      .chart-summary dl > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-top: 5px;
+      }
+      .chart-tooltip dt,
+      .chart-summary dt {
+        color: #7b8ea9;
+      }
+      .chart-tooltip dd,
+      .chart-summary dd {
+        margin: 0;
+        color: #30435e;
+        font-family: Consolas, monospace;
+        white-space: nowrap;
+      }
+      .chart-scrubber {
+        margin-top: 5px;
+      }
+      .chart-scrubber label {
+        display: flex;
+        justify-content: space-between;
+        color: #778ba8;
+        font-size: 12px;
+      }
+      .chart-scrubber strong {
+        color: #334762;
+        font-family: Consolas, monospace;
+      }
+      .chart-scrubber input {
+        width: 100%;
+        margin: 5px 0 0;
+        accent-color: var(--blue);
+        cursor: pointer;
+      }
+      .chart-scrubber p {
+        display: none;
+        margin: 5px 0 12px;
+        color: #8697af;
+        font-size: 11px;
+      }
+      .chart-temperature {
+        --chart-color: #ff6474;
+      }
+      .chart-humidity {
+        --chart-color: #4587ff;
+      }
+      .chart-light {
+        --chart-color: #e4a321;
+      }
+      .chart-swatch {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: var(--chart-color);
+      }
+      .chart-readings,
+      .chart-statistics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .chart-reading {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 8px;
+        border-radius: 8px;
+        background: #f5f8fd;
+        color: #7488a5;
+        font-size: 11px;
+      }
+      .chart-reading strong {
+        margin-left: auto;
+        color: #30435e;
+        font:
+          700 12px Consolas,
+          monospace;
+      }
+      .chart-readings {
+        margin-bottom: 8px;
+      }
+      .chart-statistics {
+        margin-top: 8px;
+      }
+      .chart-summary {
+        padding: 6px 8px;
+        border: 1px solid #e6edf6;
+        border-top: 2px solid var(--chart-color);
+        border-radius: 9px;
+      }
+      .chart-summary header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 4px;
+      }
+      .chart-summary h3 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+        font-size: 12px;
+      }
+      .chart-summary small {
+        color: #91a1b9;
+        font-size: 10px;
+      }
+      .chart-summary dl {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        margin: 4px 0 0;
+        font-size: 10px;
+      }
+      .chart-summary dl > div {
+        display: block;
+        margin: 0;
+      }
+      .chart-summary dd {
+        white-space: normal;
+      }
+      .chart-summary abbr {
+        text-decoration: none;
       }
       .chart-caption {
-        /* Dòng chú thích dưới biểu đồ có thể xuống hàng khi không đủ chỗ. */
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 8px;
-        margin-top: 18px;
-        padding-top: 14px;
+        margin-top: 8px;
+        padding-top: 6px;
         border-top: 1px solid #eef2f7;
         color: #8c9bb1;
-        font-size: 10px;
+        font-size: 11px;
       }
       .chart-caption strong {
         font-weight: 400;
         color: #7184a1;
       }
+      .chart-caption a {
+        color: var(--blue);
+        font-weight: 600;
+      }
+      @media (max-width: 700px) {
+        .chart-readings,
+        .chart-statistics {
+          grid-template-columns: 1fr;
+        }
+        .chart-reading strong {
+          width: auto;
+          margin-left: auto;
+        }
+      }
       /* Điều khiển thiết bị và trạng thái xử lý */
 
       .dashboard-main .controls {
-        /* Thẻ chứa tiêu đề, 3 hàng thiết bị và chú thích; Flexbox giúp đặt chú thích ở đáy. */
         display: flex;
         flex-direction: column;
-        padding: 22px;
+        padding: 16px;
         border-color: #e9eef6;
       }
       .controls-heading {
@@ -1621,7 +1857,7 @@
         align-items: flex-start;
         justify-content: space-between;
         gap: 10px;
-        margin-bottom: 18px;
+        margin-bottom: 12px;
       }
       .dashboard-main .controls h2 {
         margin: 0;
@@ -1641,12 +1877,10 @@
         white-space: nowrap;
       }
       .dashboard-main .device-list {
-        /* Trên máy tính, ba hàng thiết bị xếp dọc trong cột điều khiển. */
         grid-template-columns: 1fr;
         gap: 12px;
       }
       .dashboard-main .device {
-        /* Thừa hưởng display: flex của styles.css, rồi tăng khoảng cách và bo góc cho Dashboard. */
         padding: 14px;
         gap: 12px;
         border: 1px solid #e8edf5;
@@ -1661,7 +1895,7 @@
         background: #f4f8ff;
       }
       .dashboard-main .device:has(.device-input:checked) {
-        /* :has chọn hàng .device chứa checkbox đang bật để tô kiểu của cả hàng. */
+        /* :has nhận biết checkbox đang bật để đổi kiểu cả hàng. */
         background: #f3f7ff;
         border-color: #dce7fb;
       }
@@ -1676,7 +1910,6 @@
         height: 25px;
       }
       .dashboard-main .device-label {
-        /* min-width: 0 cho nhãn được co trong hàng Flexbox, tránh đẩy công tắc ra ngoài. */
         min-width: 0;
       }
       .dashboard-main .device-label strong {
@@ -1691,21 +1924,19 @@
         color: #5684ca;
       }
       .dashboard-main .device-label .state-pending {
-        /* Chữ đang xử lý luôn có trong HTML, nhưng bình thường bị ẩn. */
         display: none;
       }
       .dashboard-main .switch {
         flex-shrink: 0;
       }
       .dashboard-main .device.is-pending {
-        /* dashboard.js thêm lớp này khi bắt đầu chờ; con trỏ progress biểu thị đang xử lý. */
+        /* .is-pending được dashboard.js thêm trong lúc chờ. */
         cursor: progress;
         background: #f4f7fd;
         border-color: #c7d7f5;
       }
       .dashboard-main .device.is-pending .state-on,
       .dashboard-main .device.is-pending .state-off {
-        /* Tạm ẩn cả hai nhãn bật/tắt để chỉ hiện chữ Đang xử lý bên dưới. */
         display: none;
       }
       .dashboard-main .device.is-pending .state-pending {
@@ -1716,12 +1947,10 @@
         position: relative;
       }
       .dashboard-main .device.is-pending .switch::after {
-        /* Ẩn nút tròn bình thường; không bỏ không gian để công tắc không bị nhảy bố cục. */
         visibility: hidden;
       }
       .dashboard-main .device.is-pending .switch::before {
-        /* Vòng chờ tạo bằng viền tròn với một đoạn trắng, xoay thay cho nút tròn.
-     0,7s là tốc độ một vòng quay; độ trễ xử lý 0,5s được đặt riêng trong dashboard.js. */
+        /* Vòng chờ quay; độ trễ 500ms được đặt trong dashboard.js. */
         content: '';
         position: absolute;
         top: 3px;
@@ -1734,31 +1963,27 @@
         animation: dashboard-processing 0.7s linear infinite;
       }
       .dashboard-main .device.is-pending .device-input:checked ~ .switch::before {
-        /* Khi trạng thái cũ đang bật, vòng chờ ở bên phải; nếu đang tắt nó ở bên trái. */
         left: 19px;
       }
       .device-input:checked ~ .device-icon .fan-rotor {
-        /* Chỉ xoay cánh quạt khi checked; tâm (12,12) tương ứng tâm SVG viewBox 24 x 24.
-     linear giữ tốc độ đều; infinite lặp đến khi công tắc tắt. */
+        /* Quay cánh quạt khi bật. */
         animation: dashboard-fan-spin 2s linear infinite;
         transform-box: view-box;
         transform-origin: 12px 12px;
       }
       .device-input:checked ~ .device-icon .ac-airflow {
-        /* Nhóm nét gió đổi độ mờ và dịch xuống nhẹ; ease-in-out làm chuyển động mềm ở hai đầu. */
+        /* Luồng gió chuyển động khi điều hòa bật. */
         animation: dashboard-airflow 1.8s ease-in-out infinite;
       }
       .dashboard-main .device-light .device-input:checked ~ .device-icon {
-        /* Màu vàng và nền ấm biểu thị bóng đèn đang bật. */
         color: #e9a92b;
         background: #fff0c9;
       }
       .device-light .device-input:checked ~ .device-icon .bulb-rays {
-        /* Các tia sáng đổi opacity theo nhịp; tắt checkbox sẽ ngừng animation. */
+        /* Tia sáng nhấp nháy khi đèn bật. */
         animation: dashboard-lamp-glow 2.8s ease-in-out infinite;
       }
       .control-note {
-        /* margin-top: auto đẩy chú thích xuống đáy thẻ khi còn chiều cao trống. */
         display: flex;
         align-items: center;
         gap: 6px;
@@ -1772,21 +1997,47 @@
         height: 13px;
       }
       /* Hiệu ứng thiết bị */
+      .device-test-note {
+        display: block;
+        color: #8c9bb1;
+        font-size: 10px;
+      }
+      .device-feedback {
+        display: block;
+        color: #c54756;
+        font-size: 11px;
+        white-space: normal;
+      }
+      .state-unknown {
+        display: none;
+        color: #8c9bb1;
+        font-size: 11px;
+      }
+      .device.is-unknown .state-on,
+      .device.is-unknown .state-off {
+        display: none;
+      }
+      .device.is-unknown .state-unknown {
+        display: block;
+      }
+      .device.is-pending .state-unknown {
+        display: none;
+      }
+      .device-input:disabled ~ .switch {
+        opacity: 0.5;
+      }
 
       @keyframes dashboard-fan-spin {
-        /* Một chu kỳ quay đủ 360 độ; thời lượng nằm ở animation của fan-rotor. */
         to {
           transform: rotate(360deg);
         }
       }
       @keyframes dashboard-processing {
-        /* Vòng chờ dùng một keyframes riêng để chỉnh độc lập với cánh quạt. */
         to {
           transform: rotate(360deg);
         }
       }
       @keyframes dashboard-airflow {
-        /* Đầu/cuối ở vị trí gốc và mờ hơn; giữa chu kỳ dịch xuống 1,5px và rõ hơn. */
         0%,
         100% {
           opacity: 0.55;
@@ -1798,7 +2049,6 @@
         }
       }
       @keyframes dashboard-lamp-glow {
-        /* Chỉ thay đổi độ mờ của các tia sáng: 0,55 ở đầu/cuối và 1 ở giữa. */
         0%,
         100% {
           opacity: 0.55;
@@ -1807,12 +2057,31 @@
           opacity: 1;
         }
       }
+      /* Desktop thấp: dành chỗ cho biểu đồ, không cắt nội dung để giấu thanh cuộn. */
+      @media (min-width: 901px) and (max-height: 700px) {
+        .dashboard-welcome {
+          display: none;
+        }
+      }
+
       /* Bố cục theo kích thước màn hình */
 
       @media (max-width: 1100px) {
-        /* Thu nhỏ thẻ/số và đưa chú giải xuống dưới tiêu đề biểu đồ. */
         .dashboard-main .metric {
-          padding: 16px;
+          padding: 10px 12px;
+        }
+        .chart-summary small {
+          display: none;
+        }
+        .chart-reading {
+          gap: 4px;
+        }
+        .chart-reading strong {
+          width: 100%;
+          margin-left: 0;
+        }
+        .dashboard-main .dashboard-grid {
+          grid-template-columns: minmax(0, 1fr) 240px;
         }
         .dashboard-main .metric-reading p {
           font-size: 25px;
@@ -1821,17 +2090,26 @@
           width: 70px;
         }
         .dashboard-main .chart-heading {
-          flex-direction: column;
-          align-items: flex-start;
+          flex-direction: row;
+          align-items: center;
         }
       }
       @media (max-width: 900px) {
-        /* Biểu đồ nằm trên điều khiển; ba thiết bị tạm đặt thành ba cột trong thẻ rộng. */
+        /* Biểu đồ và điều khiển chuyển sang bố cục dọc. */
         .dashboard-main .dashboard-grid {
           grid-template-columns: 1fr;
         }
         .dashboard-main .device-list {
           grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .dashboard-main .sensor-chart-svg {
+          max-height: none;
+        }
+        .welcome-copy > p:last-child {
+          display: block;
+        }
+        .chart-scrubber p {
+          display: block;
         }
         .dashboard-main .device {
           flex-wrap: wrap;
@@ -1844,7 +2122,7 @@
         }
       }
       @media (max-width: 800px) {
-        /* Cảm biến và thiết bị chuyển thành một cột; từng thẻ cảm biến bố trí nội dung ngang. */
+        /* Cảm biến và thiết bị chuyển thành một cột. */
         .dashboard-main .metrics {
           grid-template-columns: 1fr;
           gap: 12px;
@@ -1870,7 +2148,7 @@
         }
       }
       @media (max-width: 560px) {
-        /* Điện thoại: banner xếp dọc, giảm khoảng cách và bỏ đường SVG nhỏ để tiết kiệm chỗ. */
+        /* Điện thoại: banner xếp dọc và ẩn biểu đồ nhỏ. */
         .dashboard-heading {
           align-items: flex-start;
         }
@@ -1927,8 +2205,7 @@
         }
       }
       @media (prefers-reduced-motion: reduce) {
-        /* Nếu hệ điều hành yêu cầu giảm chuyển động, bỏ animation và transition,
-     kể cả phần tử giả. Chữ trạng thái và độ trễ JavaScript vẫn hoạt động. */
+        /* Giảm chuyển động theo tùy chọn hệ điều hành. */
         .dashboard-main *,
         .dashboard-main *::before,
         .dashboard-main *::after {
@@ -1937,19 +2214,11 @@
         }
       }
     </style>
-    <!-- JavaScript được nhúng cuối body để chạy sau khi đã đọc nội dung HTML. -->
   </head>
   <body>
-    <!--
-      Thanh điều hướng dùng chung: logo, liên kết đến 4 trang và thông tin Admin.
-      styles.css đặt sidebar bên trái trên máy tính, chuyển lên đầu trang trên điện thoại.
-    -->
+    <!-- Thanh điều hướng; active đánh dấu tab hiện tại. -->
     <aside class="sidebar">
       <a class="brand" href="dashboard.html">
-        <!--
-          SVG vẽ biểu tượng bằng tọa độ: viewBox là vùng vẽ, path/rect/circle là hình.
-          currentColor lấy màu từ CSS; aria-hidden bỏ qua biểu tượng trang trí khi đọc màn hình.
-        -->
         <span class="brand-icon">
           <svg
             class="icon"
@@ -1970,7 +2239,6 @@
           <small>Dashboard v1.0</small>
         </span>
       </a>
-      <!-- href mở file HTML tương ứng; active và aria-current đánh dấu trang đang xem. -->
       <nav class="navigation" aria-label="Điều hướng chính">
         <a class="nav-link active" href="dashboard.html" aria-current="page">
           <svg
@@ -2039,7 +2307,6 @@
           <span>Profile</span>
         </a>
       </nav>
-      <!-- Tên Admin và Online là thông tin mẫu hiển thị, chưa có chức năng đăng nhập. -->
       <div class="account">
         <span class="account-avatar">A</span>
         <span>
@@ -2051,7 +2318,7 @@
         </span>
       </div>
     </aside>
-    <!-- main chứa nội dung chính; dashboard-main giới hạn các kiểu CSS riêng của Dashboard. -->
+    <!-- Nội dung Dashboard. -->
     <main class="main dashboard-main">
       <header class="page-header dashboard-heading">
         <div>
@@ -2061,10 +2328,7 @@
         <span class="demo-badge">Dữ liệu mẫu</span>
       </header>
 
-      <!--
-        Banner tổng quan: nội dung bên trái, số thiết bị đang bật bên phải.
-        data-device-count đánh dấu nơi dashboard.js ghi số đếm; có 2 nơi dùng thuộc tính này.
-      -->
+      <!-- data-device-count hiển thị số thiết bị đang bật. -->
       <section class="dashboard-welcome" aria-labelledby="welcome-title">
         <div class="welcome-copy">
           <p class="welcome-eyebrow">IoT Control</p>
@@ -2080,11 +2344,7 @@
         </div>
       </section>
 
-      <!--
-        Ba thẻ cảm biến dùng cùng cấu trúc: biểu tượng, tên, giá trị và đường SVG nhỏ.
-        metric-temperature/humidity/light chọn màu riêng trong dashboard.css.
-        Giá trị và đường vẽ hiện là mẫu tĩnh; có thể sửa trực tiếp ở các thẻ phía dưới.
-      -->
+      <!-- Các cảm biến dùng dữ liệu mẫu. -->
       <section class="metrics" aria-label="Thông số cảm biến mẫu">
         <article class="card metric metric-temperature">
           <div class="metric-top">
@@ -2110,11 +2370,11 @@
           </div>
           <div class="metric-reading">
             <p>
-              28.5
+              <strong data-current-sensor="temperature">28.9</strong>
               <span>°C</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 26 18 23 34 24 50 18 66 20 82 14 98 19 114 14 126 16" />
+              <path d="M2.0 34.0 L26.8 30.0 L51.6 22.0 L76.4 18.0 L101.2 10.0 L126.0 6.0" />
             </svg>
           </div>
         </article>
@@ -2142,11 +2402,11 @@
           </div>
           <div class="metric-reading">
             <p>
-              65
+              <strong data-current-sensor="humidity">71</strong>
               <span>%</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 18 18 23 34 17 50 21 66 14 82 18 98 12 114 16 126 13" />
+              <path d="M2.0 34.0 L26.8 22.0 L51.6 18.0 L76.4 14.0 L101.2 10.0 L126.0 6.0" />
             </svg>
           </div>
         </article>
@@ -2176,115 +2436,464 @@
           </div>
           <div class="metric-reading">
             <p>
-              720
+              <strong data-current-sensor="light">780</strong>
               <span>lux</span>
             </p>
             <svg class="metric-spark" viewBox="0 0 128 40" aria-hidden="true">
-              <path d="M2 27 18 24 34 22 50 25 66 18 82 17 98 22 114 16 126 14" />
+              <path d="M2.0 34.0 L26.8 28.4 L51.6 22.8 L76.4 17.2 L101.2 11.6 L126.0 6.0" />
             </svg>
           </div>
         </article>
       </section>
 
-      <!-- Grid chia vùng biểu đồ và điều khiển thành 2 cột; màn hình nhỏ chuyển thành 1 cột. -->
       <div class="dashboard-grid">
-        <section class="card chart-card" aria-labelledby="chart-heading">
+        <section class="card chart-card" data-sensor-chart aria-labelledby="chart-heading">
           <div class="chart-heading">
             <h2 id="chart-heading">
-              Biểu đồ theo dõi
-              <span>Dữ liệu cảm biến minh họa</span>
+              Biểu đồ dữ liệu cảm biến
+              <span>Ba đường dữ liệu · Trục giá trị theo màu</span>
             </h2>
-            <div class="legend">
-              <span class="temperature">Nhiệt độ</span>
-              <span class="humidity">Độ ẩm</span>
-              <span class="light">Ánh sáng</span>
+            <span class="chart-record-badge">12 mốc đo · 07/10/2026</span>
+          </div>
+          <div class="chart-readings" role="group" aria-label="Giá trị tại mốc đo đã chọn">
+            <span class="chart-reading chart-temperature">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Nhiệt độ
+              <strong data-chart-reading="temperature">28.9 °C</strong>
+            </span>
+            <span class="chart-reading chart-humidity">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Độ ẩm
+              <strong data-chart-reading="humidity">71 %</strong>
+            </span>
+            <span class="chart-reading chart-light">
+              <i class="chart-swatch" aria-hidden="true"></i>
+              Ánh sáng
+              <strong data-chart-reading="light">780 lux</strong>
+            </span>
+          </div>
+          <!-- Cùng vùng vẽ; mỗi màu đọc theo trục có cùng đơn vị. -->
+          <div class="chart-viewport" data-chart-viewport>
+            <svg
+              class="chart sensor-chart-svg"
+              data-chart-svg
+              viewBox="0 0 840 230"
+              role="img"
+              aria-labelledby="chart-title chart-desc"
+            >
+              <title id="chart-title">Nhiệt độ, độ ẩm và ánh sáng theo thời gian</title>
+              <desc id="chart-desc">
+                12 mốc mẫu từ 10:30:02 đến 11:16:02. Ba đường trong cùng một vùng vẽ: nhiệt độ theo
+                trục °C bên trái, độ ẩm theo trục % và ánh sáng theo trục lux bên phải. Mỗi trục có
+                thang đo riêng. Mốc thiếu dữ liệu được để trống.
+              </desc>
+              <rect class="sensor-panel" x="54" y="24" width="636" height="170" rx="7" />
+              <path class="sensor-grid" d="M54 194H690" />
+              <path class="sensor-grid" d="M54 151.5H690" />
+              <path class="sensor-grid" d="M54 109H690" />
+              <path class="sensor-grid" d="M54 66.5H690" />
+              <path class="sensor-grid" d="M54 24H690" />
+              <path class="sensor-grid sensor-grid-vertical" d="M54 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M191.8 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M330.06 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M468.32 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M606.58 24V194" />
+              <path class="sensor-grid sensor-grid-vertical" d="M690 24V194" />
+              <g data-chart-axis="temperature" fill="#ff6474">
+                <text class="sensor-axis-unit" x="42" y="15" text-anchor="end">°C</text>
+                <text class="sensor-axis-value" x="42" y="199" text-anchor="end">26</text>
+                <text class="sensor-axis-value" x="42" y="156.5" text-anchor="end">27</text>
+                <text class="sensor-axis-value" x="42" y="114" text-anchor="end">28</text>
+                <text class="sensor-axis-value" x="42" y="71.5" text-anchor="end">29</text>
+                <text class="sensor-axis-value" x="42" y="29" text-anchor="end">30</text>
+              </g>
+              <g data-chart-axis="humidity" fill="#4587ff">
+                <text class="sensor-axis-unit" x="710" y="15" text-anchor="start">%</text>
+                <text class="sensor-axis-value" x="710" y="199" text-anchor="start">60</text>
+                <text class="sensor-axis-value" x="710" y="156.5" text-anchor="start">65</text>
+                <text class="sensor-axis-value" x="710" y="114" text-anchor="start">70</text>
+                <text class="sensor-axis-value" x="710" y="71.5" text-anchor="start">75</text>
+                <text class="sensor-axis-value" x="710" y="29" text-anchor="start">80</text>
+              </g>
+              <g data-chart-axis="light" fill="#e4a321">
+                <text class="sensor-axis-unit" x="776" y="15" text-anchor="start">lux</text>
+                <text class="sensor-axis-value" x="776" y="199" text-anchor="start">600</text>
+                <text class="sensor-axis-value" x="776" y="156.5" text-anchor="start">650</text>
+                <text class="sensor-axis-value" x="776" y="114" text-anchor="start">700</text>
+                <text class="sensor-axis-value" x="776" y="71.5" text-anchor="start">750</text>
+                <text class="sensor-axis-value" x="776" y="29" text-anchor="start">800</text>
+              </g>
+              <g data-chart-series="temperature">
+                <path
+                  class="sensor-line"
+                  stroke="#ff6474"
+                  d="M54 87.75 L81.65 66.5 L109.3 117.5 L468.78 155.75 L496.43 147.25 L524.09 138.75 L551.74 130.25 L579.39 121.75 L607.04 104.75 L634.7 96.25 L662.35 79.25 L690 70.75"
+                />
+                <circle class="sensor-point" cx="54" cy="87.75" r="3.3" stroke="#ff6474">
+                  <title>10:30:02 · Nhiệt độ: 28.5 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="66.5" r="3.3" stroke="#ff6474">
+                  <title>10:32:02 · Nhiệt độ: 29.0 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="109.3" cy="117.5" r="3.3" stroke="#ff6474">
+                  <title>10:34:02 · Nhiệt độ: 27.8 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="155.75" r="3.3" stroke="#ff6474">
+                  <title>11:00:02 · Nhiệt độ: 26.9 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="147.25" r="3.3" stroke="#ff6474">
+                  <title>11:02:02 · Nhiệt độ: 27.1 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="138.75" r="3.3" stroke="#ff6474">
+                  <title>11:04:02 · Nhiệt độ: 27.3 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="130.25" r="3.3" stroke="#ff6474">
+                  <title>11:06:02 · Nhiệt độ: 27.5 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="121.75" r="3.3" stroke="#ff6474">
+                  <title>11:08:02 · Nhiệt độ: 27.7 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="104.75" r="3.3" stroke="#ff6474">
+                  <title>11:10:02 · Nhiệt độ: 28.1 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="96.25" r="3.3" stroke="#ff6474">
+                  <title>11:12:02 · Nhiệt độ: 28.3 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="79.25" r="3.3" stroke="#ff6474">
+                  <title>11:14:02 · Nhiệt độ: 28.7 °C</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="70.75" r="3.3" stroke="#ff6474">
+                  <title>11:16:02 · Nhiệt độ: 28.9 °C</title>
+                </circle>
+              </g>
+              <g data-chart-series="humidity">
+                <path
+                  class="sensor-line"
+                  stroke="#4587ff"
+                  d="M54 151.5 L81.65 168.5 L109.3 143 L468.78 194 L496.43 185.5 L524.09 177 L551.74 160 L579.39 134.5 L607.04 126 L634.7 117.5 L662.35 109 L690 100.5"
+                />
+                <circle class="sensor-point" cx="54" cy="151.5" r="3.3" stroke="#4587ff">
+                  <title>10:30:02 · Độ ẩm: 65 %</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="168.5" r="3.3" stroke="#4587ff">
+                  <title>10:32:02 · Độ ẩm: 63 %</title>
+                </circle>
+                <circle class="sensor-point" cx="109.3" cy="143" r="3.3" stroke="#4587ff">
+                  <title>10:34:02 · Độ ẩm: 66 %</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="194" r="3.3" stroke="#4587ff">
+                  <title>11:00:02 · Độ ẩm: 60 %</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="185.5" r="3.3" stroke="#4587ff">
+                  <title>11:02:02 · Độ ẩm: 61 %</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="177" r="3.3" stroke="#4587ff">
+                  <title>11:04:02 · Độ ẩm: 62 %</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="160" r="3.3" stroke="#4587ff">
+                  <title>11:06:02 · Độ ẩm: 64 %</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="134.5" r="3.3" stroke="#4587ff">
+                  <title>11:08:02 · Độ ẩm: 67 %</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="126" r="3.3" stroke="#4587ff">
+                  <title>11:10:02 · Độ ẩm: 68 %</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="117.5" r="3.3" stroke="#4587ff">
+                  <title>11:12:02 · Độ ẩm: 69 %</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="109" r="3.3" stroke="#4587ff">
+                  <title>11:14:02 · Độ ẩm: 70 %</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="100.5" r="3.3" stroke="#4587ff">
+                  <title>11:16:02 · Độ ẩm: 71 %</title>
+                </circle>
+              </g>
+              <g data-chart-series="light">
+                <path class="sensor-line" stroke="#e4a321" d="M54 92 L81.65 100.5" />
+                <path
+                  class="sensor-line"
+                  stroke="#e4a321"
+                  d="M468.78 126 L496.43 117.5 L524.09 109 L551.74 83.5 L579.39 75 L607.04 66.5 L634.7 58 L662.35 49.5 L690 41"
+                />
+                <circle class="sensor-point" cx="54" cy="92" r="3.3" stroke="#e4a321">
+                  <title>10:30:02 · Ánh sáng: 720 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="81.65" cy="100.5" r="3.3" stroke="#e4a321">
+                  <title>10:32:02 · Ánh sáng: 710 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="468.78" cy="126" r="3.3" stroke="#e4a321">
+                  <title>11:00:02 · Ánh sáng: 680 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="496.43" cy="117.5" r="3.3" stroke="#e4a321">
+                  <title>11:02:02 · Ánh sáng: 690 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="524.09" cy="109" r="3.3" stroke="#e4a321">
+                  <title>11:04:02 · Ánh sáng: 700 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="551.74" cy="83.5" r="3.3" stroke="#e4a321">
+                  <title>11:06:02 · Ánh sáng: 730 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="579.39" cy="75" r="3.3" stroke="#e4a321">
+                  <title>11:08:02 · Ánh sáng: 740 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="607.04" cy="66.5" r="3.3" stroke="#e4a321">
+                  <title>11:10:02 · Ánh sáng: 750 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="634.7" cy="58" r="3.3" stroke="#e4a321">
+                  <title>11:12:02 · Ánh sáng: 760 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="662.35" cy="49.5" r="3.3" stroke="#e4a321">
+                  <title>11:14:02 · Ánh sáng: 770 lux</title>
+                </circle>
+                <circle class="sensor-point" cx="690" cy="41" r="3.3" stroke="#e4a321">
+                  <title>11:16:02 · Ánh sáng: 780 lux</title>
+                </circle>
+              </g>
+              <g>
+                <text class="sensor-axis-label" x="54" y="220" text-anchor="start">10:30</text>
+                <text class="sensor-axis-label" x="191.8" y="220" text-anchor="middle">10:40</text>
+                <text class="sensor-axis-label" x="330.06" y="220" text-anchor="middle">10:50</text>
+                <text class="sensor-axis-label" x="468.32" y="220" text-anchor="middle">11:00</text>
+                <text class="sensor-axis-label" x="606.58" y="220" text-anchor="middle">11:10</text>
+                <text class="sensor-axis-label" x="690" y="220" text-anchor="end">11:16</text>
+              </g>
+              <path class="sensor-guide" data-chart-guide d="M690 24V194" />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="temperature"
+                cx="690"
+                cy="70.75"
+                r="5"
+                fill="#ff6474"
+              />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="humidity"
+                cx="690"
+                cy="100.5"
+                r="5"
+                fill="#4587ff"
+              />
+              <circle
+                class="sensor-selected-point"
+                data-chart-marker="light"
+                cx="690"
+                cy="41"
+                r="5"
+                fill="#e4a321"
+              />
+            </svg>
+            <div class="chart-tooltip" data-chart-tooltip hidden aria-hidden="true">
+              <strong data-chart-time>11:16:02</strong>
+              <dl>
+                <div>
+                  <dt>Nhiệt độ</dt>
+                  <dd data-chart-reading="temperature">28.9 °C</dd>
+                </div>
+                <div>
+                  <dt>Độ ẩm</dt>
+                  <dd data-chart-reading="humidity">71 %</dd>
+                </div>
+                <div>
+                  <dt>Ánh sáng</dt>
+                  <dd data-chart-reading="light">780 lux</dd>
+                </div>
+              </dl>
             </div>
           </div>
-          <!--
-            Biểu đồ SVG dùng viewBox 740 x 190: tọa độ x tăng sang phải, y tăng xuống dưới.
-            title/desc mô tả biểu đồ cho công cụ đọc màn hình.
-            Các đường dùng chung trục tung; đây là hình minh họa, chưa lấy dữ liệu thời gian thực.
-          -->
-          <svg
-            class="chart"
-            viewBox="0 0 740 190"
-            role="img"
-            aria-labelledby="chart-title chart-desc"
-          >
-            <title id="chart-title">Biểu đồ cảm biến theo thời gian</title>
-            <desc id="chart-desc">
-              Dữ liệu mẫu từ 10:30 đến 10:30:10. Ánh sáng dao động quanh 720 lux, độ ẩm 65 phần trăm
-              và nhiệt độ 28.5 độ C. Các giá trị dùng chung trục tung.
-            </desc>
-            <!-- defs khai báo màu chuyển sắc; chart-area dùng lại qua id dashboard-light-fill. -->
-            <defs>
-              <linearGradient id="dashboard-light-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#ffbf46" stop-opacity=".15" />
-                <stop offset="100%" stop-color="#ffbf46" stop-opacity="0" />
-              </linearGradient>
-            </defs>
-            <!-- g gom nhiều hình thành nhóm: lưới nền và nhãn trục được định dạng riêng bằng CSS. -->
-            <g class="grid-lines">
-              <path d="M42 20H722M42 60H722M42 100H722M42 140H722M42 172H722" />
-            </g>
-            <g class="chart-labels">
-              <text x="12" y="23">800</text>
-              <text x="12" y="63">600</text>
-              <text x="12" y="103">400</text>
-              <text x="12" y="143">200</text>
-              <text x="27" y="175">0</text>
-              <text x="42" y="188">10:30:00</text>
-              <text x="178" y="188" text-anchor="middle">10:30:02</text>
-              <text x="314" y="188" text-anchor="middle">10:30:04</text>
-              <text x="450" y="188" text-anchor="middle">10:30:06</text>
-              <text x="586" y="188" text-anchor="middle">10:30:08</text>
-              <text x="722" y="188" text-anchor="end">10:30:10</text>
-            </g>
-            <!-- path dùng d để mô tả nét vẽ; vùng tô đặt trước để nằm dưới 3 đường cảm biến. -->
-            <path
-              class="chart-area"
-              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36V172H42Z"
+          <div class="chart-scrubber">
+            <label for="sensor-chart-time">
+              Mốc đang xem
+              <strong data-chart-time>11:16:02</strong>
+            </label>
+            <input
+              id="sensor-chart-time"
+              data-chart-slider
+              type="range"
+              min="0"
+              max="11"
+              value="11"
+              step="1"
+              aria-label="Chọn mốc đo cảm biến"
+              title="Rê chuột, chạm biểu đồ hoặc dùng thanh trượt để xem từng mốc"
+              aria-valuetext="11:16:02"
             />
-            <path
-              class="plot light-line"
-              d="M42 36 112 34 180 33 248 36 314 37 382 36 450 32 486 33 552 38 620 38 680 37 722 36"
-            />
-            <path
-              class="plot humidity-line"
-              d="M42 159 112 159 180 158 248 159 314 159 382 160 450 159 486 159 552 159 620 158 680 159 722 159"
-            />
-            <path
-              class="plot temperature-line"
-              d="M42 166 112 166 180 166 248 166 314 165 382 166 450 166 486 166 552 166 620 166 680 166 722 166"
-            />
-            <circle class="chart-endpoint" cx="722" cy="36" r="4" />
-          </svg>
-          <div class="chart-caption">
-            <span>Khoảng thời gian mẫu</span>
-            <strong>10:30:00 – 10:30:10</strong>
+            <p class="chart-hint">Rê chuột, chạm biểu đồ hoặc dùng thanh trượt để xem từng mốc.</p>
           </div>
+          <div class="chart-statistics" aria-label="Thống kê dữ liệu mẫu">
+            <article class="chart-summary chart-temperature">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Nhiệt độ
+                </h3>
+                <small data-chart-stat="temperature-count">12 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="temperature-min">26.9 °C</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="temperature-average">28.0 °C</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="temperature-max">29.0 °C</dd>
+                </div>
+              </dl>
+            </article>
+            <article class="chart-summary chart-humidity">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Độ ẩm
+                </h3>
+                <small data-chart-stat="humidity-count">12 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="humidity-min">60 %</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="humidity-average">65.5 %</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="humidity-max">71 %</dd>
+                </div>
+              </dl>
+            </article>
+            <article class="chart-summary chart-light">
+              <header>
+                <h3>
+                  <i class="chart-swatch" aria-hidden="true"></i>
+                  Ánh sáng
+                </h3>
+                <small data-chart-stat="light-count">11 điểm đo</small>
+              </header>
+              <dl>
+                <div>
+                  <dt>Thấp</dt>
+                  <dd data-chart-stat="light-min">680 lux</dd>
+                </div>
+                <div>
+                  <dt><abbr title="Trung bình">TB</abbr></dt>
+                  <dd data-chart-stat="light-average">730.0 lux</dd>
+                </div>
+                <div>
+                  <dt>Cao</dt>
+                  <dd data-chart-stat="light-max">780 lux</dd>
+                </div>
+              </dl>
+            </article>
+          </div>
+          <div class="chart-caption">
+            <span>
+              35 bản ghi ·
+              <strong>07/10/2026 · 10:30:02 – 11:16:02</strong>
+            </span>
+            <a href="data-sensor.html">
+              Xem dữ liệu chi tiết
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <script type="application/json" data-chart-data>
+            [
+              {
+                "time": "10:30:02",
+                "temperature": 28.5,
+                "humidity": 65,
+                "light": 720
+              },
+              {
+                "time": "10:32:02",
+                "temperature": 29,
+                "humidity": 63,
+                "light": 710
+              },
+              {
+                "time": "10:34:02",
+                "temperature": 27.8,
+                "humidity": 66,
+                "light": null
+              },
+              {
+                "time": "11:00:02",
+                "temperature": 26.9,
+                "humidity": 60,
+                "light": 680
+              },
+              {
+                "time": "11:02:02",
+                "temperature": 27.1,
+                "humidity": 61,
+                "light": 690
+              },
+              {
+                "time": "11:04:02",
+                "temperature": 27.3,
+                "humidity": 62,
+                "light": 700
+              },
+              {
+                "time": "11:06:02",
+                "temperature": 27.5,
+                "humidity": 64,
+                "light": 730
+              },
+              {
+                "time": "11:08:02",
+                "temperature": 27.7,
+                "humidity": 67,
+                "light": 740
+              },
+              {
+                "time": "11:10:02",
+                "temperature": 28.1,
+                "humidity": 68,
+                "light": 750
+              },
+              {
+                "time": "11:12:02",
+                "temperature": 28.3,
+                "humidity": 69,
+                "light": 760
+              },
+              {
+                "time": "11:14:02",
+                "temperature": 28.7,
+                "humidity": 70,
+                "light": 770
+              },
+              {
+                "time": "11:16:02",
+                "temperature": 28.9,
+                "humidity": 71,
+                "light": 780
+              }
+            ]
+          </script>
         </section>
 
-        <!--
-          Mỗi label chứa một checkbox và toàn bộ hình thức của công tắc.
-          Nhấn vào hàng cũng đổi checkbox. checked biểu thị bật; bỏ checked là tắt.
-          data-device-toggle được dashboard.js tìm để xử lý độ trễ 500ms.
-          Giữ input trước icon/label/switch vì CSS dùng dấu ~ để chọn phần tử đứng sau.
-        -->
+        <!-- Công tắc xử lý sau 500ms; giữ input trước icon, nhãn và switch. -->
         <section class="card controls" aria-labelledby="controls-title">
           <div class="controls-heading">
             <div>
               <h2 id="controls-title">Điều khiển thiết bị</h2>
               <p>Bật hoặc tắt từng thiết bị</p>
             </div>
-            <!-- aria-live thông báo khi số đếm đổi; aria-atomic đọc toàn bộ nội dung trạng thái. -->
             <span class="device-count-badge" role="status" aria-live="polite" aria-atomic="true">
               <span data-device-count>2</span>
               /3 bật
             </span>
           </div>
           <div class="device-list">
-            <!-- Quạt bật mặc định. CSS chỉ xoay nhóm fan-rotor, giữ khung ngoài đứng yên. -->
+            <!-- Quạt: quay cánh khi bật. -->
             <label class="device device-fan">
               <input
                 class="device-input"
@@ -2292,6 +2901,7 @@
                 role="switch"
                 checked
                 data-device-toggle
+                data-device="fan"
                 aria-label="Bật hoặc tắt quạt"
               />
               <span class="device-icon">
@@ -2314,23 +2924,22 @@
                   </g>
                 </svg>
               </span>
-              <!-- CSS hiện đúng một trạng thái: bật/tắt; is-pending tạm hiện chữ đang xử lý. -->
               <span class="device-label">
                 <strong>Quạt</strong>
                 <small class="state-on">Đang bật</small>
                 <small class="state-off">Đang tắt</small>
                 <small class="state-pending" role="status" aria-live="polite">Đang xử lý…</small>
               </span>
-              <!-- switch là phần trang trí; checked thật và thao tác bàn phím thuộc về checkbox. -->
               <span class="switch" aria-hidden="true"></span>
             </label>
-            <!-- Điều hòa tắt mặc định. Nhóm ac-airflow chuyển động nhẹ khi checked. -->
+            <!-- Điều hòa: hiệu ứng luồng gió khi bật. -->
             <label class="device device-ac">
               <input
                 class="device-input"
                 type="checkbox"
                 role="switch"
                 data-device-toggle
+                data-device="ac"
                 aria-label="Bật hoặc tắt điều hòa"
               />
               <span class="device-icon">
@@ -2359,7 +2968,7 @@
               </span>
               <span class="switch" aria-hidden="true"></span>
             </label>
-            <!-- Đèn bật mặc định. CSS đổi màu icon và làm nhóm bulb-rays sáng theo nhịp. -->
+            <!-- Đèn: hiệu ứng ánh sáng khi bật. -->
             <label class="device device-light">
               <input
                 class="device-input"
@@ -2367,6 +2976,7 @@
                 role="switch"
                 checked
                 data-device-toggle
+                data-device="light"
                 aria-label="Bật hoặc tắt đèn"
               />
               <span class="device-icon">
@@ -2411,7 +3021,7 @@
         </section>
       </div>
     </main>
-    <!-- details/summary tự mở và đóng hướng dẫn khi nhấn ?, không cần JavaScript. -->
+    <!-- Trợ giúp mở/đóng bằng details. -->
     <details class="help">
       <summary aria-label="Trợ giúp">?</summary>
       <div class="help-content">
@@ -2422,78 +3032,406 @@
         </p>
       </div>
     </details>
-    <script data-source="dashboard.js">
-      /**
-       * ĐIỀU KHIỂN THIẾT BỊ TRÊN DASHBOARD
-       *
-       * Trong bản xuất này, JavaScript nằm cuối body, nên HTML đã được phân tích
-       * trước khi các công tắc được tìm và gắn sự kiện.
-       *
-       * Luồng xử lý:
-       * Nhấn công tắc -> giữ trạng thái cũ -> chờ 500ms -> áp dụng trạng thái mới.
-       * CSS đọc thuộc tính checked để đổi màu và chạy hiệu ứng của từng thiết bị.
-       * JavaScript cập nhật đồng thời hai vị trí hiển thị số thiết bị đang bật.
-       *
-       * Đây là mô phỏng tại trình duyệt; file chưa gửi lệnh đến phần cứng hoặc API.
-       */
+    <script data-source="sensor-chart.js">
+      /* Ba đường cảm biến trong một biểu đồ, mỗi loại có trục giá trị riêng. */
       (() => {
-        // Hàm tự gọi (IIFE) giữ các biến bên trong file, tránh trùng biến với file khác.
-        // Strict mode giúp phát hiện các lỗi như gán vào một biến chưa được khai báo.
         'use strict';
 
-        // querySelectorAll tìm các phần tử theo thuộc tính data-* trong index.html.
-        // Dấu ... chuyển NodeList thành mảng để dùng forEach và filter.
+        const LEFT = 54;
+        const RIGHT = 690;
+        const WIDTH = 840;
+        const HEIGHT = 230;
+        const TOP = 24;
+        const BOTTOM = 194;
+        const SERIES = [
+          {
+            key: 'temperature',
+            label: 'Nhiệt độ',
+            unit: '°C',
+            color: '#ff6474',
+            min: 26,
+            max: 30,
+            axisX: 42,
+            anchor: 'end',
+          },
+          {
+            key: 'humidity',
+            label: 'Độ ẩm',
+            unit: '%',
+            color: '#4587ff',
+            min: 60,
+            max: 80,
+            axisX: 710,
+            anchor: 'start',
+          },
+          {
+            key: 'light',
+            label: 'Ánh sáng',
+            unit: 'lux',
+            color: '#e4a321',
+            min: 600,
+            max: 800,
+            axisX: 776,
+            anchor: 'start',
+          },
+        ];
+        const seconds = (time) =>
+          time.split(':').reduce((total, part) => total * 60 + Number(part), 0);
+        const timeAt = (sample) =>
+          sample.timestamp ? new Date(sample.timestamp).getTime() / 1000 : seconds(sample.time);
+        const round = (value) => Math.round(value * 100) / 100;
+        const xAt = (sample, samples) =>
+          LEFT +
+          ((timeAt(sample) - timeAt(samples[0])) /
+            Math.max(1, timeAt(samples.at(-1)) - timeAt(samples[0]))) *
+            (RIGHT - LEFT);
+        const yAt = (value, series) =>
+          BOTTOM - ((value - series.min) / (series.max - series.min)) * (BOTTOM - TOP);
+
+        const formatValue = (value, key, average = false, lightUnit = 'lux') => {
+          if (!Number.isFinite(value)) return 'Chưa có dữ liệu';
+          const series = SERIES.find((item) => item.key === key);
+          const number = key === 'temperature' || average ? value.toFixed(1) : String(value);
+          return `${number} ${key === 'light' ? lightUnit : series.unit}`;
+        };
+
+        const seriesFor = (samples, options) =>
+          SERIES.map((base) => {
+            const series = { ...base };
+            if (series.key === 'light') series.unit = options.lightUnit ?? 'lux';
+            if (!options.autoScale) return series;
+            if (series.key === 'light' && series.unit === 'ADC')
+              return { ...series, min: 0, max: 1024 };
+            const values = samples.map((sample) => sample[series.key]).filter(Number.isFinite);
+            if (!values.length) return series;
+            const low = Math.min(...values);
+            const high = Math.max(...values);
+            const raw = Math.max(series.key === 'temperature' ? 4 : 20, high - low) / 4;
+            const power = 10 ** Math.floor(Math.log10(raw));
+            const step = [1, 2, 5, 10].find((value) => value * power >= raw) * power;
+            series.min = Math.floor((low - step * 0.25) / step) * step;
+            series.max = Math.max(
+              series.min + 4 * step,
+              Math.ceil((high + step * 0.25) / step) * step,
+            );
+            if (series.key === 'humidity') {
+              series.min = Math.max(0, series.min);
+              series.max = Math.min(100, series.max);
+            }
+            return series;
+          });
+
+        const summarize = (samples) =>
+          Object.fromEntries(
+            SERIES.map(({ key }) => {
+              const values = samples.map((sample) => sample[key]).filter(Number.isFinite);
+              return [
+                key,
+                {
+                  count: values.length,
+                  min: values.length ? Math.min(...values) : null,
+                  max: values.length ? Math.max(...values) : null,
+                  average: values.length
+                    ? values.reduce((sum, value) => sum + value, 0) / values.length
+                    : null,
+                },
+              ];
+            }),
+          );
+
+        // Tọa độ X dựa trên thời gian thực của mốc mẫu; bỏ đoạn thiếu dữ liệu.
+        const buildMarkup = (samples, options = {}) => {
+          if (!samples.length)
+            return '<title id="chart-title">Chưa có dữ liệu cảm biến</title><desc id="chart-desc">Đang chờ ESP8266 gửi dữ liệu.</desc><text class="sensor-axis-label" x="420" y="115" text-anchor="middle">Đang chờ dữ liệu ESP8266</text>';
+          const seriesList = seriesFor(samples, options);
+          const first = timeAt(samples[0]);
+          const last = timeAt(samples.at(-1));
+          const interval = options.autoScale
+            ? ([1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 1800, 3600, 7200, 14400, 86400].find(
+                (value) => value >= (last - first) / 4,
+              ) ?? 86400)
+            : 600;
+          const ticks = [first];
+          for (
+            let tick = Math.ceil((first + 1) / interval) * interval;
+            tick < last;
+            tick += interval
+          ) {
+            if (
+              !options.autoScale ||
+              (((tick - ticks.at(-1)) / Math.max(1, last - first)) * (RIGHT - LEFT) >= 120 &&
+                ((last - tick) / Math.max(1, last - first)) * (RIGHT - LEFT) >= 120)
+            )
+              ticks.push(tick);
+          }
+          if (last > first) ticks.push(last);
+          const tickX = (tick) =>
+            round(LEFT + ((tick - first) / Math.max(1, last - first)) * (RIGHT - LEFT));
+          const timeLabel = (tick) =>
+            samples[0].timestamp
+              ? new Date(tick * 1000).toLocaleTimeString('en-GB', {
+                  timeZone: 'Asia/Bangkok',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  ...(interval < 60 ? { second: '2-digit' } : {}),
+                  hourCycle: 'h23',
+                })
+              : `${String(Math.floor(tick / 3600)).padStart(2, '0')}:${String(Math.floor(tick / 60) % 60).padStart(2, '0')}`;
+          const plots = seriesList
+            .map((series) => {
+              const segments = [];
+              let segment = [];
+              samples.forEach((sample) => {
+                if (Number.isFinite(sample[series.key])) {
+                  segment.push({
+                    sample,
+                    x: round(xAt(sample, samples)),
+                    y: round(yAt(sample[series.key], series)),
+                  });
+                } else if (segment.length) {
+                  segments.push(segment);
+                  segment = [];
+                }
+              });
+              if (segment.length) segments.push(segment);
+              const paths = segments
+                .map((points) => {
+                  const path = points
+                    .map((point, index) => `${index ? 'L' : 'M'}${point.x} ${point.y}`)
+                    .join(' ');
+                  return `<path class="sensor-line" stroke="${series.color}" d="${path}"/>`;
+                })
+                .join('');
+              const points = segments
+                .flat()
+                .map(
+                  ({ sample, x, y }) =>
+                    `<circle class="sensor-point" cx="${x}" cy="${y}" r="3.3" stroke="${series.color}"><title>${sample.time} · ${series.label}: ${formatValue(sample[series.key], series.key, false, options.lightUnit)}</title></circle>`,
+                )
+                .join('');
+              return `<g data-chart-series="${series.key}">${paths}${points}</g>`;
+            })
+            .join('');
+          const grid = Array.from({ length: 5 }, (_, index) => {
+            const y = BOTTOM - (index / 4) * (BOTTOM - TOP);
+            return `<path class="sensor-grid" d="M${LEFT} ${y}H${RIGHT}"/>`;
+          }).join('');
+          const axes = seriesList
+            .map(
+              (series) => `<g data-chart-axis="${series.key}" fill="${series.color}">
+      <text class="sensor-axis-unit" x="${series.axisX}" y="15" text-anchor="${series.anchor}">${series.unit}</text>
+      ${Array.from({ length: 5 }, (_, index) => {
+        const y = BOTTOM - (index / 4) * (BOTTOM - TOP);
+        const value = round(series.min + (index / 4) * (series.max - series.min));
+        return `<text class="sensor-axis-value" x="${series.axisX}" y="${y + 5}" text-anchor="${series.anchor}">${value}</text>`;
+      }).join('')}
+    </g>`,
+            )
+            .join('');
+          const vertical = ticks
+            .map(
+              (tick) =>
+                `<path class="sensor-grid sensor-grid-vertical" d="M${tickX(tick)} ${TOP}V${BOTTOM}"/>`,
+            )
+            .join('');
+          const lastSample = samples.at(-1);
+          const markers = seriesList
+            .map(
+              (series) =>
+                `<circle class="sensor-selected-point" data-chart-marker="${series.key}" cx="${round(xAt(lastSample, samples))}" cy="${round(yAt(lastSample[series.key] ?? series.min, series))}" r="5" fill="${series.color}" ${Number.isFinite(lastSample[series.key]) ? '' : 'hidden'}/>`,
+            )
+            .join('');
+          return `<title id="chart-title">Nhiệt độ, độ ẩm và ánh sáng theo thời gian</title>
+      <desc id="chart-desc">${samples.length} mốc từ ${samples[0].time} đến ${lastSample.time}. Ba đường trong cùng một vùng vẽ: nhiệt độ theo trục °C bên trái, độ ẩm theo trục % và ánh sáng theo trục ${options.lightUnit ?? 'lux'} bên phải. Mỗi trục có thang đo riêng. Mốc thiếu dữ liệu được để trống.</desc>
+      <rect class="sensor-panel" x="${LEFT}" y="${TOP}" width="${RIGHT - LEFT}" height="${BOTTOM - TOP}" rx="7"/>
+      ${grid}${vertical}${axes}${plots}
+      <g>${ticks.map((tick, index) => `<text class="sensor-axis-label" x="${tickX(tick)}" y="220" text-anchor="${index === 0 ? 'start' : index === ticks.length - 1 ? 'end' : 'middle'}">${timeLabel(tick)}</text>`).join('')}</g>
+      <path class="sensor-guide" data-chart-guide d="M${RIGHT} ${TOP}V${BOTTOM}"/>
+      ${markers}`;
+        };
+
+        const initialize = (root, initialOptions = {}) => {
+          let options = initialOptions;
+          let samples =
+            options.samples ?? JSON.parse(root.querySelector('[data-chart-data]').textContent);
+          let seriesList = seriesFor(samples, options);
+          const svg = root.querySelector('[data-chart-svg]');
+          const viewport = root.querySelector('[data-chart-viewport]');
+          const tooltip = root.querySelector('[data-chart-tooltip]');
+          const slider = root.querySelector('[data-chart-slider]');
+
+          const selectSample = (index, showTooltip = false, clientX) => {
+            const sample = samples[index];
+            const x = round(xAt(sample, samples));
+            slider.value = String(index);
+            root.querySelectorAll('[data-chart-time]').forEach((element) => {
+              element.textContent = sample.time;
+            });
+            seriesList.forEach((series) => {
+              const value = sample[series.key];
+              root.querySelectorAll(`[data-chart-reading="${series.key}"]`).forEach((element) => {
+                element.textContent = formatValue(value, series.key, false, options.lightUnit);
+              });
+              const marker = svg.querySelector(`[data-chart-marker="${series.key}"]`);
+              marker.toggleAttribute('hidden', !Number.isFinite(value));
+              if (Number.isFinite(value)) {
+                marker.setAttribute('cx', String(x));
+                marker.setAttribute('cy', String(round(yAt(value, series))));
+              }
+            });
+            svg.querySelector('[data-chart-guide]').setAttribute('d', `M${x} ${TOP}V${BOTTOM}`);
+            slider.setAttribute(
+              'aria-valuetext',
+              `${sample.time}; ${seriesList.map((series) => `${series.label}: ${formatValue(sample[series.key], series.key, false, options.lightUnit)}`).join('; ')}`,
+            );
+            tooltip.hidden = !showTooltip;
+            if (showTooltip) {
+              const bounds = viewport.getBoundingClientRect();
+              const anchor =
+                clientX === undefined
+                  ? bounds.width - tooltip.offsetWidth - 12
+                  : clientX - bounds.left + 14;
+              tooltip.style.left = `${Math.max(8, Math.min(anchor, bounds.width - tooltip.offsetWidth - 8))}px`;
+            }
+          };
+
+          // Rê chuột hoặc chạm để xem điểm đo gần nhất, không nội suy giá trị.
+          const inspect = (event) => {
+            if (!samples.length) return;
+            const bounds = svg.getBoundingClientRect();
+            if (!bounds.width || !bounds.height) return;
+            // SVG giữ tỷ lệ khi bị giới hạn chiều cao; trừ phần lề trống trước khi chọn điểm.
+            const scale = Math.min(bounds.width / WIDTH, bounds.height / HEIGHT);
+            const x = (event.clientX - bounds.left - (bounds.width - WIDTH * scale) / 2) / scale;
+            const y = (event.clientY - bounds.top - (bounds.height - HEIGHT * scale) / 2) / scale;
+            if (x < LEFT || x > RIGHT || y < TOP || y > BOTTOM) {
+              tooltip.hidden = true;
+              return;
+            }
+            let nearest = 0;
+            samples.forEach((sample, index) => {
+              if (Math.abs(xAt(sample, samples) - x) < Math.abs(xAt(samples[nearest], samples) - x))
+                nearest = index;
+            });
+            selectSample(nearest, true, event.clientX);
+          };
+          svg.addEventListener('pointermove', (event) => {
+            if (event.pointerType !== 'touch') inspect(event);
+          });
+          svg.addEventListener('pointerdown', inspect);
+          svg.addEventListener('pointerleave', () => {
+            tooltip.hidden = true;
+          });
+          slider.addEventListener('input', () => {
+            if (!samples.length) return;
+            const index = Math.max(0, Math.min(samples.length - 1, Number(slider.value)));
+            selectSample(index, true);
+          });
+          slider.addEventListener('blur', () => {
+            tooltip.hidden = true;
+          });
+          const render = (nextSamples, nextOptions = options) => {
+            if (!Array.isArray(nextSamples)) return;
+            const selected = Number(slider.value);
+            const oldTimestamp =
+              selected < samples.length - 1 ? samples[selected]?.timestamp : null;
+            samples = nextSamples;
+            options = nextOptions;
+            seriesList = seriesFor(samples, options);
+            svg.innerHTML = buildMarkup(samples, options);
+            slider.max = String(Math.max(0, samples.length - 1));
+            slider.disabled = !samples.length;
+            const statistics = summarize(samples);
+            root.querySelectorAll('[data-chart-stat]').forEach((element) => {
+              const [key, field] = element.dataset.chartStat.split('-');
+              element.textContent =
+                field === 'count'
+                  ? `${statistics[key].count} điểm đo`
+                  : formatValue(
+                      statistics[key][field],
+                      key,
+                      field === 'average',
+                      options.lightUnit,
+                    );
+            });
+            if (samples.length) {
+              const preserved = oldTimestamp
+                ? samples.findIndex((sample) => sample.timestamp === oldTimestamp)
+                : -1;
+              selectSample(preserved >= 0 ? preserved : samples.length - 1);
+            } else {
+              tooltip.hidden = true;
+              root.querySelectorAll('[data-chart-time]').forEach((element) => {
+                element.textContent = '—';
+              });
+              for (const series of seriesList)
+                root.querySelectorAll(`[data-chart-reading="${series.key}"]`).forEach((element) => {
+                  element.textContent = 'Chưa có dữ liệu';
+                });
+            }
+          };
+          render(samples, options);
+          return render;
+        };
+
+        // Dùng cùng hàm vẽ cho HTML tĩnh và kiểm tra bằng Node.js.
+        if (typeof module !== 'undefined' && module.exports) {
+          module.exports = { buildMarkup, summarize, formatValue, initialize, seriesFor };
+          return;
+        }
+        document.querySelectorAll('[data-sensor-chart]').forEach((root) => {
+          const live = typeof window !== 'undefined' && window.IoT?.live;
+          root.updateSensorChart = initialize(
+            root,
+            live ? { samples: [], lightUnit: 'ADC', autoScale: true } : {},
+          );
+        });
+      })();
+    </script>
+    <script data-source="dashboard.js">
+      /* Điều khiển mẫu: chờ 500ms rồi cập nhật trạng thái thiết bị. */
+      (() => {
+        'use strict';
+        if (typeof window !== 'undefined' && window.IoT?.live) return;
+
         const toggles = [...document.querySelectorAll('[data-device-toggle]')];
-        // Cùng một số lượng được hiển thị ở banner tổng quan và thẻ điều khiển.
         const counts = [...document.querySelectorAll('[data-device-count]')];
 
-        // Đếm công tắc đang checked, rồi ghi số lượng vào tất cả vị trí đánh dấu.
+        // Cập nhật số thiết bị đang bật.
         const updateCount = () => {
           const active = toggles.filter((toggle) => toggle.checked).length;
           counts.forEach((count) => {
-            // textContent ghi văn bản; String chuyển số đếm thành chuỗi để hiển thị.
             count.textContent = String(active);
           });
         };
 
-        // Mỗi công tắc có trạng thái và thời gian chờ riêng.
-        // Vì vậy, quạt đang xử lý vẫn cho phép thao tác điều hòa hoặc đèn.
+        // Mỗi thiết bị có trạng thái và thời gian chờ riêng.
         toggles.forEach((toggle) => {
-          // closest tìm thẻ .device gần nhất chứa công tắc để đổi trạng thái cả hàng.
           const device = toggle.closest('.device');
-          // appliedState: trạng thái đã áp dụng, dùng làm mốc trong 0,5 giây chờ.
           let appliedState = toggle.checked;
-          // pending: true khi hàng thiết bị này đang xử lý một thao tác.
           let pending = false;
 
-          // change xảy ra khi checkbox thay đổi do nhấn chuột hoặc bàn phím.
           toggle.addEventListener('change', () => {
-            // Lưu trạng thái người dùng vừa yêu cầu trước khi phục hồi trạng thái cũ.
             const requestedState = toggle.checked;
 
-            // Trình duyệt đã đổi checked trước khi gọi change.
-            // Đặt lại checked để màu, hiệu ứng và số đếm giữ trạng thái đã áp dụng.
+            // Giữ trạng thái cũ trong lúc xử lý.
             toggle.checked = appliedState;
 
-            // Không tạo thêm bộ hẹn giờ nếu công tắc này đang xử lý.
-            // Kiểm tra này cũng bảo vệ khi sự kiện được kích hoạt bằng mã khác.
+            // Bỏ qua yêu cầu khi thiết bị đang xử lý.
             if (pending) return;
 
-            // Bắt đầu chờ: khóa công tắc và thêm lớp CSS cho chữ/vòng quay xử lý.
+            // Khóa công tắc trong thời gian chờ.
             pending = true;
             toggle.disabled = true;
-            // aria-busy thông báo trạng thái đang xử lý cho công cụ hỗ trợ truy cập.
             toggle.setAttribute('aria-busy', 'true');
             device.classList.add('is-pending');
 
-            // setTimeout lên lịch chạy hàm sau khoảng 500ms (0,5 giây).
-            // Nó không chặn các thao tác khác trên trang; trình duyệt bận có thể chạy muộn hơn.
+            // Áp dụng trạng thái mới sau 500ms.
             setTimeout(() => {
-              // Hoàn tất: lưu trạng thái mới và cho CSS cập nhật hiệu ứng qua checked.
               appliedState = requestedState;
               toggle.checked = appliedState;
 
-              // Mở khóa, gỡ trạng thái chờ, rồi cập nhật lại cả hai bộ đếm.
+              // Mở khóa và cập nhật bộ đếm.
               toggle.disabled = false;
               toggle.removeAttribute('aria-busy');
               device.classList.remove('is-pending');
@@ -2503,7 +3441,7 @@
           });
         });
 
-        // Đồng bộ số đếm ngay khi mở trang theo các checkbox checked trong HTML.
+        // Đồng bộ bộ đếm khi mở trang.
         updateCount();
       })();
     </script>
